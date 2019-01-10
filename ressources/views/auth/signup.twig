@@ -1,4 +1,26 @@
 {% extends 'templates/app.twig' %}
 {% block content %}
-	signup
+	<div class="signup">
+		<form action="{{ path_for('auth.signup') }}" method="post" autocomplete="off">
+			<fieldset>
+				<legend>Création de compte</legend>
+					<label for="nom">Nom</label>
+					<input type="text" name="nom" id="nom">
+
+					<label for="prenom">Prénom</label>
+					<input type="text" name="prenom" id="prenom">
+
+					<label for="mail">mail</label>
+					<input type="mail" name="mail" id="mail">
+
+					<label for="mdp">mot de passe</label>
+					<input type="password" name="mdp" id="mdp">
+
+					<label for="mdpConf">Confirmation mot de passe</label>
+					<input type="password" name="mdpConf" id="mdpConf">
+			</fieldset>
+			<input type="submit" value="Créer">
+
+		</form>
+	</div>
 {% endblock %}
