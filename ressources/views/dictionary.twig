@@ -1,0 +1,11 @@
+{% for method in methods %}
+	{{ method.libelle }}(
+	{% if method.parametre != null %}
+	    {{method.parametre}}
+	{% endif %}
+	)<br/>
+{% endfor %}
+<br/>
+{% for object in objects %}
+	<a href="dictionary/{{object.id}}">{{ object.libelle }}</a><br/>
+{% endfor %}
