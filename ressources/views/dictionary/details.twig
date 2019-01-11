@@ -1,0 +1,8 @@
+{{ element.libelle }}
+{% if element.type == "method" %}
+	(
+	{% if element.parametre != null %}
+    	{{ element.parametre }}
+	{% endif %}
+	)
+{% endif %}

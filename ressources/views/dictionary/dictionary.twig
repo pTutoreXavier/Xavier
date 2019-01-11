@@ -1,0 +1,19 @@
+<a href="dictionary/new/object">Ajouter un objet</a>
+<a href="dictionary/new/method">Ajouter une méthode</a>
+<br/><br/>
+<table border="1" style="border-collapse: collapse;">
+{% for method in methods %}
+	<tr><td>
+	<a href="dictionary/{{method.id}}">{{ method.libelle }}(
+		{% if method.parametre != null %}
+		    {{ method.parametre }}
+		{% endif %}
+	)</a></td></tr>
+{% endfor %}
+</table>
+<br/>
+<table border="1" style="border-collapse: collapse;">
+{% for object in objects %}
+	<tr><td><a href="dictionary/{{object.id}}">{{ object.libelle }}</a></td></tr>
+{% endfor %}
+</table>
