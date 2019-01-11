@@ -1,0 +1,10 @@
+{% extends 'templates/app.twig' %}
+{% block content %}
+	Id : {{ id }}<br />
+	Nom : {{ nom }}<br />
+	Prenom : {{ prenom }}<br />
+	Mail : {{ mail }}<br />
+	Mot de passe : {{ mdp }}<br />
+	Level d'acces : {{ level }}<br />
+	<a href='profil/update'>Modifiez vos informations</a>
+{% endblock %}

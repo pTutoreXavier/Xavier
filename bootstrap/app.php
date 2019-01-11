@@ -44,4 +44,7 @@ $container["HomeController"] = function($container){
 $container["AuthController"] = function($container){
 	return new \App\Controllers\Auth\AuthController($container);
 };
+$container["ProfilController"] = function($container){
+	return new \App\Controllers\ProfilController($container);
+};
 require __DIR__."/../app/routes.php";
