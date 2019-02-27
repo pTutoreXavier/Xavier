@@ -1,0 +1,10 @@
+{% extends 'templates/app.twig' %}
+{% block content %}
+
+<form method="POST" action="updatePass/check">
+	<p>Mot de passe actuel : </p><input type="password" name="currentPass" required="required">
+	<p>Nouveau mot de passe : </p><input type="password" name="newPass" required="required">
+	<p>Confirmer le mot de passe : </p><input type="password" name="newPass2" required="required"><br/>
+	<input type="submit" name='valide' value="valider">
+</form>
+{% endblock %}
