@@ -1,9 +1,13 @@
 {% extends 'templates/app.twig' %}
 {% block content %}
+<fieldset>
+	À propos de moi<br /><br />
 	Nom : {{ nom }}<br />
 	Prenom : {{ prenom }}<br />
-	Level d'acces : {{ level }}<br />
-	Mail : {{ mail }}<a href='profil/updateMail'>Modifier Adresse email</a><br />
+	date de naissance : {{dateNaissance}}<br />
+	Mail : {{ mail }}<br /><a href='profil/updateMail'>Modifier Adresse email</a><br />
 	<a href='profil/updatePass'>Modifier mot de passe</a>
-
+</fieldset>
+	Level d'acces : {{ level }}<br />
+	
 {% endblock %}
