@@ -1,13 +1,27 @@
 {% extends 'templates/app.twig' %}
 {% block content %}
-<fieldset>
-	À propos de moi<br /><br />
-	Nom : {{ nom }}<br />
-	Prenom : {{ prenom }}<br />
-	date de naissance : {{dateNaissance}}<br />
-	Mail : {{ mail }}<br /><a href='profil/updateMail'>Modifier Adresse email</a><br />
-	<a href='profil/updatePass'>Modifier mot de passe</a>
-</fieldset>
+<h2>Mon compte</h2>
+<fieldset id="fieldsetMesInformations">
+	<legend>Mes informations</legend>
+	<div id="pictureAvatar">
+		<img id="imgAvatar" src="../ressources/avatar/defaultAvatar.png">
+	</div>
+	<div id="divMesInformations">
+		Nom : {{ nom }}<br />
+		Prenom : {{ prenom }}<br />
+		Date de naissance : {{dateNaissance}}<br />
+		Mail : {{ mail }}<br /><br />
+		<a href='profil/updateMail'>Modifier Adresse email</a><br />
+		<a href='profil/updatePass'>Modifier mot de passe</a><br />
+	</div>
+	
+
+</fieldset><br /><br />
+<fieldset id="fieldsetInfoCompte">
+	<legend>Informations du compte</legend>
 	Level d'acces : {{ level }}<br />
+	Date d'inscription : {{ created_at }}
+</fieldset>
+
 	
 {% endblock %}

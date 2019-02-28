@@ -6,13 +6,13 @@ class ProfilController extends Controller{
 	public function index($request, $response){
 		$user = User::find(1);/* A remplacer par l'id  dans la session*/
 		return $this->view->render($response, 'profil/profil.twig', array(
-			"id" => $user->id, 
 			"nom" => $user->nom,
 			"prenom" => $user->prenom,
 			"mail" => $user->mail,
 			"dateNaissance" => $user->dateNaissance,
-			"mdp" => $user->mdp,
-			"level" => $user->level));
+			"level" => $user->level,
+			"created_at" => substr($user->created_at, 0, -9)
+		));
 	}
 	public function updatePass($request, $response){
 		$user = User::find(1);/* A remplacer par l'id  dans la session*/
@@ -21,13 +21,8 @@ class ProfilController extends Controller{
 		}
 		session_destroy();
 		return $this->view->render($response, 'profil/profilUpdatePass.twig', array(
-			"id" => $user->id, 
-			"nom" => $user->nom,
-			"prenom" => $user->prenom,
-			"mail" => $user->mail,
-			"dateNaissance" => $user->dateNaissance,
 			"mdp" => $user->mdp,
-			"level" => $user->level));
+		));
 	}
 	public function updateMail($request, $response){
 		$user = User::find(1);/* A remplacer par l'id  dans la session*/
@@ -35,14 +30,7 @@ class ProfilController extends Controller{
 			echo $_SESSION['errorMail'];
 		}
 		session_destroy();
-		return $this->view->render($response, 'profil/profilUpdateMail.twig', array(
-			"id" => $user->id, 
-			"nom" => $user->nom,
-			"prenom" => $user->prenom,
-			"mail" => $user->mail,
-			"dateNaissance" => $user->dateNaissance,
-			"mdp" => $user->mdp,
-			"level" => $user->level));
+		return $this->view->render($response, 'profil/profilUpdateMail.twig');
 	}
 	public function checkPass($request, $response){
 		if ($_POST['newPass'] != $_POST['newPass2']) {

@@ -1,0 +1,85 @@
+/* Début régle général CSS */
+
+@import "_grille"
+$primary-color: #133AAC
+
+html
+	font-family : Verdana
+	color : black
+	font-size : 18px
+	margin : 0
+	padding : 0
+a
+	color : black
+	text-decoration : none
+
+a:hover
+	color : $primary-color
+
+h2
+	text-align : center
+
+fieldset
+	padding : 10px
+	box-shadow : 10px 5px 5px gray
+
+input
+	box-sizing : border-box
+	border : 1px solid gray
+
+input:focus
+	border-color : $primary-color
+
+input[type="submit"]
+	cursor : pointer
+	background-color : $primary-color
+	color : white
+	width : 150px
+	height : 40px
+	border-radius : 5px
+	transition : all 0.5s
+	text-transform: uppercase
+	font-weight : bold
+	letter-spacing : 2px
+	font-size : 18px
+
+input[type="submit"]:hover
+	box-shadow : 0px 5px 5px gray
+
+/* Fin régle général CSS */
+
+/* Début Profil */
+
+#fieldsetMesInformations, #fieldsetInfoCompte
+	@include grille(12, 1.6%, 1, 10)
+
+#fieldsetMesInformations
+		display : flex
+		height : 200px
+
+#pictureAvatar
+	@include grille(4, 1.6%, 0, 1)
+	text-align : center
+
+#divMesInformations
+	@include grille(4, 1.6%, 0, 3)
+
+#imgAvatar
+	width : 180px
+
+#formUpdateMail, #formUpdatePass
+	margin-top : 10%
+	text-align : center
+	display : flex
+	flex-direction : column
+	@include grille(10, 1.6%, 2, 6)
+	span
+		margin-top : 20px
+	input[type="text"], input[type='password']
+		margin-top : 10px
+		height : 25px
+	input[type="submit"]
+		margin : auto
+		margin-top : 30px
+		
+/* Fin Profil */
