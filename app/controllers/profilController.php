@@ -5,13 +5,20 @@ use \App\Models\User as User;
 class ProfilController extends Controller{
 	public function index($request, $response){
 		$user = User::find(1);/* A remplacer par l'id  dans la session*/
+    	$dateNaissance = \DateTime::createFromFormat('Y-m-d', $user->dateNaissance)->format('d F Y');
+    	$dateCreation = \DateTime::createFromFormat('Y-m-d H:i:s', $user->created_at)->format('d F Y'); 
+    	$moisNaissanceEn = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    	$moisNaissanceFr = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Decembre'];	
+    	$dateNaissance = str_replace($moisNaissanceEn, $moisNaissanceFr, $dateNaissance);
+    	$dateCreation = str_replace($moisNaissanceEn, $moisNaissanceFr, $dateCreation);
 		return $this->view->render($response, 'profil/profil.twig', array(
 			"nom" => $user->nom,
 			"prenom" => $user->prenom,
 			"mail" => $user->mail,
-			"dateNaissance" => $user->dateNaissance,
+			"dateNaissance" => $dateNaissance,
 			"level" => $user->level,
-			"created_at" => substr($user->created_at, 0, -9)
+			"avatar" => $user->avatar,
+			"created_at" => $dateCreation
 		));
 	}
 	public function updatePass($request, $response){
@@ -76,5 +83,45 @@ class ProfilController extends Controller{
 			$user->save();
 			return $response->withRedirect($this->router->pathFor('profil'));
 		}
+	}
+	public function updateProfilPicture($request, $response){	
+		if (isset($_SESSION['erreur'])) {
+			echo $_SESSION['erreur'];
+		}
+		session_destroy();
+		$user = User::find(1);
+		return $this->view->render($response, 'profil/profilUpdateProfilPicture.twig', array(
+			"mdp" => $user->mdp,
+		));
+	}
+	public function checkProfilPicture($request, $response){
+		$user = User::find(1);/* A remplacer par l'id  dans la session*/
+		$user->avatar = $_POST['profilPicture'].".png";
+		$user->save();
+		return $response->withRedirect($this->router->pathFor('profil'));
+	}
+	public function checkProfilPictureUpload($request, $response){
+		$user = User::find(1);/* A remplacer par l'id  dans la session*/
+		$extensions_valides = array( 'jpg' , 'jpeg', 'png' );
+		$extension_upload = strtolower(  substr(  strrchr($_FILES['picture']['name'], '.')  ,1)  );
+		if ($_FILES['picture']['size'] > 2000000) {
+			$_SESSION['erreur'] = "<script>alert('Le fichier est trop gros (2Mo max)')</script>";
+			return $response->withRedirect($this->router->pathFor('updateProfilPicture'));
+		}
+		elseif (! in_array($extension_upload,$extensions_valides) ){
+			$_SESSION['erreur'] = "<script>alert('L\'extenssion n\'est pas autorisé (jpg, jpeg ou png)')</script>";
+			return $response->withRedirect($this->router->pathFor('updateProfilPicture'));
+		} 
+		else
+		{
+			$rand = md5(uniqid(rand(), true));
+			$nom = "../ressources/avatar/custom/{$rand}.{$extension_upload}";
+			$resultat = move_uploaded_file($_FILES['picture']['tmp_name'],$nom);
+			if ($resultat) echo "Transfert réussi";
+			$user->avatar = "/custom/{$rand}.{$extension_upload}";
+			$user->save();
+			return $response->withRedirect($this->router->pathFor('profil'));
+		}
+
 	}
 }
