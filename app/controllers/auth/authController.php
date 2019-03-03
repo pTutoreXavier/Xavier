@@ -4,11 +4,34 @@ namespace App\Controllers\Auth;
 
 use \App\Controllers\Controller;
 use \App\Models\User;
+use http\Params;
 use \Respect\Validation\Validator as v;
 
 class AuthController extends Controller{
 
-    public function getSignUp($request, $response){
+
+    public function getSignIn($request, $response)
+    {
+        return $this->view->render($response, "auth/signin.twig");
+    }
+
+    public function postSignIn($request, $response)
+    {
+        $auth = $this->auth->attempt(
+            $request->getParam('mail'),
+            $request->getParam('mdp')
+        );
+
+        if (!$auth) {
+            return $response->withRedirect($this->router->pathFor('auth.signin'));
+        }
+
+        return $response->withRedirect($this->router->pathFor('home'));
+
+    }
+
+    public function getSignUp($request, $response)
+    {
 		return $this->view->render($response, "auth/signup.twig");
 	}
 
