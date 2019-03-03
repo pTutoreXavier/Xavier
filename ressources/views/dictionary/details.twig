@@ -1,3 +1,5 @@
+{% extends "templates/app.twig" %}
+{% block content %}
 {{ element.libelle }}
 {% if element.type == "method" %}
 	(
@@ -6,3 +8,12 @@
 	{% endif %}
 	)
 {% endif %}
+<br/><br/>
+<table border="1" style="border-collapse: collapse;">
+{% for sequence in sequences %}
+	<tr>
+		<td>{{ sequence.id }}</td>
+	</tr>
+{% endfor %}
+</table>
+{% endblock %}
