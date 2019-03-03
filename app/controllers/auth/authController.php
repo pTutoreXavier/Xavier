@@ -14,13 +14,12 @@ class AuthController extends Controller{
 
 	public function postSignUp($request, $response)
     {
-
         $validation = $this->validator->validate($request, [
             'nom' => v::notEmpty()->alpha(),
             'prenom' => v::noWhitespace()->notEmpty()->alpha(),
-            'mail' => v::noWhitespace()->notEmpty()->email(),
+            'mail' => v::noWhitespace()->notEmpty()->email()->mailAvailable(),
             'mdp' => v::noWhitespace()->notEmpty(),
-            'mdpConf' => v::equals('mdp'),
+            'mdpConf' => v::equals($_POST['mdp']),
         ]);
 
         if($validation->failed()){

@@ -31,7 +31,7 @@
 					<label for="mdpConf">Confirmation mot de passe</label>
 					<input type="password" name="mdpConf" id="mdpConf">
 					{% if errors.mdpConf %}
-						<span class="erreur">{{ errors.mdpConf | first }}</span>
+						<span class="erreur">Le mot de passe doit être identique</span>
 					{% endif %}
 			</fieldset>
 			<input type="submit" value="Créer">
