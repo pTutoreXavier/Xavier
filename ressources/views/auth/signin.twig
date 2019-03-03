@@ -1,0 +1,44 @@
+{% extends 'templates/app.twig' %}
+{% block content %}
+	<div class="signup">
+		<form action="{{ path_for('auth.signup') }}" method="post" autocomplete="off">
+			<fieldset>
+				<legend>Création de compte</legend>
+					<label for="nom">Nom</label>
+					<input type="text" name="nom" id="nom" value="{{ old.nom }}">
+					{% if errors.nom %}
+						<span class="erreur">{{ errors.nom | first }}</span>
+					{% endif %}
+
+					<label for="prenom">Prénom</label>
+					<input type="text" name="prenom" id="prenom" value="{{ old.prenom }}">
+					{% if errors.prenom %}
+						<span class="erreur">{{ errors.prenom | first }}</span>
+					{% endif %}
+
+					<label for="mail">mail</label>
+					<input type="mail" name="mail" id="mail" value="{{ old.mail }}">
+					{% if errors.mail %}
+						<span class="erreur">{{ errors.mail | first }}</span>
+					{% endif %}
+
+					<label for="mdp">mot de passe</label>
+					<input type="password" name="mdp" id="mdp">
+					{% if errors.mdp %}
+						<span class="erreur">{{ errors.mdp | first }}</span>
+					{% endif %}
+
+					<label for="mdpConf">Confirmation mot de passe</label>
+					<input type="password" name="mdpConf" id="mdpConf">
+					{% if errors.mdpConf %}
+						<span class="erreur">Le mot de passe doit être identique</span>
+					{% endif %}
+			</fieldset>
+
+			<input type="submit" value="Créer">
+
+			{{ csrf.field | raw }}
+
+		</form>
+	</div>
+{% endblock %}
