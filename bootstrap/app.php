@@ -59,9 +59,17 @@ $container["AuthController"] = function($container){
 	return new \App\Controllers\Auth\AuthController($container);
 };
 
+// SECURITE : CSRF
+$container['csrf'] = function ($container) {
+    return new \Slim\Csrf\Guard;
+};
+
 // MIDDLEWARES
 $app->add(new \App\Middleware\ValidationErrorsMiddleware($container));
 $app->add(new \App\Middleware\OldInputMiddleware($container));
+$app->add(new \App\Middleware\CsrfViewMiddleware($container));
+
+$app->add($container->csrf);
 
 
 //REGLES DE VALIDATION

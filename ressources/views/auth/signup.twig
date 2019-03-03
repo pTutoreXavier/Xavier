@@ -34,7 +34,10 @@
 						<span class="erreur">Le mot de passe doit être identique</span>
 					{% endif %}
 			</fieldset>
+
 			<input type="submit" value="Créer">
+
+			{{ csrf.field | raw }}
 
 		</form>
 	</div>
