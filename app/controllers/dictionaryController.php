@@ -65,18 +65,16 @@ class DictionaryController extends Controller{
 		}
 		$method = $args["format"];
 		$name = "test";
-		$this->$method($data, $name);
+		$path = "../ressources/temp/";
+		$this->$method($data, $name, $path);
 		header('Content-disposition: attachment; filename="'.$name.'.'.$args["format"].'"');
 		header('Content-Type: application/force-download');
 		header('Content-Transfer-Encoding: binary');
-		header('Content-Length: '. filesize('../ressources/export/'.$name.'.'.$args["format"]));
-		header('Pragma: no-cache');
-		header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
-		header('Expires: 0');
-		readfile('../ressources/export/'.$name.'.'.$args["format"]);
+		readfile($path.$name.'.'.$args["format"]);
+		unlink($path.$name.'.'.$args["format"]);
 	}
 
-	private function xml($data, $name){
+	private function xml($data, $name, $path){
 		$xml = new \XMLWriter();
 		$xml->openMemory();
 		$xml->startDocument('2.0', 'utf-8');
@@ -91,13 +89,13 @@ class DictionaryController extends Controller{
 		}
 		$xml->endElement();
 		$xml->endDocument();
-		$file = fopen("./../ressources/export/".$name.".xml", "w+");
+		$file = fopen($path.$name.".xml", "w+");
 		fwrite($file, $xml->flush());
 		fclose($file);
 	}
 
-	private function csv($data, $name){
-		$file = fopen("./../ressources/export/".$name.".csv", "w+");
+	private function csv($data, $name, $path){
+		$file = fopen($path.$name.".csv", "w+");
 		fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
 		fputcsv($file, array("sequence", "commentaires"), ";");
 		foreach($data as $key => $value){
@@ -113,8 +111,8 @@ class DictionaryController extends Controller{
 		fclose($file);
 	}
 
-	private function json($data, $name){
-		$file = fopen("./../ressources/export/".$name.".json", "w+");
+	private function json($data, $name, $path){
+		$file = fopen($path.$name.".json", "w+");
 		fwrite($file, json_encode($data));
 		fclose($file);
 	}
