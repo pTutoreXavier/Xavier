@@ -6,6 +6,15 @@ use App\models\User;
 
 class Auth
 {
+    public function user()
+    {
+        return User::find($_SESSION['user']);
+    }
+
+    public function check()
+    {
+        return isset($_SESSION['user']);
+    }
 
     public function attempt($mail, $mdp)
     {
@@ -20,6 +29,11 @@ class Auth
         }
         return false;
 
+    }
+
+    public function logout ()
+    {
+        unset($_SESSION['user']);
     }
 
 

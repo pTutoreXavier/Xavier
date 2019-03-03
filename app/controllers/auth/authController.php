@@ -10,6 +10,12 @@ use \Respect\Validation\Validator as v;
 class AuthController extends Controller{
 
 
+    public function getSignOut($request, $response)
+    {
+        $this->auth->logout();
+        return $response->withRedirect($this->router->pathFor('home'));
+    }
+
     public function getSignIn($request, $response)
     {
         return $this->view->render($response, "auth/signin.twig");
@@ -27,7 +33,6 @@ class AuthController extends Controller{
         }
 
         return $response->withRedirect($this->router->pathFor('home'));
-
     }
 
     public function getSignUp($request, $response)
@@ -56,6 +61,8 @@ class AuthController extends Controller{
             'mdp' => password_hash($request->getParam('mdp'),PASSWORD_DEFAULT),
             'level' => 500,
         ]);
+
+        $this->auth->attempt($user->mail, $request->getParam('mdp'));
 
         return $response->withRedirect($this->router->pathFor('home'));
 	}
