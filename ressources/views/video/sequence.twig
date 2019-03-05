@@ -3,21 +3,25 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Xavier</title>
-
-	<link type="text/css" href="../ressources/jplayer/skin/css/blue.monday/css/jplayer.blue.monday.css" rel="stylesheet" />
-	<link rel="stylesheet" href="../ressources/jplayer/css/style.css" type="text/css"/>
- 	<script type="text/javascript" src="../ressources/jplayer/js/jquery.min.js"></script>
-  	<script type="text/javascript" src="../ressources/jplayer/js/jquery.jplayer.min.js"></script>
+	<!--D:\laragon\www\Projet_Tutore\ressources\jplayer\css-->
+	<link type="text/css" href="../../../../ressources/jplayer/skin/css/blue.monday/css/jplayer.blue.monday.css" rel="stylesheet" />
+	<link rel="stylesheet" href="../../../../ressources/jplayer/css/style.css" type="text/css"/>
+ 	<script type="text/javascript" src="../../../../ressources/jplayer/js/jquery.min.js"></script>
+  	<script type="text/javascript" src="../../../../ressources/jplayer/js/jquery.jplayer.min.js"></script>
 
   		<script type="text/javascript">
   		$(document).ready(function(){
+  			console.log("{{message.commentaire}}");
+  			if("{{message.commentaire}}" != ""){
+  				$("#commentaire").html("");
+  			}
 
      	$("#jquery_jplayer_1").jPlayer({
 		ready: function () {
 			$(this).jPlayer("setMedia", {
-				title: "{{tab.0}}.{{tab.1}}({{tab.2}})",  //titre de la video
-				m4v: "../ressources/video/{{video.lien}}",		//lien de la video (complete)
-				poster: "http://www.jplayer.org/video/poster/Big_Buck_Bunny_Trailer_480x270.png"  //miniature
+				//title: "{{seq.pseudocode}}",  //titre de la video
+				m4v: "../../../../ressources/video/{{video.lien}}.mp4",		//lien de la video (complete)
+				//poster: "http://www.jplayer.org/video/poster/Big_Buck_Bunny_Trailer_480x270.png"  //miniature
 			});
 		},
 		swfPath: "../ressources/jplayer/js/",  //emplacement jplayer
@@ -54,7 +58,7 @@
     		$("#jquery_jplayer_1").jPlayer("play", debut);  // demarre la video du debut (int debut de la video en s)
     	}
     	play = true; // la video est en cours
-    	imprimer_bloc("miniature","jp_container_1");
+    	//imprimer_bloc("miniature","jp_container_1");
     });
 
 
@@ -194,7 +198,7 @@ fen.window.print();
 return true;
 }
 
-imprimer_bloc("miniature","jp_container_1");
+//imprimer_bloc("miniature","jp_container_1");
 
 });
 
@@ -256,6 +260,14 @@ imprimer_bloc("miniature","jp_container_1");
 			To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
 		</div>
 	</div>
+</div>
+<div id="commentaire">
+	<form method="POST" name="comment" action="../../commenter">
+		<input type="text" name="message"/>
+		<input type="hidden" name="idSequence" value="{{idSequence}}"/>
+		<input type="hidden" name="idVideo" value="{{idVideo}}"/>
+		<input type="submit" name="envoi" value="commenter"/>
+	</form>
 </div>
 </body>
 </html>

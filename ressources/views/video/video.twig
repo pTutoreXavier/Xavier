@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Xavier</title>
+	<!--D:\laragon\www\Projet_Tutore\ressources\jplayer\css-->
+	<link type="text/css" href="../../../ressources/jplayer/skin/css/blue.monday/css/jplayer.blue.monday.css" rel="stylesheet" />
+	<link rel="stylesheet" href="../../../ressources/jplayer/css/style.css" type="text/css"/>
+ 	<script type="text/javascript" src="../../../ressources/jplayer/js/jquery.min.js"></script>
+  	<script type="text/javascript" src="../../../ressources/jplayer/js/jquery.jplayer.min.js"></script>
+
+  	<script type="text/javascript">
+  		$(document).ready(function(){
+  			$(document).on('contextmenu', 'div', function(e) 
+		    {
+		        e.preventDefault();
+		        return false;
+		    });
+  			var seqStart = [];
+  			var seqFinish = [];
+
+		    {% for sequence in lesSequences %}
+		    	seqStart.push("{{sequence.debut}}");
+		    	seqFinish.push("{{sequence.fin}}");
+		    {% endfor %}
+
+     	$("#jquery_jplayer_1").jPlayer({
+			ready: function () {
+				$(this).jPlayer("setMedia", {
+					title: "{{video.lien}}",  //titre de la video
+					m4v: "../../../ressources/video/{{video.lien}}.mp4",		//lien de la video (complete)
+					//poster: "http://www.jplayer.org/video/poster/Big_Buck_Bunny_Trailer_480x270.png"  //miniature
+				});
+			},
+			swfPath: "../ressources/jplayer/js/",  //emplacement jplayer
+			supplied: "m4v",
+			size: {
+				width: "640px", //largeur de la fenetre video
+				height: "360px",  //longueur de la fenetre video
+				cssClass: "jp-video-360p"  //qualité vidéo
+			},
+			useStateClassSkin: true,
+			autoBlur: false,
+			smoothPlayBar: true,
+			keyEnabled: true,
+			remainingDuration: true,
+			toggleDuration: true,
+		});
+
+     	$(".sequence").click(function(event){
+     		let start = [];
+     		let finish = [];
+     		let test = true;
+
+     		if($("#start"+ nbreSequence).val() == "" || $("#finish"+ nbreSequence).val() == ""){
+     			test = false;
+     			alert("votre dernière séléction n'est pas correcte ou n'est pas complète");
+     		}
+     		else{
+     			for(let i = 1; i < nbreSequence +1; i++){
+	     			let tempo = $("#start" + i).val().split(':');   			
+		    		let total = calculSeconde(tempo);	
+	     			start.push(total);
+
+	     			tempo = $("#finish" + i).val().split(':');   			
+		    		total = calculSeconde(tempo);
+	     			finish.push(total);
+
+	     		}
+	     		$("#Start").val(start);
+	     		$("#Finish").val(finish);
+     		}
+     	});
+
+     	var repeat = false;
+     	var debut = 0;
+     	var fin;
+     	var play = false;  // savoir si la vidéo est en cours ou non
+     	var max; // (fin video - debut video)
+     	var jp = $('#jquery_jplayer_1'), jpData = jp.data('jPlayer');
+     	var nbreSequence = 0;
+     	var first = true;
+     	var selectStart = 0;
+     	var selectFinish = 0;
+     	let pourcent = 0;
+
+     	function test(){
+     		alert("slt");
+     		return false;
+     	}
+
+     	function afficherIndisponible(seconde){
+     		let duree = seconde;
+
+     		pourcent = duree / 100;
+     		let pixel = 640 / duree;
+     		let HTML = '';
+     		for (var i = 0; i < seqStart.length; i++) {
+     			let margin = Math.round(seqStart[i] * pixel);
+     			let width = Math.round((seqFinish[i] - seqStart[i]) / pourcent);
+     			HTML += "<div id='indisponible' style='width:"+width+"%; margin-left:"+margin+"px'></div>";
+     		}
+     		console.log(HTML);
+     		$("#indicator").html(HTML);
+     	}
+
+     	function calculSeconde(tempo){
+
+     		for(var i = 0; i < tempo.length; i++) {
+	    		tempo[i] = Math.abs(parseInt(tempo[i]));
+	    	}
+	    	if(tempo.length == 2){
+	    		let temp = tempo[0];
+	    		tempo[0] = tempo[1];
+	    		tempo[1] = temp;
+	    	}
+	    	else if(tempo.length ==3){
+	    		let temp = tempo[0];
+	    		tempo[0] = tempo[2];
+	    		tempo[2] = temp;
+	    	}
+	    	let total = 0;
+	    	for(var i = 0; i < tempo.length; i++){
+	    		total += tempo[i] * Math.pow(60, i);
+	    	}
+     		return total;
+     	}
+
+     	function calculFormatTime(nombre){
+     		let reste=nombre;
+			let total='';
+
+     		let nbHours=Math.floor(reste/3600);
+			reste -= nbHours*3600;
+ 
+			let nbMinutes=Math.floor(reste/60);
+			reste -= nbMinutes*60;
+ 
+			let nbSeconds=reste;
+
+			if (nbHours>0){
+				total += nbHours + ":";
+			}
+ 
+			if (nbMinutes>0){
+				total += nbMinutes + ":";
+			}
+			else{
+				total += "0:";
+			}
+			if(nbSeconds < 10){
+				total += "0" + nbSeconds;
+			}
+			else{
+				total += nbSeconds;
+			}
+
+     		return total;
+     	}
+
+    	$(".jp-play").click( function(event) {  //clique sur le bouton play
+    		var tempo = $(".jp-duration").html().split(':');
+    		
+	    	let total = calculSeconde(tempo);
+
+	    	
+
+	    	if(first){
+	    		//afficherIndispobile(total);
+	    		fin = total;
+				max = (fin - debut);
+				first = false;
+	    	}
+       	
+			
+	    	if(jpData.status.currentTime !== undefined){
+	    		if(jpData.status.currentTime > 0){
+	    			$("#jquery_jplayer_1").jPlayer("play", jpData.status.currentTime); //demarre la video ou elle a était arreté
+		    	}
+		    	else{
+		    		$("#jquery_jplayer_1").jPlayer("play", debut); // demarre la video du debut (int debut de la video en s)
+		    	}
+	    	}
+	    	else{
+	    		$("#jquery_jplayer_1").jPlayer("play", debut);  // demarre la video du debut (int debut de la video en s)
+	    	}
+	    	play = true; // la video est en cours
+	    	//imprimer_bloc("miniature","jp_container_1");
+	    });
+
+
+
+	    $(".jp-stop").click( function() {  //clique sur le bouton pause
+	    	play = false; // la video est en pause
+	     	$("#jquery_jplayer_1").jPlayer("pause", jpData.status.currentTime); //ammène le curseur a l'endroit ou a était arreté la vidéo
+	    });
+
+	    $(".jp-repeat").click(function(){
+	    	if(repeat == false){
+	    		repeat = true;
+	    	}
+	    	else if(repeat == true){
+	    		repeat = false;
+	    	}
+	    });
+
+	    $("#progressBar").click( function(event){	// clique sur la barre de progression
+	    	var x = document.getElementById("progressBar"); 
+	    	//console.log("decalage gauche : " + x.offsetLeft);
+	    	var start = ((event.clientX - 10) / x.offsetWidth); // event.clientX => abscisse de la souris || offsetwidth => taille de la barre de progression | calcul pourcentage de la video pour la barre de progression
+	    	if(play == true){ 
+	    		$("#jquery_jplayer_1").jPlayer("play", start * max + debut); // si la video est en cours la lancer ou le clique a était éffectué
+	    	}
+	    	else{
+	    		$("#jquery_jplayer_1").jPlayer("pause", start * max + debut); // si la vidéo est en pause mettre le curseur de la vidéo ou le clique a était éffectué
+	    	}
+
+	    	if(nbreSequence > 0){
+	    		selectStart = start * max + debut;
+	    		let time = calculFormatTime(Math.round(start * max + debut));
+	    		$("#start"+nbreSequence).val(time);
+	    	}
+	    });
+
+	    $("#progressBar").contextmenu(function(event){
+	    	var x = document.getElementById("progressBar"); 
+	    	//console.log("decalage gauche : " + x.offsetLeft);
+	    	var start = ((event.clientX - 10) / x.offsetWidth); // event.clientX => abscisse de la souris || offsetwidth => taille de la barre de progression | calcul pourcentage de la video pour la barre de progression
+	    	if(play == true){ 
+	    		$("#jquery_jplayer_1").jPlayer("play", start * max + debut); // si la video est en cours la lancer ou le clique a était éffectué
+	    	}
+	    	else{
+	    		$("#jquery_jplayer_1").jPlayer("pause", start * max + debut); // si la vidéo est en pause mettre le curseur de la vidéo ou le clique a était éffectué
+	    	}
+
+	    	if(nbreSequence > 0){
+	    		selectFinish = start * max + debut;
+	    		let time = calculFormatTime(Math.round(start * max + debut));
+	    		$("#finish"+nbreSequence).val(time);
+	    	}
+	    });
+
+		$(".ajouterSequence").click(function(event){
+
+			let possible = true;
+
+			if(nbreSequence > 0){
+				for (var i = 0; i < seqStart.length; i++) {
+					if((seqStart[i] < selectStart && seqFinish[i] > selectStart) || (seqStart[i] < selectFinish && seqFinish[i] > selectFinish)){
+						possible = false;
+					}
+				}
+			}
+
+			console.log($("#finish"+nbreSequence).val());
+
+			if($("#start"+nbreSequence).val() == "0:NaN" || $("#start"+nbreSequence).val() === "" || $("#finish"+nbreSequence).val() == "0:NaN" || $("#finish"+nbreSequence).val() === ""){
+					alert("la séléction n'est pas correcte ou n'est pas complète")
+			}
+			else if(possible == false){
+				alert("des séquences existe déjà dans cette tranche");
+			}
+			else{
+				nbreSequence += 1;
+
+				let element = document.createElement("div");
+				element.setAttribute("id",nbreSequence);
+				element.setAttribute("class","StartFinish");
+				document.getElementById("leForm").appendChild(element);
+
+				element = document.createElement("label");
+				element.setAttribute("id", "labelDeb" + nbreSequence);    
+				document.getElementById(nbreSequence).appendChild(element);
+				$('#labelDeb'+nbreSequence).html("Début : ");
+
+				element = document.createElement("input");
+				element.setAttribute("name", "start" + nbreSequence);
+				element.setAttribute("id", "start" + nbreSequence);       
+				element.setAttribute("type", "text"); 
+				element.setAttribute("required", "required");      
+				element.setAttribute("disabled", "disabled");     
+				document.getElementById(nbreSequence).appendChild(element)    
+
+				element = document.createElement("label")
+				element.setAttribute("id", "labelFin" + nbreSequence);    
+				document.getElementById(nbreSequence).appendChild(element);
+				$('#labelFin'+nbreSequence).html("Fin : ");
+
+				element = document.createElement("input");
+				element.setAttribute("name", "finish" + nbreSequence);
+				element.setAttribute("id", "finish" + nbreSequence);       
+				element.setAttribute("type", "text");     
+				element.setAttribute("required", "required");   
+				element.setAttribute("disabled", "disabled");     
+				element.setAttribute("value", "");  
+				document.getElementById(nbreSequence).appendChild(element);
+			}    
+		});
+
+	
+		setInterval(function() {
+			if ((jpData.status.currentTime > fin || jpData.status.currentTime < debut) && jpData.status.currentTime != 0) {
+				if(repeat == true){
+					$("#jquery_jplayer_1").jPlayer("play",debut);
+				}
+				else{
+					jp.jPlayer('stop'); // si le temps de la vidéo est supérieur a la fin ou le début de la séquence celle si s'arrete
+				}
+			}
+
+			if(jpData.status.currentTime != 0){
+				var x = document.getElementById("indicator");
+			   	if((((jpData.status.currentTime - debut) / max)* 100) > 100){ // si la séquence est fini stopper la barre de progression a 100%
+			   		x.style.width = "100%";
+			   		if(repeat == false){
+						play = false;
+			   		}	   		
+			   	}
+			   	else{  //sinon augementer la barre de progression
+			   		x.style.width = ((jpData.status.currentTime - debut) / max)* 100 + "%";
+			   	}
+
+			   	var HTML = "";
+			   	if(max >= 60){
+			   		var total = Math.trunc(jpData.status.currentTime - debut);
+			   		if(total >= 60){
+			   			var nbreMinutes = Math.trunc(total / 60);
+			   			HTML += nbreMinutes + ":";
+			   			total -= (nbreMinutes * 60);
+			   		}
+			   		else{
+			   			HTML += "0:";
+			   		}
+			   		if(total > 10){
+			   			HTML += total;
+			   		}
+			   		else{
+			   			HTML += "0" + total;
+			   		}
+			   		$("#jp-current-time").html(HTML);
+			   		HTML = "";
+			   		total = max - Math.trunc(jpData.status.currentTime - debut);
+
+			   		if(total >= 60){
+			   			nbreMinutes = Math.trunc(total / 60);
+			   			HTML += nbreMinutes + ":";
+			   			total -= (nbreMinutes * 60);
+			   		}
+			   		else{
+			   			HTML += "0:";
+			   		}
+			   		if(total >= 10){
+			   			HTML += total;
+			   		}
+			   		else{
+			   			HTML += "0" + total;
+			   		}
+			   		$("#jp-duration").html(HTML); 
+			   	}
+			   	else{
+			   		HTML += "0:";
+			   		if((Math.round(jpData.status.currentTime - debut)) >= 10){
+			   			HTML += Math.round(jpData.status.currentTime - debut);
+			   		}
+			   		else{
+			   			HTML += "0" + Math.round(jpData.status.currentTime - debut);
+			   		}
+			   		$("#jp-current-time").html(HTML);
+
+			   		HTML = "0:";
+
+			   		if((max - Math.round(jpData.status.currentTime - debut)) >= 10 ){
+			   			HTML += (max - Math.round(jpData.status.currentTime - debut));
+			   		}
+			   		else{
+			   			HTML += "0" + (max - Math.round(jpData.status.currentTime - debut));
+			   		}
+			   		$("#jp-duration").html(HTML);  		
+			   	}	   	
+			}
+			   
+		},500); 
+	});
+  	</script>
+</head>
+<body>
+<div class="container">
+	{% block content %}{% endblock %}
+</div>
+<div id="config_val_face"></div>
+<div id="jp_container_1" class="jp-video jp-video-360p" role="application" aria-label="media player">
+	<div class="jp-type-single">
+		<div class="jp-details">
+			<div class="jp-title" aria-label="title">&nbsp;
+			</div>
+		</div>
+		<div id="jquery_jplayer_1" class="jp-jplayer">
+			
+		</div>
+		<div class="jp-gui">
+			<div class="jp-interface">
+				<div id="invisible" class="jp-current-time" role="timer" aria-label="time"></div>
+				<div id="invisible" class="jp-duration" role="timer" aria-lable="time"></div>
+				<div id="progressBar">
+					<div id="indicator">
+						
+					</div>	
+				</div>
+				<div class="duree">
+					<div id="jp-current-time" role="timer" aria-label="time">&nbsp;
+					</div>
+					<div id="jp-duration" role="timer" aria-label="duration">&nbsp;
+					</div>
+				</div>
+				<div class="jp-controls-holder">
+					<div class="jp-volume-controls">
+						<button class="jp-mute" role="button" tabindex="0">mute</button>
+						<button class="jp-volume-max" role="button" tabindex="0">max volume</button>
+						<div class="jp-volume-bar">
+							<div class="jp-volume-bar-value">
+								
+							</div>
+						</div>
+					</div>
+					<div class="jp-controls">
+						<button id="play" class="jp-play" role="button" tabindex="0">play</button>
+						<button class="jp-stop" role="button" tabindex="0">stop</button>
+					</div>
+					<div class="jp-toggles">
+						<button class="jp-repeat" role="button" tabindex="0">repeat</button>
+						<button class="jp-full-screen" role="button" tabindex="0">full screen</button>
+					</div>
+				</div>			
+			</div>
+			<form id="leForm" name="createSequence" method="POST" action='../video' onSubmit="return test()">
+				<div id="bloc">
+					<button class="ajouterSequence" type="button">Ajouter une sequence</button><br/> 
+					<button class="sequence" type="submit">envoie</button>
+				</div>		
+				<input id="Start" type="hidden" name="capStart" value="0"/>
+				<input id="Finish" type="hidden" name="capFinish" value="0"/>
+				<input id="idVideo" type="hidden" name="idVideo" value="{{idVideo}}"/>
+			</form>	
+		</div>
+		<div class="jp-no-solution">
+			<span>Update Required</span>
+			To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
+		</div>
+	</div>
+</div>	
+</body>
+</html>

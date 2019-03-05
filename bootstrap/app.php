@@ -44,6 +44,9 @@ $container["HomeController"] = function($container){
 $container["AuthController"] = function($container){
 	return new \App\Controllers\Auth\AuthController($container);
 };
+$container["SequenceController"] = function($container){
+	return new \App\Controllers\SequenceController($container);
+};
 $container["VideoController"] = function($container){
 	return new \App\Controllers\VideoController($container);
 };
