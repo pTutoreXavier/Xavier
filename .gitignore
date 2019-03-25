@@ -5,3 +5,5 @@
 /app/conf/
 composer.json
 composer.lock
+
+jquery-3\.3\.1\.min\.js
