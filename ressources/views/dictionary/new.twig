@@ -1,0 +1,11 @@
+{% extends "templates/app.twig" %}
+{% block content %}
+<form method="POST" action="{{ type }}">
+	Nom de l'élément: <input type="text" name="name"><br/>
+	{% if type == "method" %}
+		Paramètre: <input type="text" name="parameter"><br/>
+		<!-- plusieurs paramètres?? -->
+	{% endif %}
+	<input type="submit" name="submit" value="Ajouter">
+</form>
+{% endblock %}
