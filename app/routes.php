@@ -1,4 +1,8 @@
 <?php
+
+use App\Middleware\AuthMiddleware;
+use App\Middleware\GuestMiddleware;
+
 $app->get("/dictionary", "DictionaryController:index")->setName("dictionary");
 $app->get("/dictionary/export", "DictionaryController:viewExport");
 $app->get("/dictionary/export/{format}", "DictionaryController:export");
@@ -22,11 +26,20 @@ $app->post("/video","VideoController:createSequence");
 
 $app->get("/home", "HomeController:index")->setName('home');
 
-//Creation de compte
-$app->get("/auth/signup", "AuthController:getSignUp")->setName("auth.signup");
-$app->post("/auth/signup", "AuthController:postSignUp");
-//Connection au compte
-$app->get("/auth/signin", "AuthController:getSignIn")->setName("auth.signin");
-$app->post("/auth/signin", "AuthController:postSignIn");
-//Deconnection du compte
-$app->get("/auth/signout", "AuthController:getSignOut")->setName("auth.signout");
+
+
+
+$app->group('', function () use ($app) {
+    //Creation de compte
+    $app->get("/auth/signup", "AuthController:getSignUp")->setName("auth.signup");
+    $app->post("/auth/signup", "AuthController:postSignUp");
+
+    //Connection au compte
+    $app->get("/auth/signin", "AuthController:getSignIn")->setName("auth.signin");
+    $app->post("/auth/signin", "AuthController:postSignIn");
+})->add(new GuestMiddleware($container));
+
+$app->group('', function () use ($app) {
+    //Deconnection du compte
+    $this->get("/auth/signout", "AuthController:getSignOut")->setName("auth.signout");
+})->add(new AuthMiddleware($container));
