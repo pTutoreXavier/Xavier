@@ -1,0 +1,28 @@
+{% extends 'templates/app.twig' %}
+{% block content %}
+	<div class="signup">
+		<form action="{{ path_for('auth.signin') }}" method="post" autocomplete="off">
+			<fieldset>
+				<legend>Connection au compte</legend>
+
+					<label for="mail">mail</label>
+					<input type="mail" name="mail" id="mail" value="{{ old.mail }}">
+					{% if errors.mail %}
+						<span class="erreur">{{ errors.mail | first }}</span>
+					{% endif %}
+
+					<label for="mdp">mot de passe</label>
+					<input type="password" name="mdp" id="mdp">
+					{% if errors.mdp %}
+						<span class="erreur">{{ errors.mdp | first }}</span>
+					{% endif %}
+
+			</fieldset>
+
+			<input type="submit" value="Connection">
+
+			{{ csrf.field | raw }}
+
+		</form>
+	</div>
+{% endblock %}

@@ -1,6 +1,4 @@
 <?php
-$app->get("/home", "HomeController:index");
-
 $app->get("/dictionary", "DictionaryController:index")->setName("dictionary");
 $app->get("/dictionary/export", "DictionaryController:viewExport");
 $app->get("/dictionary/export/{format}", "DictionaryController:export");
@@ -23,3 +21,14 @@ $app->get("/sequence/{idVideo}/{idSequence}","SequenceController:index");
 $app->post("/commenter","SequenceController:commentaire");
 $app->get("/video/{idVideo}","VideoController:index");
 $app->post("/video","VideoController:createSequence");
+
+$app->get("/home", "HomeController:index")->setName('home');
+
+//Creation de compte
+$app->get("/auth/signup", "AuthController:getSignUp")->setName("auth.signup");
+$app->post("/auth/signup", "AuthController:postSignUp");
+//Connection au compte
+$app->get("/auth/signin", "AuthController:getSignIn")->setName("auth.signin");
+$app->post("/auth/signin", "AuthController:postSignIn");
+//Deconnection du compte
+$app->get("/auth/signout", "AuthController:getSignOut")->setName("auth.signout");
