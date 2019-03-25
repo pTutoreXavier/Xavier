@@ -28,10 +28,10 @@ class VideoController extends Controller{
 			$seq->fin = $tabFinish[$i];
 			$seq->idUser = $_SESSION['idUser'];
 			echo $seq;
-			//$seq->save();
+			$seq->save();
 		}
 
-		//header('Location: home');
-		//exit();
+		header('Location: video/'.$_POST['idVideo']);
+		exit();
 	}
 }
