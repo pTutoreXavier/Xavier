@@ -2,7 +2,6 @@
 /logs/*
 !/logs/README.md
 /.idea
-/app/conf/
 composer.json
 composer.lock
 
