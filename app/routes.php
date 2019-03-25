@@ -6,7 +6,6 @@ $app->get("/dictionary/{id}[/]", "DictionaryController:getById");
 $app->get("/dictionary/new/{type}", "DictionaryController:new");
 $app->post("/dictionary/new/{type}", "DictionaryController:create");
 
-$app->get("/auth/signup", "AuthController:getSignUp")->setName("auth.signup");
 $app->get("/profil", "ProfilController:index")->setName("profil");
 $app->get("/profil/updatePass", "ProfilController:updatePass")->setName("updatePass");
 $app->post("/profil/checkPass", "ProfilController:checkPass")->setName("checkPass");
@@ -16,7 +15,6 @@ $app->get("/profil/updateProfilPicture", "ProfilController:updateProfilPicture")
 $app->post("/profil/checkProfilPicture", "ProfilController:checkProfilPicture")->setName("checkProfilPicture");
 $app->post("/profil/checkProfilPictureUpload", "ProfilController:checkProfilPictureUpload")->setName("checkProfilPictureUpload");
 
-$app->get("/auth/signup", "AuthController:getSignUp")->setName("auth.signup");
 $app->get("/sequence/{idVideo}/{idSequence}","SequenceController:index");
 $app->post("/commenter","SequenceController:commentaire");
 $app->get("/video/{idVideo}","VideoController:index");
