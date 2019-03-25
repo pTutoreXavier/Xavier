@@ -2,9 +2,12 @@
 namespace App\Controllers;
 use \Slim\Views\Twig as View;
 use \App\Models\User as User;
+use http\Params;
+use \Respect\Validation\Validator as v;
+
 class ProfilController extends Controller{
 	public function index($request, $response){
-		$user = User::find(1);/* A remplacer par l'id  dans la session*/
+		$user = User::find(8);/* A remplacer par l'id  dans la session*/
     	$dateNaissance = \DateTime::createFromFormat('Y-m-d', $user->dateNaissance)->format('d F Y');
     	$dateCreation = \DateTime::createFromFormat('Y-m-d H:i:s', $user->created_at)->format('d F Y'); 
     	$moisNaissanceEn = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -22,7 +25,7 @@ class ProfilController extends Controller{
 		));
 	}
 	public function updatePass($request, $response){
-		$user = User::find(1);/* A remplacer par l'id  dans la session*/
+		$user = User::find(8);/* A remplacer par l'id  dans la session*/
 		if (isset($_SESSION['errorPass'])) {
 			echo $_SESSION['errorPass'];
 		}
@@ -32,7 +35,7 @@ class ProfilController extends Controller{
 		));
 	}
 	public function updateMail($request, $response){
-		$user = User::find(1);/* A remplacer par l'id  dans la session*/
+		$user = User::find(8);/* A remplacer par l'id  dans la session*/
 		if (isset($_SESSION['errorMail'])) {
 			echo $_SESSION['errorMail'];
 		}
@@ -54,7 +57,7 @@ class ProfilController extends Controller{
 		}
 		else{ 
 			$passHash = password_hash ($_POST['newPass'] , PASSWORD_DEFAULT);
-			$user = User::find(1);/* A remplacer par l'id  dans la session*/
+			$user = User::find(8);/* A remplacer par l'id  dans la session*/
 			if (password_verify ( $_POST['currentPass'] , $user->mdp )) {
 				echo "ok";
 				$user->mdp = $passHash;
@@ -69,7 +72,7 @@ class ProfilController extends Controller{
 		}
 
 	}
-	public function checkMail($request, $response){	
+	public function checkMail($request, $response){
 		if ($_POST['mail'] != $_POST['mail2']) {
 			$_SESSION['errorMail']='diff';
 			return $response->withRedirect($this->router->pathFor('updateMail'));
@@ -78,7 +81,7 @@ class ProfilController extends Controller{
 			$_SESSION['errorMail']='non valide';
 			return $response->withRedirect($this->router->pathFor('updateMail'));
 		}else{
-			$user = User::find(1);/* A remplacer par l'id  dans la session*/
+			$user = User::find(8);/* A remplacer par l'id  dans la session*/
 			$user->mail = $_POST['mail'];
 			$user->save();
 			return $response->withRedirect($this->router->pathFor('profil'));
@@ -89,19 +92,19 @@ class ProfilController extends Controller{
 			echo $_SESSION['erreur'];
 		}
 		session_destroy();
-		$user = User::find(1);
+		$user = User::find(8);
 		return $this->view->render($response, 'profil/profilUpdateProfilPicture.twig', array(
 			"mdp" => $user->mdp,
 		));
 	}
 	public function checkProfilPicture($request, $response){
-		$user = User::find(1);/* A remplacer par l'id  dans la session*/
+		$user = User::find(8);/* A remplacer par l'id  dans la session*/
 		$user->avatar = $_POST['profilPicture'].".png";
 		$user->save();
 		return $response->withRedirect($this->router->pathFor('profil'));
 	}
 	public function checkProfilPictureUpload($request, $response){
-		$user = User::find(1);/* A remplacer par l'id  dans la session*/
+		$user = User::find(8);/* A remplacer par l'id  dans la session*/
 		$extensions_valides = array( 'jpg' , 'jpeg', 'png' );
 		$extension_upload = strtolower(  substr(  strrchr($_FILES['picture']['name'], '.')  ,1)  );
 		if ($_FILES['picture']['size'] > 2000000) {
@@ -115,10 +118,10 @@ class ProfilController extends Controller{
 		else
 		{
 			$rand = md5(uniqid(rand(), true));
-			$nom = "../ressources/avatar/custom/{$rand}.{$extension_upload}";
+			$nom = "../ressources/views/avatar/custom/{$rand}.{$extension_upload}";
 			$resultat = move_uploaded_file($_FILES['picture']['tmp_name'],$nom);
 			if ($resultat) echo "Transfert réussi";
-			$user->avatar = "/custom/{$rand}.{$extension_upload}";
+			$user->avatar = "custom/{$rand}.{$extension_upload}";
 			$user->save();
 			return $response->withRedirect($this->router->pathFor('profil'));
 		}
