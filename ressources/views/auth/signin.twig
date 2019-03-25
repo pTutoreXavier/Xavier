@@ -6,13 +6,13 @@
 				<legend>Connection au compte</legend>
 
 					<label for="mail">mail</label>
-					<input type="mail" name="mail" id="mail" value="{{ old.mail }}">
+					<input class="form-control" type="mail" name="mail" id="mail" value="{{ old.mail }}">
 					{% if errors.mail %}
 						<span class="erreur">{{ errors.mail | first }}</span>
 					{% endif %}
 
 					<label for="mdp">mot de passe</label>
-					<input type="password" name="mdp" id="mdp">
+					<input class="form-control" type="password" name="mdp" id="mdp">
 					{% if errors.mdp %}
 						<span class="erreur">{{ errors.mdp | first }}</span>
 					{% endif %}
