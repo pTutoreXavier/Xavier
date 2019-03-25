@@ -1,10 +1,9 @@
 <?php
 $app->get("/dictionary", "DictionaryController:index")->setName("dictionary");
-$app->get("/dictionary/export", "DictionaryController:viewExport");
-$app->get("/dictionary/export/{format}", "DictionaryController:export");
-$app->get("/dictionary/{id}[/]", "DictionaryController:getById");
-$app->get("/dictionary/new/{type}", "DictionaryController:new");
-$app->post("/dictionary/new/{type}", "DictionaryController:create");
+$app->get("/dictionary/export", "DictionaryController:viewExport")->setName("dictionary.export");
+$app->get("/dictionary/new", "DictionaryController:new")->setName("dictionary.new");
+$app->get("/dictionary/{id}", "DictionaryController:getById")->setName("dictionary.details");
+$app->post("/dictionary", "DictionaryController:create")->setName("dictionary.create");
 
 $app->get("/profil", "ProfilController:index")->setName("profil");
 $app->get("/profil/updatePass", "ProfilController:updatePass")->setName("updatePass");

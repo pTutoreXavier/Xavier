@@ -1,50 +1,67 @@
 <?php
 namespace App\Controllers;
 use \Slim\Views\Twig as View;
-use \App\Models\Dictionary;
+use \Respect\Validation\Validator as v;
+use \App\Models\Dictionnaire;
 use \App\Models\Sequence;
-use \App\Models\Commentary;
+use \App\Models\Commentaire;
 
 class DictionaryController extends Controller{
 	public function index($request, $response){
-		$methods = Dictionary::where("type", "method")->get();
-		$objects = Dictionary::where("type", "object")->get();
+		$methods = Dictionnaire::where("type", "method")->get();
+		$objects = Dictionnaire::where("type", "object")->get();
 		return $this->view->render($response, "dictionary/dictionary.twig", array("methods" => $methods, "objects" => $objects));
 	}
 
 	public function getById($request, $response, $args){
-		$element = Dictionary::find($args["id"]);
+		$element = Dictionnaire::find($args["id"]);
 		$sequences = Sequence::where("pseudocode", "like", $args["id"].";%")->orWhere("pseudocode", "like", "%;".$args["id"].";%")->orWhere("pseudocode", "like", "%;".$args["id"])->get();
 		return $this->view->render($response, "dictionary/details.twig", array("element" => $element, "sequences" => $sequences));
 	}
 
-	public function new($request, $response, $args){
-		return $this->view->render($response, "dictionary/new.twig", array("type" => $args["type"]));
+	public function new($request, $response){
+		return $this->view->render($response, "dictionary/new.twig", array("type" => $request->getParam("type")));
 	}
 
 	public function create($request, $response, $args){
-		$element = new Dictionary();
-		$element->type = $args["type"];
-		$element->libelle = $request->getParam("name");
-		if($args["type"] == "method"){
-			$element->parametre = $request->getParam("parameter");
+		$params = $request->getParams();
+		$validation = $this->validator->validate($request, [
+	        'name' => v::notEmpty()->alpha()
+	    ]);
+	    if($params == "method"){
+	    	$validation = $this->validator->validate($request, [
+		        'parameter' => v::notEmpty()->alpha()
+		    ]);
+	    }
+        if($validation->failed()){
+            return $response->withRedirect($this->router->pathFor('auth.signup'));
+        }
+		$element = new Dictionnaire;
+		$element->type = $params["type"];
+		$element->libelle = $params["name"];
+		if($params["type"] == "method"){
+			$element->parametre = $params["parameter"];
 		}
 		$element->save();
 		return $response->withRedirect($this->router->pathFor('dictionary'));
 	}
 
 	public function viewExport($request, $response, $args){
+		$format = $request->getParam("format");
+		if(isset($format) && in_array($format, ["xml", "csv", "json"])){
+			$this->export($format);
+		}
 		return $this->view->render($response, "dictionary/export.twig");
 	}
 
-	public function export($request, $response, $args){
+	public function export($format){
 		$data = array();
 		$sequences = Sequence::select(["id", "pseudocode"])->get();
 		foreach($sequences as $sequence){
 			$pseudocode = explode(";", $sequence->pseudocode);
 			$s = "";
 			for($i = 0; $i < count($pseudocode); $i++){
-				$element = Dictionary::where("id", "=", $pseudocode[$i])->first();
+				$element = Dictionnaire::where("id", "=", $pseudocode[$i])->first();
 				if($i > 2){
 					$s .= ", ";
 				}
@@ -57,17 +74,16 @@ class DictionaryController extends Controller{
 				}
 			}
 			$s .= ")";
-			$commentaires = Commentary::where("idSequence", "=", $sequence->id)->get();
+			$commentaires = Commentaire::where("idSequence", "=", $sequence->id)->get();
 			$data[$s] = array();
 			foreach ($commentaires as $commentaire){
 				array_push($data[$s], $commentaire->commentaire);
 			}
 		}
-		$method = $args["format"];
 		$name = "test";
 		$path = "../ressources/temp/";
-		$this->$method($data, $name, $path);
-		header('Content-disposition: attachment; filename="'.$name.'.'.$args["format"].'"');
+		$this->$format($data, $name, $path);
+		header('Content-disposition: attachment; filename="'.$name.'.'.$format.'"');
 		header('Content-Type: application/force-download');
 		header('Content-Transfer-Encoding: binary');
 		readfile($path.$name.'.'.$args["format"]);
