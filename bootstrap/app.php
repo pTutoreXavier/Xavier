@@ -6,28 +6,16 @@ session_start();
 
 require __DIR__."/../vendor/autoload.php";
 
-$conf = parse_ini_file(__DIR__."/../app/conf/conf.ini");
-
 $app = new \Slim\App([
 	"settings" => [
-		"displayErrorDetails" => true,
-		"db" => [
-			"driver" => $conf["driver"],
-			"host" => $conf["host"],
-			"database" => $conf["database"],
-			"username" => $conf["username"],
-			"password" => $conf["password"],
-			"charset" => $conf["charset"],
-			"collation" => $conf["collation"],
-			"prefix" => $conf["prefix"]
-		]
+		"displayErrorDetails" => true
 	]
 ]);
 
 $container = $app->getContainer();
 
 $capsule = new \Illuminate\Database\Capsule\Manager;
-$capsule->addConnection($container["settings"]["db"]);
+$capsule->addConnection(parse_ini_file(__DIR__."/conf/conf.ini"));
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 $container["db"] = function($container) use ($capsule){
