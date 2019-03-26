@@ -34,7 +34,7 @@ $app->group('', function () {
     //Connection au compte
     $this->get("/auth/signin", "AuthController:getSignIn")->setName("auth.signin");
     $this->post("/auth/signin", "AuthController:postSignIn");
-})->add(new CsrfViewMiddleware($container))
+})->add(new \App\Middleware\CsrfViewMiddleware($container))
     ->add($container->csrf)
     ->add(new GuestMiddleware($container));
 
