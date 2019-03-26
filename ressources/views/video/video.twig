@@ -4,13 +4,14 @@
 	<meta charset="UTF-8">
 	<title>Xavier</title>
 	<!--D:\laragon\www\Projet_Tutore\ressources\jplayer\css-->
-	<link type="text/css" href="../../../ressources/jplayer/skin/css/blue.monday/css/jplayer.blue.monday.css" rel="stylesheet" />
-	<link rel="stylesheet" href="../../../ressources/jplayer/css/style.css" type="text/css"/>
- 	<script type="text/javascript" src="../../../ressources/jplayer/js/jquery.min.js"></script>
-  	<script type="text/javascript" src="../../../ressources/jplayer/js/jquery.jplayer.min.js"></script>
+	<link type="text/css" href="/projet_tut_merge/Xavier/ressources/views/jplayer/skin/css/blue.monday/css/jplayer.blue.monday.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/projet_tut_merge/Xavier/ressources/views/jplayer/css/style.css" type="text/css"/>
+ 	<script type="text/javascript" src="/projet_tut_merge/Xavier/ressources/views/jplayer/js/jquery.min.js"></script>
+  	<script type="text/javascript" src="/projet_tut_merge/Xavier/ressources/views/jplayer/js/jquery.jplayer.min.js"></script>
 
   	<script type="text/javascript">
   		$(document).ready(function(){
+
   			$(document).on('contextmenu', 'div', function(e) 
 		    {
 		        e.preventDefault();
@@ -28,11 +29,11 @@
 			ready: function () {
 				$(this).jPlayer("setMedia", {
 					title: "{{video.lien}}",  //titre de la video
-					m4v: "../../../ressources/video/{{video.lien}}.mp4",		//lien de la video (complete)
+					m4v: "/projet_tut_merge/Xavier/ressources/views/video/{{video.lien}}.mp4",		//lien de la video (complete)
 					//poster: "http://www.jplayer.org/video/poster/Big_Buck_Bunny_Trailer_480x270.png"  //miniature
 				});
 			},
-			swfPath: "../ressources/jplayer/js/",  //emplacement jplayer
+			swfPath: "/projet_tut_merge/Xavier/ressources/views/jplayer/js/",  //emplacement jplayer
 			supplied: "m4v",
 			size: {
 				width: "640px", //largeur de la fenetre video
@@ -51,8 +52,15 @@
      		let start = [];
      		let finish = [];
      		let test = true;
+     		let possible = true;
 
-     		if($("#start"+ nbreSequence).val() == "" || $("#finish"+ nbreSequence).val() == ""){
+     		for (var i = 0; i < seqStart.length; i++) {
+				if((selectStart < seqStart[i] && selectFinish > seqFinish[i]) || (selectStart < seqStart[i] && selectFinish > seqStart[i] && selectFinish < seqFinish[i]) || (selectStart > seqStart[i] && selectStart < seqFinish[i] && selectFinish > seqFinish[i]) || (selectStart > seqStart[i] && selectFinish < seqFinish[i]) || ($("#start"+nbreSequence).val() == "0:NaN" || $("#start"+nbreSequence).val() === "" || $("#finish"+nbreSequence).val() == "0:NaN" || $("#finish"+nbreSequence).val() === "" || $("#start"+nbreSequence).val() > $("#finish"+nbreSequence).val())){
+					
+					possible = false;
+				}
+			}
+     		if(possible == false){
      			test = false;
      			alert("votre dernière séléction n'est pas correcte ou n'est pas complète");
      		}
@@ -69,6 +77,8 @@
 	     		}
 	     		$("#Start").val(start);
 	     		$("#Finish").val(finish);
+
+	     		document.getElementById("leForm").submit();
      		}
      	});
 
@@ -236,24 +246,24 @@
 		$(".ajouterSequence").click(function(event){
 
 			let possible = true;
-
 			if(nbreSequence > 0){
 				for (var i = 0; i < seqStart.length; i++) {
-					if((seqStart[i] < selectStart && seqFinish[i] > selectStart) || (seqStart[i] < selectFinish && seqFinish[i] > selectFinish)){
+					if((selectStart < seqStart[i] && selectFinish > seqFinish[i]) || (selectStart < seqStart[i] && selectFinish > seqStart[i] && selectFinish < seqFinish[i]) || (selectStart > seqStart[i] && selectStart < seqFinish[i] && selectFinish > seqFinish[i]) || (selectStart > seqStart[i] && selectFinish < seqFinish[i])){
+
 						possible = false;
 					}
 				}
-			}
+			}	
 
-			console.log($("#finish"+nbreSequence).val());
-
-			if($("#start"+nbreSequence).val() == "0:NaN" || $("#start"+nbreSequence).val() === "" || $("#finish"+nbreSequence).val() == "0:NaN" || $("#finish"+nbreSequence).val() === ""){
+			if($("#start"+nbreSequence).val() == "0:NaN" || $("#start"+nbreSequence).val() === "" || $("#finish"+nbreSequence).val() == "0:NaN" || $("#finish"+nbreSequence).val() === "" || $("#start"+nbreSequence).val() > $("#finish"+nbreSequence).val()){
 					alert("la séléction n'est pas correcte ou n'est pas complète")
 			}
 			else if(possible == false){
 				alert("des séquences existe déjà dans cette tranche");
 			}
 			else{
+				seqStart.push(selectStart);
+				seqFinish.push(selectFinish);
 				nbreSequence += 1;
 
 				let element = document.createElement("div");
@@ -384,13 +394,9 @@
 </div>
 <div id="config_val_face"></div>
 <div id="jp_container_1" class="jp-video jp-video-360p" role="application" aria-label="media player">
-	<form id="leForm" name="createSequence" method="POST" action='../video'>
+	
 	<div class="jp-type-single">
 		<div class="jp-details">
-			<input id='pseudo-code' type="text" name="object" value=""/>
-			<input id='pseudo-code' type="text" name="method" value=""/>
-			<input id='pseudo-code' type="text" name="parameter" value=""/>
-			
 		</div>
 		<div id="jquery_jplayer_1" class="jp-jplayer">
 			
@@ -432,9 +438,10 @@
 				</div>			
 			</div>
 			<!-- début form -->
+			<form id="leForm" name="createSequence" method="POST" action='../video'>
 				<div id="bloc">
 					<button class="ajouterSequence" type="button">Ajouter une sequence</button><br/> 
-					<button class="sequence" type="submit">envoie</button>
+					<button class="sequence" type="button">envoie</button>
 				</div>		
 				<input id="Start" type="hidden" name="capStart" value="0"/>
 				<input id="Finish" type="hidden" name="capFinish" value="0"/>

@@ -16,6 +16,8 @@ class VideoController extends Controller{
 	}
 
 	public function createSequence($request, $response){
+		echo $_POST["capStart"];
+		echo $_POST["capFinish"];
 		$tabStart = explode(",",$_POST["capStart"]);
 		$tabFinish = explode(",",$_POST["capFinish"]);
 		$today = date("Y-m-d"); 
@@ -27,11 +29,11 @@ class VideoController extends Controller{
 			$seq->debut = $tabStart[$i];
 			$seq->fin = $tabFinish[$i];
 			$seq->idUser = $_SESSION['idUser'];
-			echo $seq;
-			$seq->save();
+			//echo $seq;
+			//$seq->save();
 		}
 
-		header('Location: video/'.$_POST['idVideo']);
-		exit();
+		//header('Location: video/'.$_POST['idVideo']);
+		//exit();
 	}
 }

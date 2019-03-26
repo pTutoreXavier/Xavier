@@ -4,10 +4,10 @@
 	<meta charset="UTF-8">
 	<title>Xavier</title>
 	<!--D:\laragon\www\Projet_Tutore\ressources\jplayer\css-->
-	<link type="text/css" href="../../../../ressources/jplayer/skin/css/blue.monday/css/jplayer.blue.monday.css" rel="stylesheet" />
-	<link rel="stylesheet" href="../../../../ressources/jplayer/css/style.css" type="text/css"/>
- 	<script type="text/javascript" src="../../../../ressources/jplayer/js/jquery.min.js"></script>
-  	<script type="text/javascript" src="../../../../ressources/jplayer/js/jquery.jplayer.min.js"></script>
+	<link type="text/css" href="/projet_tut_merge/Xavier/ressources/views/jplayer/skin/css/blue.monday/css/jplayer.blue.monday.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/projet_tut_merge/Xavier/ressources/views/jplayer/css/style.css" type="text/css"/>
+ 	<script type="text/javascript" src="/projet_tut_merge/Xavier/ressources/views/jplayer/js/jquery.min.js"></script>
+  	<script type="text/javascript" src="/projet_tut_merge/Xavier/ressources/views/jplayer/js/jquery.jplayer.min.js"></script>
 
   		<script type="text/javascript">
   		$(document).ready(function(){
@@ -20,11 +20,11 @@
 		ready: function () {
 			$(this).jPlayer("setMedia", {
 				//title: "{{seq.pseudocode}}",  //titre de la video
-				m4v: "../../../../ressources/video/{{video.lien}}.mp4",		//lien de la video (complete)
+				m4v: "/projet_tut_merge/Xavier/ressources/views/video/{{video.lien}}.mp4",		//lien de la video (complete)
 				//poster: "http://www.jplayer.org/video/poster/Big_Buck_Bunny_Trailer_480x270.png"  //miniature
 			});
 		},
-		swfPath: "../ressources/jplayer/js/",  //emplacement jplayer
+		swfPath: "/projet_tut_merge/Xavier/ressources/views/jplayer/js/",  //emplacement jplayer
 		supplied: "m4v",
 		size: {
 			width: "640px", //largeur de la fenetre video
