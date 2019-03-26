@@ -1,19 +1,22 @@
 {% extends "templates/app.twig" %}
 {% block content %}
 	<div class="row m-auto">
-		<div class="card" style="width: 18rem;">
+		<div class="card mr-2 p-1" style="width: 18rem;">
+			<img class="h-50 w-50 m-auto" src="{{ base_url() }}/../ressources/images/xml.png">
 			<h4>Exporter au format XML</h4>
 			<div class="card-body">
 				<a class="btn btn-primary" href="export?format=xml">Télécharger</a>
 			</div>
 		</div>
-		<div class="card" style="width: 18rem;">
+		<div class="card mr-2 p-1" style="width: 18rem;">
+			<img class="h-50 w-50 m-auto" src="{{ base_url() }}/../ressources/images/csv.png">
 			<h4>Exporter au format CSV</h4>
 			<div class="card-body">
 				<a class="btn btn-primary" href="export?format=csv">Télécharger</a>
 			</div>
 		</div>
-		<div class="card" style="width: 18rem;">
+		<div class="card p-1" style="width: 18rem;">
+			<img class="h-50 w-50 m-auto" src="{{ base_url() }}/../ressources/images/json.png">
 			<h4>Exporter au format JSON</h4>
 			<div class="card-body">
 				<a class="btn btn-primary" href="export?format=json">Télécharger</a>
