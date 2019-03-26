@@ -1,58 +1,6 @@
-@charset "UTF-8";
-/* D├®but r├®gle g├®n├®ral CSS */
-/*
-$cols: dans une grille de x colonnes
-*/
-/*
-.col{
-	margin-left: $size_gutter;
-	margin-bottom: 5px;
-	box-sizing: border-box;
-}*/
-html {
-  font-family: Verdana;
-  color: black;
-  font-size: 18px;
-  margin: 0;
-  padding: 0; }
+/*   FORMULAIRES SIGNUP/SIGNIN   */
 
-a {
-  color: black;
-  text-decoration: none; }
-
-a:hover {
-  color: #133AAC; }
-
-h2 {
-  text-align: center; }
-
-fieldset {
-  padding: 10px;
-  box-shadow: 10px 5px 5px gray; }
-
-input {
-  box-sizing: border-box;
-  border: 1px solid gray; }
-
-input:focus {
-  border-color: #133AAC; }
-
-input[type="submit"] {
-  cursor: pointer;
-  background-color: #133AAC;
-  color: white;
-  width: 150px;
-  height: 40px;
-  border-radius: 5px;
-  transition: all 0.5s;
-  text-transform: uppercase;
-  font-weight: bold;
-  letter-spacing: 2px;
-  font-size: 18px; }
-
-input[type="submit"]:hover {
-  box-shadow: 0px 5px 5px gray; }
-
-/* Fin r├®gle g├®n├®ral CSS */
-
-/*# sourceMappingURL=style.css.map */
+.erreur {
+  color: red;
+  font-size: small;
+}

@@ -12,7 +12,7 @@
             </ul>
             <ul class="navbar-nav ml-auto">
                 {% if auth.check %}
-                    <li class="nav-item my-2 my-lg-0">{{ auth.user.nom }} {{ auth.user.prenom }}</li>
+                    <li class="navbar-text my-lg-0 text-white">{{ auth.user.nom }} {{ auth.user.prenom }}</li>
                     <li class="nav-item my-2 my-lg-0"><a class="nav-link" href="{{ path_for('auth.signout') }}">se deconnecter</a></li>
                 {% else %}
                     <li class="nav-item mr-sm-2"><a class="nav-link" href="{{ path_for('auth.signup') }}">s'inscrire</a></li>
