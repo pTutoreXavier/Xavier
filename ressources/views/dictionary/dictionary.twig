@@ -1,33 +1,61 @@
 {% extends "templates/app.twig" %}
 {% block content %}
 <a href="dictionary/new?type=object">Ajouter un objet</a>
-<a href="dictionary/new?type=method">Ajouter une méthode</a>
+<a href="dictionary/new?type=method">Ajouter une fonction</a>
 <a href="dictionary/export">Exporter le dictionnaire</a>
 <br/><br/>
-<table border="1" style="border-collapse: collapse;" class="w-50">
-{% for method in methods %}
-	<tr><td>
-	<a href="dictionary/{{method.id}}">{{ method.libelle }}(
-		{% if method.parametre != null %}
-		    {{ method.parametre }}
-		{% endif %}
-	)</a>
-	<div class="float-right">
-		<i class="fas fa-pen"></i>
-		<i class="fas fa-trash"></i>
-	</div>
-	</td></tr>
-{% endfor %}
+<table border="1" id="table_fonctions" class="display w-50">
+	<thead>
+		<th class="w-90">Fonctions</th>
+	</thead>
+	<tbody>
+		{% for method in methods %}
+			<tr>
+				<td>
+					<a href="dictionary/{{method.id}}">{{ method.libelle }}(
+						{% if method.parametre != null %}
+						    {{ method.parametre }}
+						{% endif %}
+						)
+					</a>
+				</td>
+				<td>
+					<div class="float-right">
+						<a href="{{ path_for('dictionary.details', {'id': method.id}) }}?action=edit"><i class="fas fa-pen"></i></a>
+						<a href="{{ path_for('dictionary.delete', {'id': method.id}) }}"><i class="fas fa-trash"></i></a>
+					</div>
+				</td>
+			</tr>
+		{% endfor %}
+	</tbody>
 </table>
 <br/>
-<table border="1" style="border-collapse: collapse;" class="w-50">
-{% for object in objects %}
-	<tr><td><a href="dictionary/{{object.id}}">{{ object.libelle }}</a>
-	<div class="float-right">
-		<i class="fas fa-pen"></i>
-		<i class="fas fa-trash"></i>
-	</div>
-	</td></tr>
-{% endfor %}
+<table border="1" id="table_fonctions" class="display w-50">
+	<thead>
+		<th class="w-90">Objets</th>
+	</thead>
+	<tbody>
+		{% for object in objects %}
+			<tr>
+				<td>
+					<a href="{{ path_for('dictionary.details', {'id': object.id}) }}">{{ object.libelle }}</a>
+				</td>
+				<td>
+					<div class="float-right">
+						<a href="{{ path_for('dictionary.details', {'id': object.id}) }}?action=edit"><i class="fas fa-pen"></i></a>
+						<a href="{{ path_for('dictionary.delete', {'id': object.id}) }}?action=delete"><i class="fas fa-trash"></i></a>
+					</div>
+				</td>
+			</tr>
+		{% endfor %}
+	</tbody>
 </table>
+<!--<script type="text/javascript">
+	$(document).ready(function(){
+	    $('#example').DataTable( {
+	    	"paginate": false,
+	        "sort": false
+	    });
+	});
+</script>-->
 {% endblock %}

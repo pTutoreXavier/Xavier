@@ -7,6 +7,8 @@ $app->get("/dictionary/export", "DictionaryController:viewExport")->setName("dic
 $app->get("/dictionary/new", "DictionaryController:new")->setName("dictionary.new");
 $app->get("/dictionary/{id}", "DictionaryController:getById")->setName("dictionary.details");
 $app->post("/dictionary", "DictionaryController:create")->setName("dictionary.create");
+$app->put("/dictionary/{id}", "DictionaryController:update")->setName("dictionary.edit");
+$app->delete("/dictionary/{id}", "DictionaryController:delete")->setName("dictionary.delete");
 
 $app->get("/profil", "ProfilController:index")->setName("profil");
 $app->get("/profil/updatePass", "ProfilController:updatePass")->setName("updatePass");

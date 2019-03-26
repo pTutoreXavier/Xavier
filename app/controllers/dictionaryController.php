@@ -15,13 +15,22 @@ class DictionaryController extends Controller{
 
 	public function getById($request, $response, $args){
 		$element = Dictionnaire::find($args["id"]);
-		$sequences = Sequence::select("id")->where("pseudocode", "like", $element->id.";%")->orWhere("pseudocode", "like", "%;".$element->id.";%")->orWhere("pseudocode", "like", "%;".$element->id)->get();
-		$id = [];
-		foreach($sequences as $sequence){
-			array_push($id, $sequence->id);
+		if($request->getParam("action") !== null && $request->getParam("action") == "edit"){
+			$response = $this->view->render($response, "dictionary/edit.twig", array("element" => $element));
 		}
-		$commentaires = Commentaire::select("commentaire")->whereIn("idSequence", $id)->get();
-		return $this->view->render($response, "dictionary/details.twig", array("element" => $element, "commentaires" => $commentaires));
+		elseif($request->getParam("action") !== null && $request->getParam("action") == "delete"){
+			$response = $this->delete($request, $response, $args);
+		}
+		else{
+			$sequences = Sequence::select("id")->where("pseudocode", "like", $element->id.";%")->orWhere("pseudocode", "like", "%;".$element->id.";%")->orWhere("pseudocode", "like", "%;".$element->id)->get();
+			$id = [];
+			foreach($sequences as $sequence){
+				array_push($id, $sequence->id);
+			}
+			$commentaires = Commentaire::select("commentaire")->whereIn("idSequence", $id)->get();
+			$response = $this->view->render($response, "dictionary/details.twig", array("element" => $element, "commentaires" => $commentaires));
+		}		
+		return $response;
 	}
 
 	public function new($request, $response){
@@ -39,7 +48,7 @@ class DictionaryController extends Controller{
 		    ]);
 	    }
         if($validation->failed()){
-            return $response->withRedirect($this->router->pathFor('auth.signup'));
+            return $response->withRedirect($this->router->pathFor('dictionary.create'));
         }
 		$element = new Dictionnaire;
 		$element->type = $params["type"];
@@ -49,6 +58,34 @@ class DictionaryController extends Controller{
 		}
 		$element->save();
 		return $response->withRedirect($this->router->pathFor('dictionary'));
+	}
+
+	public function update($request, $response, $args){
+		$params = $request->getParams();
+		$validation = $this->validator->validate($request, [
+	        'name' => v::notEmpty()->alpha()
+	    ]);
+	    if($params["type"] == "method"){
+	    	$validation = $this->validator->validate($request, [
+		        'parameter' => v::notEmpty()->alpha()
+		    ]);
+	    }
+        if($validation->failed()){
+            return $response->withRedirect($this->router->pathFor('dictionary'));
+        }
+        $element = Dictionnaire::find($args["id"]);
+        $element->libelle = $params["name"];
+        if($params["type"] == "method"){
+	    	$element->parametre = $params["parameter"];
+	    }
+	    $element->save();
+	    return $response->withRedirect($this->router->pathFor("dictionary.details", ["id" => $args["id"]]));
+	}
+
+	public function delete($request, $response, $args){
+        $element = Dictionnaire::find($args["id"]);
+	    $element->delete();
+	    return $response->withRedirect($this->router->pathFor("dictionary"));
 	}
 
 	public function viewExport($request, $response, $args){
@@ -85,7 +122,7 @@ class DictionaryController extends Controller{
 				array_push($data[$s], $commentaire->commentaire);
 			}
 		}
-		$name = "test";
+		$name = "export_".date("d-m-Y");
 		$path = "../ressources/temp/";
 		$this->$format($data, $name, $path);
 		header('Content-disposition: attachment; filename="'.$name.'.'.$format.'"');
