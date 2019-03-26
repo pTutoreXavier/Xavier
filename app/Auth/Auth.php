@@ -8,11 +8,13 @@ class Auth
 {
     public function user()
     {
+        if(isset($_SESSION['user']))
         return User::find($_SESSION['user']);
     }
 
     public function check()
     {
+        if(isset($_SESSION['user']))
         return isset($_SESSION['user']);
     }
 
