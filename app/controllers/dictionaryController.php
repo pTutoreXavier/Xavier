@@ -15,8 +15,13 @@ class DictionaryController extends Controller{
 
 	public function getById($request, $response, $args){
 		$element = Dictionnaire::find($args["id"]);
-		$sequences = Sequence::where("pseudocode", "like", $args["id"].";%")->orWhere("pseudocode", "like", "%;".$args["id"].";%")->orWhere("pseudocode", "like", "%;".$args["id"])->get();
-		return $this->view->render($response, "dictionary/details.twig", array("element" => $element, "sequences" => $sequences));
+		$sequences = Sequence::select("id")->where("pseudocode", "like", $element->id.";%")->orWhere("pseudocode", "like", "%;".$element->id.";%")->orWhere("pseudocode", "like", "%;".$element->id)->get();
+		$id = [];
+		foreach($sequences as $sequence){
+			array_push($id, $sequence->id);
+		}
+		$commentaires = Commentaire::select("commentaire")->whereIn("idSequence", $id)->get();
+		return $this->view->render($response, "dictionary/details.twig", array("element" => $element, "commentaires" => $commentaires));
 	}
 
 	public function new($request, $response){
