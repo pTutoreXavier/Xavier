@@ -4,13 +4,14 @@ use Illuminate\Database\Eloquent\Model as Model;
 
 class User extends Model{
 	protected $table = "user";
-	public $timestamps = false;
+	public $timestamps = true;
 	protected $fillable = [
 	    'nom',
         'prenom',
         'mail',
         'mdp',
         'level',
+        'dateNaissance',
 
     ];
 }

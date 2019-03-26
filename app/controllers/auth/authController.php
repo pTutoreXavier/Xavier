@@ -45,25 +45,24 @@ class AuthController extends Controller{
         $validation = $this->validator->validate($request, [
             'nom' => v::notEmpty()->alpha(),
             'prenom' => v::noWhitespace()->notEmpty()->alpha(),
-            'naissance' => v::noWhitespace()->notEmpty()->date(),
+            'naissance' => v::date(),
             'mail' => v::noWhitespace()->notEmpty()->email()->mailAvailable(),
             'mdp' => v::noWhitespace()->notEmpty(),
             'mdpConf' => v::equals($_POST['mdp']),
         ]);
 
+
         if($validation->failed()){
             return $response->withRedirect($this->router->pathFor('auth.signup'));
         }
-
         $user = User::create([
             'nom' => $request->getParam('nom'),
             'prenom' => $request->getParam('prenom'),
-            'dateNaissance' => $request->getParam('naissance'),
             'mail' => $request->getParam('mail'),
             'mdp' => password_hash($request->getParam('mdp'),PASSWORD_DEFAULT),
             'level' => 500,
+            'dateNaissance' => $request->getParam('naissance'),
         ]);
-
         $this->auth->attempt($user->mail, $request->getParam('mdp'));
 
         return $response->withRedirect($this->router->pathFor('home'));

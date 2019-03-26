@@ -8,27 +8,31 @@ $cols: dans une grille de x colonnes
 	margin-bottom: 5px;
 	box-sizing: border-box;
 }*/
-/* D├®but Profil */
+/* Début Profil */
 #fieldsetMesInformations, #fieldsetInfoCompte {
   width: 80.4%;
-  margin-left: 9.8%; }
+  margin-left: 9.8%;
+}
 
 #fieldsetMesInformations {
   display: flex;
-  height: 220px; }
+}
 
 #pictureAvatar {
   width: 23%;
   margin-left: 1.6%;
-  text-align: center; }
+  text-align: center;
+}
 
 #divMesInformations {
   width: 72.2%;
-  margin-left: 1.6%; }
+  margin-left: 1.6%;
+}
 
 #imgAvatar {
   max-width: 180px;
-  max-height: 180px; }
+  max-height: 180px;
+}
 
 #formUpdateMail, #formUpdatePass {
   margin-top: 10%;
@@ -36,47 +40,58 @@ $cols: dans une grille de x colonnes
   display: flex;
   flex-direction: column;
   width: 57.44%;
-  margin-left: 21.28%; }
-  #formUpdateMail span, #formUpdatePass span {
-    margin-top: 20px; }
-  #formUpdateMail input[type="text"], #formUpdateMail input[type='password'], #formUpdatePass input[type="text"], #formUpdatePass input[type='password'] {
-    margin-top: 10px;
-    height: 25px; }
-  #formUpdateMail input[type="submit"], #formUpdatePass input[type="submit"] {
-    margin: auto;
-    margin-top: 30px; }
+  margin-left: 21.28%;
+}
+#formUpdateMail span, #formUpdatePass span {
+  margin-top: 20px;
+}
+#formUpdateMail input[type=text], #formUpdateMail input[type=password], #formUpdatePass input[type=text], #formUpdatePass input[type=password] {
+  margin-top: 10px;
+  height: 25px;
+}
+#formUpdateMail input[type=submit], #formUpdatePass input[type=submit] {
+  margin: auto;
+  margin-top: 30px;
+}
 
 #formUpdatePicture [type=radio] {
   position: absolute;
   opacity: 0;
   width: 0;
-  height: 0; }
+  height: 0;
+}
 
 #formUpdatePicture [type=radio] + img {
-  cursor: pointer; }
+  cursor: pointer;
+}
 
 #formUpdatePicture [type=radio]:checked + img {
-  outline: 2px solid #133AAC; }
+  outline: 2px solid #133AAC;
+}
 
 #formUpdatePicture {
   width: 59.9%;
   margin-left: 5.7%;
-  text-align: center; }
+  text-align: center;
+}
 
 #formUpdatePictureUpload {
   width: 27.1%;
   margin-left: 1.6%;
-  text-align: center; }
+  text-align: center;
+}
 
 #pageUpdateProfilPicture {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap; }
+  flex-wrap: wrap;
+}
 
 #titreUpdateProfil {
   width: 100%;
   margin-top: 30px;
-  margin-bottom: 40px; }
+  margin-bottom: 40px;
+}
 
 /* Fin Profil */
 

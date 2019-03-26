@@ -23,7 +23,9 @@ $app->post("/commenter","SequenceController:commentaire");
 $app->get("/video/{idVideo}","VideoController:index");
 $app->post("/video","VideoController:createSequence");
 
-$app->get("/home", "HomeController:index")->setName('home');
+$app->get("/home", "HomeController:index")->setName('home')
+
+    ->add(new \App\Middleware\LevelMiddleware($container));
 
 //Creation de compte
 $app->group('', function () {
