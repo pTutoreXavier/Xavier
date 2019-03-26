@@ -1,6 +1,23 @@
 {% extends "templates/app.twig" %}
 {% block content %}
-<a href="export?format=xml">export en XML</a>
-<a href="export?format=csv">export en CSV</a>
-<a href="export?format=json">export en JSON</a>
+	<div class="row m-auto">
+		<div class="card" style="width: 18rem;">
+			<h4>Exporter au format XML</h4>
+			<div class="card-body">
+				<a class="btn btn-primary" href="export?format=xml">Télécharger</a>
+			</div>
+		</div>
+		<div class="card" style="width: 18rem;">
+			<h4>Exporter au format CSV</h4>
+			<div class="card-body">
+				<a class="btn btn-primary" href="export?format=csv">Télécharger</a>
+			</div>
+		</div>
+		<div class="card" style="width: 18rem;">
+			<h4>Exporter au format JSON</h4>
+			<div class="card-body">
+				<a class="btn btn-primary" href="export?format=json">Télécharger</a>
+			</div>
+		</div>
+	</div>
 {% endblock %}

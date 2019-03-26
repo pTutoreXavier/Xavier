@@ -1,5 +1,4 @@
 <?php
-
 use App\Middleware\AuthMiddleware;
 use App\Middleware\GuestMiddleware;
 
