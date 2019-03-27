@@ -1,6 +1,6 @@
 {% extends 'templates/app.twig' %}
 {% block content %}
-<h2>Mon compte</h2>
+<h2 id="h2profil">Mon compte</h2>
 <fieldset id="fieldsetMesInformations">
 	<legend>Mes informations</legend>
 	<div id="pictureAvatar">
@@ -10,7 +10,7 @@
 	<div id="divMesInformations">
 		Nom : {{ nom }}<br />
 		Prenom : {{ prenom }}<br />
-		Date de naissance : {{dateNaissance}}<br />
+		Date de naissance : {{ dateNaissance }}<br />
 		Mail : {{ mail }}<br /><br />
 		<a href='profil/updateMail'>Modifier Adresse email</a><br />
 		<a href='profil/updatePass'>Modifier mot de passe</a><br />

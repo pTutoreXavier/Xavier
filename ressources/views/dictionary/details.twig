@@ -1,19 +1,32 @@
 {% extends "templates/app.twig" %}
 {% block content %}
-{{ element.libelle }}
-{% if element.type == "method" %}
-	(
-	{% if element.parametre != null %}
-    	{{ element.parametre }}
-	{% endif %}
-	)
-{% endif %}
-<br/><br/>
-<table border="1" style="border-collapse: collapse;">
-{% for commentaire in commentaires %}
-	<tr>
-		<td>{{ commentaire.commentaire }}</td>
-	</tr>
+<div class="row">
+	<div class="col-11">
+		<h3>
+			{{ element.libelle }}
+			{% if element.type == "method" %}
+				(
+				{% if element.parametre != null %}
+			    	{{ element.parametre }}
+				{% endif %}
+				)
+			{% endif %}
+		</h3>
+	</div>
+	<div class="col-1">
+		<a href="{{ path_for('dictionary.details', {'id': element.id}) }}?action=edit"><i class="fas fa-pen"></i></a>
+		<a href="{{ path_for('dictionary.delete', {'id': element.id}) }}?action=delete"><i class="fas fa-trash"></i></a>
+	</div>
+</div>
+<p>Utilisé dans {{ sequences | length }} séquence(s)</p>
+{% for sequence in sequences %}
+	<ul class="list-group mt-4">
+		<p>{{ sequence.pseudocode }}</p>
+		{% for commentaire in sequence.commentaires %}
+			<li class="list-group-item">
+				{{ commentaire.commentaire }}
+			</li>
+		{% endfor %}
+	</ul>	
 {% endfor %}
-</table>
 {% endblock %}

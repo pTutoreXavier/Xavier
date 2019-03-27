@@ -24,14 +24,14 @@
 		<label><input type="radio" name="profilPicture" value="16"><img id="imgAvatar" src="../../ressources/views/avatar/16.png"></label>
 		<label><input type="radio" name="profilPicture" value="17"><img id="imgAvatar" src="../../ressources/views/avatar/17.png"></label>
 		<label><input type="radio" name="profilPicture" value="18"><img id="imgAvatar" src="../../ressources/views/avatar/18.png"></label><br /><br />
-		<input type="submit" value="Valider" style="margin-bottom: 20px;">
+		<input class="inputProfilSubmit" type="submit" value="Valider" style="margin-bottom: 20px;">
 	</form>
 	</fieldset>
 	<fieldset id="formUpdatePictureUpload">
 	<form method="POST" action="checkProfilPictureUpload" enctype="multipart/form-data">
 		<h2>Choisir une photo</h2><br />
 		<input type="file" name="picture" required/><br /><br />
-		<input type="submit" value="Valider">
+		<input class="inputProfilSubmit" type="submit" value="Valider">
 
 		{{ csrf.field | raw }}
 

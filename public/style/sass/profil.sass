@@ -1,10 +1,40 @@
 @import "_grille"
 $primary-color: #133AAC
 
-/* Début Profil */
+/* Début Profil */	
+
+.inputProfiltext
+	box-sizing : border-box
+	border : 1px solid gray
+
+.inputProfiltext:focus
+	border-color : $primary-color
+
+.inputProfilSubmit[type="submit"]
+	cursor : pointer
+	background-color : $primary-color
+	color : white
+	width : 150px
+	height : 40px
+	border-radius : 5px
+	transition : all 0.5s
+	text-transform: uppercase
+	font-weight : bold
+	letter-spacing : 2px
+	font-size : 18px
+
+.inputProfilSubmit[type="submit"]:hover
+	box-shadow : 0px 5px 5px gray
+
+
+#h2profil
+	text-align : center
+
 
 #fieldsetMesInformations, #fieldsetInfoCompte
 	@include grille(12, 1.6%, 1, 10)
+	padding : 10px
+	box-shadow : 10px 5px 5px gray
 
 #fieldsetMesInformations
 		display : flex
