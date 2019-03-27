@@ -4,6 +4,7 @@ use App\Middleware\GuestMiddleware;
 
 $app->get("/dictionary", "DictionaryController:index")->setName("dictionary");
 $app->get("/dictionary/export", "DictionaryController:viewExport")->setName("dictionary.export");
+$app->get("/dictionary/export/{format}", "DictionaryController:export")->setName("dictionary.format");
 $app->get("/dictionary/new", "DictionaryController:new")->setName("dictionary.new");
 $app->get("/dictionary/{id}", "DictionaryController:getById")->setName("dictionary.details");
 $app->post("/dictionary", "DictionaryController:create")->setName("dictionary.create");
