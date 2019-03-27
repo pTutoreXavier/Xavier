@@ -8,10 +8,43 @@ $cols: dans une grille de x colonnes
 	margin-bottom: 5px;
 	box-sizing: border-box;
 }*/
-/* Début Profil */
+/* Début Profil */	
+.inputProfiltext {
+  box-sizing: border-box;
+  border: 1px solid gray;
+}
+
+.inputProfiltext:focus {
+  border-color: #133AAC;
+}
+
+.inputProfilSubmit[type=submit] {
+  cursor: pointer;
+  background-color: #133AAC;
+  color: white;
+  width: 150px;
+  height: 40px;
+  border-radius: 5px;
+  transition: all 0.5s;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 2px;
+  font-size: 18px;
+}
+
+.inputProfilSubmit[type=submit]:hover {
+  box-shadow: 0px 5px 5px gray;
+}
+
+#h2profil {
+  text-align: center;
+}
+
 #fieldsetMesInformations, #fieldsetInfoCompte {
   width: 80.4%;
   margin-left: 9.8%;
+  padding: 10px;
+  box-shadow: 10px 5px 5px gray;
 }
 
 #fieldsetMesInformations {

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*   FORMULAIRES SIGNUP/SIGNIN   */
 
 .erreur {
@@ -50,3 +51,19 @@ body {
 
   background-color: #f5f5f5;
 }
+=======
+@charset "UTF-8";
+/* Début régle général CSS */
+/*
+$cols: dans une grille de x colonnes
+*/
+/*
+.col{
+	margin-left: $size_gutter;
+	margin-bottom: 5px;
+	box-sizing: border-box;
+}*/
+/* Fin régle général CSS */
+
+/*# sourceMappingURL=style.css.map */
+>>>>>>> marc
