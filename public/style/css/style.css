@@ -59,9 +59,9 @@ $cols: dans une grille de x colonnes
 */
 /*
 .col{
-	margin-left: $size_gutter;
-	margin-bottom: 5px;
-	box-sizing: border-box;
+  margin-left: $size_gutter;
+  margin-bottom: 5px;
+  box-sizing: border-box;
 }*/
 /* Fin régle général CSS */
 
