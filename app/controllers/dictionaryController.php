@@ -136,7 +136,7 @@ class DictionaryController extends Controller{
 				}
 			}
 			$name = "dictionnaire_".$format."_".date("d-m-Y");
-			$path = "../ressources/temp/";
+			$path = "../ressources/";
 			$this->$format($data, $name, $path);
 			// désactive la mise en cache
 			header("Cache-Control: no-cache, must-revalidate");
