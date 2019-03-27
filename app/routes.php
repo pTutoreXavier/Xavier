@@ -22,6 +22,8 @@ $app->get("/sequence/{idVideo}/{idSequence}","SequenceController:index");
 $app->post("/commenter","SequenceController:commentaire");
 $app->get("/video/{idVideo}","VideoController:index");
 $app->post("/video","VideoController:createSequence");
+$app->get("/object/{recherche}","VideoController:getObject");
+$app->get("/method/{recherche}","VideoController:getMethod");
 
 $app->get("/home", "HomeController:index")->setName('home');
 
