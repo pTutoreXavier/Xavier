@@ -31,8 +31,8 @@ $app->group('', function () {
     $this->post("/auth/signup", "AuthController:postSignUp");
     $this->get("/auth/signin", "AuthController:getSignIn")->setName("auth.signin");
     $this->post("/auth/signin", "AuthController:postSignIn");
-})->add(new \App\Middleware\CsrfViewMiddleware($container))
-    ->add($container->csrf)
+})/*->add(new \App\Middleware\CsrfViewMiddleware($container))
+    ->add($container->csrf)*/
     ->add(new GuestMiddleware($container));
 
 $app->group('', function () {
