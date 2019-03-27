@@ -6,7 +6,7 @@
 		Paramètre: <input type="text" name="parameter"><br/>
 		<!-- plusieurs paramètres?? -->
 	{% endif %}
-	<input type="submit" name="submit" value="Ajouter">
+	<input class="btn btn-primary" type="submit" name="submit" value="Ajouter">
 	{{ csrf.field | raw }}
 </form>
 {% endblock %}

@@ -4,7 +4,8 @@ use Illuminate\Database\Eloquent\Model as Model;
 
 class User extends Model{
 	protected $table = "user";
-	public $timestamps = true;
+	protected $primaryKey = "id";
+	public $timestamps = false;
 	protected $fillable = [
 	    'nom',
         'prenom',

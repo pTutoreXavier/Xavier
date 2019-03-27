@@ -1,30 +1,28 @@
 <?php
-
 use App\Middleware\AuthMiddleware;
 use App\Middleware\GuestMiddleware;
 use App\Middleware\SearcherMiddleware;
 use App\Middleware\UserMiddleware;
 
-
 $app->group('', function () {
-    $this->get("/dictionary", "DictionaryController:index")->setName("dictionary");
-    $this->get("/dictionary/export", "DictionaryController:viewExport")->setName("dictionary.export");
-    $this->get("/dictionary/new", "DictionaryController:new")->setName("dictionary.new");
-    $this->get("/dictionary/{id}", "DictionaryController:getById")->setName("dictionary.details");
-    $this->post("/dictionary", "DictionaryController:create")->setName("dictionary.create");
+    $app->get("/dictionary", "DictionaryController:index")->setName("dictionary");
+	$app->get("/dictionary/export", "DictionaryController:viewExport")->setName("dictionary.export");
+	$app->get("/dictionary/export/{format}", "DictionaryController:export")->setName("dictionary.format");
+	$app->get("/dictionary/new", "DictionaryController:new")->setName("dictionary.new");
+	$app->get("/dictionary/{id}", "DictionaryController:getById")->setName("dictionary.details");
+	$app->post("/dictionary", "DictionaryController:create")->setName("dictionary.create");
+	$app->put("/dictionary/{id}", "DictionaryController:update")->setName("dictionary.edit");
+	$app->delete("/dictionary/{id}", "DictionaryController:delete")->setName("dictionary.delete");
 })->add(new SearcherMiddleware($container));
-
 
 $app->group('', function () {
 
 })->add(new UserMiddleware($container));
 
-
 $app->get("/sequence/{idVideo}/{idSequence}","SequenceController:index");
 $app->post("/commenter","SequenceController:commentaire");
 $app->get("/video/{idVideo}","VideoController:index");
 $app->post("/video","VideoController:createSequence");
-
 
 $app->group('', function () {
     $this->get("/auth/signup", "AuthController:getSignUp")->setName("auth.signup");
@@ -48,8 +46,6 @@ $app->group('', function () {
     $this->post("/profil/checkProfilPictureUpload", "ProfilController:checkProfilPictureUpload")->setName("checkProfilPictureUpload");
 
 })->add(new AuthMiddleware($container));
-
-
 
 $app->get("/home[/]", "HomeController:index")->setName('home');
 $app->get('/home/mentions[/]', "HomeController:mentions")->setName('home.mentions');
