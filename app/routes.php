@@ -2,36 +2,33 @@
 
 use App\Middleware\AuthMiddleware;
 use App\Middleware\GuestMiddleware;
+use App\Middleware\SearcherMiddleware;
+use App\Middleware\UserMiddleware;
 
-$app->get("/dictionary", "DictionaryController:index")->setName("dictionary");
-$app->get("/dictionary/export", "DictionaryController:viewExport")->setName("dictionary.export");
-$app->get("/dictionary/new", "DictionaryController:new")->setName("dictionary.new");
-$app->get("/dictionary/{id}", "DictionaryController:getById")->setName("dictionary.details");
-$app->post("/dictionary", "DictionaryController:create")->setName("dictionary.create");
 
-$app->get("/profil", "ProfilController:index")->setName("profil");
-$app->get("/profil/updatePass", "ProfilController:updatePass")->setName("updatePass");
-$app->post("/profil/checkPass", "ProfilController:checkPass")->setName("checkPass");
-$app->get("/profil/updateMail", "ProfilController:updateMail")->setName("updateMail");
-$app->post("/profil/checkMail", "ProfilController:checkMail")->setName("checkMail");
-$app->get("/profil/updateProfilPicture", "ProfilController:updateProfilPicture")->setName("updateProfilPicture");
-$app->post("/profil/checkProfilPicture", "ProfilController:checkProfilPicture")->setName("checkProfilPicture");
-$app->post("/profil/checkProfilPictureUpload", "ProfilController:checkProfilPictureUpload")->setName("checkProfilPictureUpload");
+$app->group('', function () {
+    $this->get("/dictionary", "DictionaryController:index")->setName("dictionary");
+    $this->get("/dictionary/export", "DictionaryController:viewExport")->setName("dictionary.export");
+    $this->get("/dictionary/new", "DictionaryController:new")->setName("dictionary.new");
+    $this->get("/dictionary/{id}", "DictionaryController:getById")->setName("dictionary.details");
+    $this->post("/dictionary", "DictionaryController:create")->setName("dictionary.create");
+})->add(new SearcherMiddleware($container));
+
+
+$app->group('', function () {
+
+})->add(new UserMiddleware($container));
+
 
 $app->get("/sequence/{idVideo}/{idSequence}","SequenceController:index");
 $app->post("/commenter","SequenceController:commentaire");
 $app->get("/video/{idVideo}","VideoController:index");
 $app->post("/video","VideoController:createSequence");
 
-$app->get("/home", "HomeController:index")->setName('home');
 
-//Creation de compte
 $app->group('', function () {
-    //Creation de compte
     $this->get("/auth/signup", "AuthController:getSignUp")->setName("auth.signup");
     $this->post("/auth/signup", "AuthController:postSignUp");
-
-    //Connection au compte
     $this->get("/auth/signin", "AuthController:getSignIn")->setName("auth.signin");
     $this->post("/auth/signin", "AuthController:postSignIn");
 })->add(new \App\Middleware\CsrfViewMiddleware($container))
@@ -39,6 +36,21 @@ $app->group('', function () {
     ->add(new GuestMiddleware($container));
 
 $app->group('', function () {
-    //Deconnection du compte
     $this->get("/auth/signout", "AuthController:getSignOut")->setName("auth.signout");
+
+    $this->get("/profil", "ProfilController:index")->setName("profil");
+    $this->get("/profil/updatePass", "ProfilController:updatePass")->setName("updatePass");
+    $this->post("/profil/checkPass", "ProfilController:checkPass")->setName("checkPass");
+    $this->get("/profil/updateMail", "ProfilController:updateMail")->setName("updateMail");
+    $this->post("/profil/checkMail", "ProfilController:checkMail")->setName("checkMail");
+    $this->get("/profil/updateProfilPicture", "ProfilController:updateProfilPicture")->setName("updateProfilPicture");
+    $this->post("/profil/checkProfilPicture", "ProfilController:checkProfilPicture")->setName("checkProfilPicture");
+    $this->post("/profil/checkProfilPictureUpload", "ProfilController:checkProfilPictureUpload")->setName("checkProfilPictureUpload");
+
 })->add(new AuthMiddleware($container));
+
+
+
+$app->get("/home[/]", "HomeController:index")->setName('home');
+$app->get('/home/mentions[/]', "HomeController:mentions")->setName('home.mentions');
+$app->get('/home/technos[/]', "HomeController:technos")->setName('home.technos');

@@ -38,6 +38,7 @@ $container["view"] = function($container){
 	$view->getEnvironment()->addGlobal('auth', [
 	    'check' => $container->auth->check(),
         'user' => $container->auth->user(),
+        'level' => $container->auth->checkLevel(),
     ]);
 
 	return $view;

@@ -18,9 +18,22 @@ class Auth
         return isset($_SESSION['user']);
     }
 
+    public function checkLevel(){
+        if(!isset($_SESSION['user']))
+            return false;
+
+        $user = User::select('level')->where('id','=',$_SESSION['user'])->first();
+        if($user->level === 500){
+            return 'user';
+        }else if ($user->level === 779) {
+            return 'searcher';
+        } else {
+            return false;
+        }
+    }
+
     public function attempt($mail, $mdp)
     {
-
         $user = User::where('mail',$mail)->first();
         if(!$user) {
             return false;
