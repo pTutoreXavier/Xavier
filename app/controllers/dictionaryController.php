@@ -10,7 +10,7 @@ class DictionaryController extends Controller{
 	public function index($request, $response){
 		$methods = Dictionnaire::where("type", "method")->get();
 		$objects = Dictionnaire::where("type", "object")->get();
-		return $this->view->render($response, "dictionary/dictionary.twig", ["methods" => $methods, "objects" => $objects]);
+		return $this->view->render($response, "dictionary/dictionary.twig", ["elements" => ["Objets" => $objects, "Fonctions" => $methods]]);
 	}
 
 	public function getById($request, $response, $args){
@@ -27,11 +27,11 @@ class DictionaryController extends Controller{
 				$pseudocode = explode(";", $sequence->pseudocode);
 				$s = "";
 				for($i = 0; $i < count($pseudocode); $i++){
-					$element = Dictionnaire::where("id", "=", $pseudocode[$i])->first();
+					$e = Dictionnaire::where("id", "=", $pseudocode[$i])->first();
 					if($i > 2){
 						$s .= ", ";
 					}
-					$s .= $element->libelle;
+					$s .= $e->libelle;
 					if($i == 0){
 						$s .=  ".";
 					}
