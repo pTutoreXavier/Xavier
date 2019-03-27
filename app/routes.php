@@ -16,14 +16,7 @@ $app->group('', function () {
 
 
 $app->group('', function () {
-    $this->get("/profil", "ProfilController:index")->setName("profil");
-    $this->get("/profil/updatePass", "ProfilController:updatePass")->setName("updatePass");
-    $this->post("/profil/checkPass", "ProfilController:checkPass")->setName("checkPass");
-    $this->get("/profil/updateMail", "ProfilController:updateMail")->setName("updateMail");
-    $this->post("/profil/checkMail", "ProfilController:checkMail")->setName("checkMail");
-    $this->get("/profil/updateProfilPicture", "ProfilController:updateProfilPicture")->setName("updateProfilPicture");
-    $this->post("/profil/checkProfilPicture", "ProfilController:checkProfilPicture")->setName("checkProfilPicture");
-    $this->post("/profil/checkProfilPictureUpload", "ProfilController:checkProfilPictureUpload")->setName("checkProfilPictureUpload");
+
 })->add(new UserMiddleware($container));
 
 
@@ -44,8 +37,20 @@ $app->group('', function () {
 
 $app->group('', function () {
     $this->get("/auth/signout", "AuthController:getSignOut")->setName("auth.signout");
+
+    $this->get("/profil", "ProfilController:index")->setName("profil");
+    $this->get("/profil/updatePass", "ProfilController:updatePass")->setName("updatePass");
+    $this->post("/profil/checkPass", "ProfilController:checkPass")->setName("checkPass");
+    $this->get("/profil/updateMail", "ProfilController:updateMail")->setName("updateMail");
+    $this->post("/profil/checkMail", "ProfilController:checkMail")->setName("checkMail");
+    $this->get("/profil/updateProfilPicture", "ProfilController:updateProfilPicture")->setName("updateProfilPicture");
+    $this->post("/profil/checkProfilPicture", "ProfilController:checkProfilPicture")->setName("checkProfilPicture");
+    $this->post("/profil/checkProfilPictureUpload", "ProfilController:checkProfilPictureUpload")->setName("checkProfilPictureUpload");
+
 })->add(new AuthMiddleware($container));
 
 
 
-$app->get("/home", "HomeController:index")->setName('home');
+$app->get("/home[/]", "HomeController:index")->setName('home');
+$app->get('/home/mentions[/]', "HomeController:mentions")->setName('home.mentions');
+$app->get('/home/technos[/]', "HomeController:technos")->setName('home.technos');

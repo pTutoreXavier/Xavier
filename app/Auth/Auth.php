@@ -34,7 +34,6 @@ class Auth
 
     public function attempt($mail, $mdp)
     {
-
         $user = User::where('mail',$mail)->first();
         if(!$user) {
             return false;
