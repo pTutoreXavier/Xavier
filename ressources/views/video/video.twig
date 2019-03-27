@@ -12,7 +12,9 @@
   	<script type="text/javascript">
   		$(document).ready(function(){
 
-  			$(document).on('contextmenu', 'div', function(e) 
+///////////////////////////////Suprresion du menu clique gauche////////////////////////////////////////////////
+
+  			$(document).on('contextmenu', 'div', function(e)   
 		    {
 		        e.preventDefault();
 		        return false;
@@ -20,10 +22,14 @@
   			var seqStart = [];
   			var seqFinish = [];
 
+///////////////////////////////Récupération des scéances de la vidéo de la base ////////////////////////////////////////////////
+
 		    {% for sequence in lesSequences %}
 		    	seqStart.push("{{sequence.debut}}");
 		    	seqFinish.push("{{sequence.fin}}");
 		    {% endfor %}
+
+///////////////////////////////initialisation de la vidéo////////////////////////////////////////////////
 
      	$("#jquery_jplayer_1").jPlayer({
 			ready: function () {
@@ -48,38 +54,36 @@
 			toggleDuration: true,
 		});
 
+///////////////////////////////envoie du formulaire////////////////////////////////////////////////
+
      	$(".sequence").click(function(event){
      		let start = [];
      		let finish = [];
-     		let test = true;
-     		let possible = true;
+     		let type = [];
+     		let method = [];
+     		let param = [];
 
-     		for (var i = 0; i < seqStart.length; i++) {
-				if((selectStart < seqStart[i] && selectFinish > seqFinish[i]) || (selectStart < seqStart[i] && selectFinish > seqStart[i] && selectFinish < seqFinish[i]) || (selectStart > seqStart[i] && selectStart < seqFinish[i] && selectFinish > seqFinish[i]) || (selectStart > seqStart[i] && selectFinish < seqFinish[i]) || ($("#start"+nbreSequence).val() == "0:NaN" || $("#start"+nbreSequence).val() === "" || $("#finish"+nbreSequence).val() == "0:NaN" || $("#finish"+nbreSequence).val() === "" || $("#start"+nbreSequence).val() > $("#finish"+nbreSequence).val())){
-					
-					possible = false;
-				}
-			}
-     		if(possible == false){
-     			test = false;
-     			alert("votre dernière séléction n'est pas correcte ou n'est pas complète");
-     		}
-     		else{
-     			for(let i = 1; i < nbreSequence +1; i++){
-	     			let tempo = $("#start" + i).val().split(':');   			
-		    		let total = calculSeconde(tempo);	
-	     			start.push(total);
+     		for(let i = 1; i < nbreSequence +1; i++){
+	     		let tempo = $("#start" + i).val().split(':');   			
+		    	let total = calculSeconde(tempo);	
+	     		start.push(total);
 
-	     			tempo = $("#finish" + i).val().split(':');   			
-		    		total = calculSeconde(tempo);
-	     			finish.push(total);
+	     		tempo = $("#finish" + i).val().split(':');   			
+		    	total = calculSeconde(tempo);
+	     		finish.push(total);
 
-	     		}
-	     		$("#Start").val(start);
-	     		$("#Finish").val(finish);
+	     		type.push($("#type" + i).val());;
 
-	     		document.getElementById("leForm").submit();
-     		}
+	     		method.push($("#lesMethodes" + i).val());;
+
+	     		param.push($("#lesParametres" + i).val());;
+	     	}
+	     	$("#Start").val(start);
+	   		$("#Finish").val(finish);
+	   		$("#PseudoCode").val(type + "." + method + "(" + param + ")");
+
+	     	document.getElementById("leForm").submit();
+
      	});
 
      	var repeat = false;
@@ -93,6 +97,9 @@
      	var selectStart = 0;
      	var selectFinish = 0;
      	let pourcent = 0;
+     	let ajoutSeq = true;
+
+///////////////////////////////affichage des séqences utilisé sur la timeline////////////////////////////////////////////////
 
      	function afficherIndisponible(seconde){
      		let duree = seconde;
@@ -106,6 +113,8 @@
      		}
      		$("#progressBar").html(HTML);
      	}
+
+///////////////////////////////retourne un total en seconde////////////////////////////////////////////////
 
      	function calculSeconde(tempo){
 
@@ -128,6 +137,8 @@
 	    	}
      		return total;
      	}
+
+///////////////////////////////retourne un temps en format time////////////////////////////////////////////////
 
      	function calculFormatTime(nombre){
      		let reste=nombre;
@@ -161,6 +172,8 @@
      		return total;
      	}
 
+///////////////////////////////lance la vidéo////////////////////////////////////////////////
+
     	$(".jp-play").click( function(event) {  //clique sur le bouton play
     		var tempo = $(".jp-duration").html().split(':');
     		
@@ -191,12 +204,14 @@
 	    	//imprimer_bloc("miniature","jp_container_1");
 	    });
 
-
+///////////////////////////////stop la vidéo////////////////////////////////////////////////
 
 	    $(".jp-stop").click( function() {  //clique sur le bouton pause
 	    	play = false; // la video est en pause
 	     	$("#jquery_jplayer_1").jPlayer("pause", jpData.status.currentTime); //ammène le curseur a l'endroit ou a était arreté la vidéo
 	    });
+
+///////////////////////////////active/desactive le repeat////////////////////////////////////////////////
 
 	    $(".jp-repeat").click(function(){
 	    	if(repeat == false){
@@ -206,6 +221,8 @@
 	    		repeat = false;
 	    	}
 	    });
+
+///////////////////////////////clique gauche sur la timeline////////////////////////////////////////////////
 
 	    $("#progressBar").click( function(event){	// clique sur la barre de progression
 	    	var x = document.getElementById("progressBar"); 
@@ -217,13 +234,9 @@
 	    	else{
 	    		$("#jquery_jplayer_1").jPlayer("pause", start * max + debut); // si la vidéo est en pause mettre le curseur de la vidéo ou le clique a était éffectué
 	    	}
-
-	    	if(nbreSequence > 0){
-	    		selectStart = start * max + debut;
-	    		let time = calculFormatTime(Math.round(start * max + debut));
-	    		$("#start"+nbreSequence).val(time);
-	    	}
 	    });
+
+///////////////////////////////clique droit sur la timeline////////////////////////////////////////////////
 
 	    $("#progressBar").contextmenu(function(event){
 	    	var x = document.getElementById("progressBar"); 
@@ -235,74 +248,191 @@
 	    	else{
 	    		$("#jquery_jplayer_1").jPlayer("pause", start * max + debut); // si la vidéo est en pause mettre le curseur de la vidéo ou le clique a était éffectué
 	    	}
-
-	    	if(nbreSequence > 0){
-	    		selectFinish = start * max + debut;
-	    		let time = calculFormatTime(Math.round(start * max + debut));
-	    		$("#finish"+nbreSequence).val(time);
-	    	}
 	    });
+		
+///////////////////////////////Ajout d'une séquence////////////////////////////////////////////////
 
 		$(".ajouterSequence").click(function(event){
 
-			let possible = true;
-			if(nbreSequence > 0){
-				for (var i = 0; i < seqStart.length; i++) {
-					if((selectStart < seqStart[i] && selectFinish > seqFinish[i]) || (selectStart < seqStart[i] && selectFinish > seqStart[i] && selectFinish < seqFinish[i]) || (selectStart > seqStart[i] && selectStart < seqFinish[i] && selectFinish > seqFinish[i]) || (selectStart > seqStart[i] && selectFinish < seqFinish[i])){
-
-						possible = false;
-					}
+			if(ajoutSeq){
+				if($("#start" + nbreSequence).val() == "0:NaN" || $("#start" + nbreSequence).val() == "" || $("#finish" + nbreSequence).val() == "0:NaN" || $("#finish" + nbreSequence).val() == ""){
 				}
-			}	
+				else{
 
-			if($("#start"+nbreSequence).val() == "0:NaN" || $("#start"+nbreSequence).val() === "" || $("#finish"+nbreSequence).val() == "0:NaN" || $("#finish"+nbreSequence).val() === "" || $("#start"+nbreSequence).val() > $("#finish"+nbreSequence).val()){
-					alert("la séléction n'est pas correcte ou n'est pas complète")
-			}
-			else if(possible == false){
-				alert("des séquences existe déjà dans cette tranche");
-			}
-			else{
-				seqStart.push(selectStart);
-				seqFinish.push(selectFinish);
-				nbreSequence += 1;
+					seqStart.push(selectStart);
+					seqFinish.push(selectFinish);
+					nbreSequence += 1;
 
-				let element = document.createElement("div");
-				element.setAttribute("id",nbreSequence);
-				element.setAttribute("class","StartFinish");
-				document.getElementById("leForm").appendChild(element);
+					let element = document.createElement("div");
+					element.setAttribute("id",nbreSequence);
+					element.setAttribute("class","StartFinish");
+					document.getElementById("leForm").appendChild(element);
 
-				element = document.createElement("label");
-				element.setAttribute("id", "labelDeb" + nbreSequence);    
-				document.getElementById(nbreSequence).appendChild(element);
-				$('#labelDeb'+nbreSequence).html("Début : ");
+					element = document.createElement("button");
+					element.setAttribute("id", "Deb" + nbreSequence);  
+					element.setAttribute("class", "start");   
+					element.setAttribute("type", "button");
+					element.setAttribute("value", "Début : "); 
+					document.getElementById(nbreSequence).appendChild(element);
+					$("#Deb"+ nbreSequence).html("Début");
 
-				element = document.createElement("input");
-				element.setAttribute("name", "start" + nbreSequence);
-				element.setAttribute("id", "start" + nbreSequence);       
-				element.setAttribute("type", "text"); 
-				element.setAttribute("required", "required");      
-				element.setAttribute("disabled", "disabled");     
-				element.setAttribute("style", "width:100px");   
-				document.getElementById(nbreSequence).appendChild(element)    
+					element = document.createElement("input");
+					element.setAttribute("name", "start" + nbreSequence);
+					element.setAttribute("id", "start" + nbreSequence);       
+					element.setAttribute("type", "text"); 
+					element.setAttribute("required", "required");      
+					element.setAttribute("disabled", "disabled");     
+					element.setAttribute("style", "width:100px");   
+					document.getElementById(nbreSequence).appendChild(element);
 
-				element = document.createElement("label")
-				element.setAttribute("id", "labelFin" + nbreSequence);    
-				document.getElementById(nbreSequence).appendChild(element);
-				$('#labelFin'+nbreSequence).html("Fin : ");
+					element = document.createElement("button");
+					element.setAttribute("id", "Fin" + nbreSequence);  
+					element.setAttribute("class", "finish");  
+					element.setAttribute("type", "button"); 
+					element.setAttribute("value", "Fin : "); 
+					element.setAttribute("disabled", "disabled"); 
+					document.getElementById(nbreSequence).appendChild(element);
+					$("#Fin"+ nbreSequence).html("Fin");
 
-				element = document.createElement("input");
-				element.setAttribute("name", "finish" + nbreSequence);
-				element.setAttribute("id", "finish" + nbreSequence);       
-				element.setAttribute("type", "text");     
-				element.setAttribute("required", "required");   
-				element.setAttribute("disabled", "disabled");     
-				element.setAttribute("value", "");  
-				element.setAttribute("style", "width:100px");  
-				document.getElementById(nbreSequence).appendChild(element);
+					element = document.createElement("input");
+					element.setAttribute("name", "finish" + nbreSequence);
+					element.setAttribute("id", "finish" + nbreSequence);       
+					element.setAttribute("type", "text"); 
+					element.setAttribute("required", "required");      
+					element.setAttribute("disabled", "disabled");     
+					element.setAttribute("style", "width:100px");   
+					document.getElementById(nbreSequence).appendChild(element);
+
+					element = document.createElement("input");
+					element.setAttribute("name", "list" + nbreSequence);
+					element.setAttribute("id", "type" + nbreSequence);       
+					element.setAttribute("list", "objet" + nbreSequence);   
+					element.setAttribute("type", "text");
+					document.getElementById(nbreSequence).appendChild(element);
+
+					element = document.createElement("datalist");
+					element.setAttribute("id", "objet" + nbreSequence);       
+					document.getElementById(nbreSequence).appendChild(element);
+
+					ajoutSeq = false;
+
+					$(".sequence").prop("disabled",'disabled');
+
+					$("#type" + nbreSequence).keyup(function(event){
+						if($("#lesParametres" + nbreSequence).val() != "" && $("#lesMethodes" + nbreSequence).val() != "" && $("#type" + nbreSequence).val() != "" && $("#Deb" + nbreSequence).prop("disabled") == true && $("#Fin" + nbreSequence).prop("disabled") == true){
+								ajoutSeq = true;
+								$(".sequence").prop("disabled",false);
+						}
+						else{
+							$(".sequence").prop("disabled",'disabled');
+							ajoutSeq = false;
+						}
+
+						if($("#type" + nbreSequence).val() != ""){
+							$.ajax({
+						        url : '../object/' + $("#type" + nbreSequence).val(), // La ressource ciblée
+						        type : 'GET', // Le type de la requête HTTP.
+						        success : function(code_html, statut){
+						       		let tab = JSON.parse(code_html);
+						       		let laListe = document.getElementById("objet" + nbreSequence);
+						       		let HTML = "";
+						       		tab.forEach(function(e){
+						       			HTML += "<option value='"+e+"'>";    
+						       		});
+						       		laListe.innerHTML = HTML;
+						        }
+						    });
+						}
+					});
+
+					element = document.createElement("input");
+					element.setAttribute("name", "methodes" + nbreSequence);
+					element.setAttribute("id", "lesMethodes" + nbreSequence);       
+					element.setAttribute("list", "libelle" + nbreSequence);   
+					element.setAttribute("type", "text");
+					document.getElementById(nbreSequence).appendChild(element);
+
+					element = document.createElement("datalist");
+					element.setAttribute("id", "libelle" + nbreSequence);       
+					document.getElementById(nbreSequence).appendChild(element);
+
+					$("#lesMethodes" + nbreSequence).keyup(function(event){
+						if($("#lesParametres" + nbreSequence).val() != "" && $("#lesMethodes" + nbreSequence).val() != "" && $("#type" + nbreSequence).val() != "" && $("#Deb" + nbreSequence).prop("disabled") == true && $("#Fin" + nbreSequence).prop("disabled") == true){
+								ajoutSeq = true;
+								$(".sequence").prop("disabled",false);
+						}
+						else{
+							$(".sequence").prop("disabled",'disabled');
+							ajoutSeq = false;
+						}
+
+						if($("#lesMethodes" + nbreSequence).val() != ""){
+							$.ajax({
+						        url : '../method/' + $("#lesMethodes" + nbreSequence).val(), // La ressource ciblée
+						        type : 'GET', // Le type de la requête HTTP.
+						        success : function(code_html, statut){
+						       		let tab = JSON.parse(code_html);
+						       		console.log(tab);
+						       		let laListe = document.getElementById("libelle" + nbreSequence);
+						       		let HTML = "";
+						       		tab.forEach(function(e){
+						       			HTML += "<option value='"+e+"'>";    
+						       		});
+						       		laListe.innerHTML = HTML;
+						        }
+						    });
+						}
+					});
+
+					element = document.createElement("input");
+					element.setAttribute("name", "parametre" + nbreSequence);
+					element.setAttribute("id", "lesParametres" + nbreSequence);       
+					element.setAttribute("list", "params" + nbreSequence);   
+					element.setAttribute("type", "text");
+					document.getElementById(nbreSequence).appendChild(element);
+
+					element = document.createElement("datalist");
+					element.setAttribute("id", "params" + nbreSequence);       
+					document.getElementById(nbreSequence).appendChild(element);
+
+					$("#lesParametres" + nbreSequence).keyup(function(event){
+						if($("#lesParametres" + nbreSequence).val() != "" && $("#lesMethodes" + nbreSequence).val() != "" && $("#type" + nbreSequence).val() != "" && $("#Deb" + nbreSequence).prop("disabled") == true && $("#Fin" + nbreSequence).prop("disabled") == true){
+								ajoutSeq = true;
+								$(".sequence").prop("disabled",false);
+						}
+						else{
+							$(".sequence").prop("disabled",'disabled');
+							ajoutSeq = false;
+						}
+					});
+
+					$(".start").unbind('click').click(function(event){
+						this.setAttribute("disabled","disabled");
+						$("#Fin"+nbreSequence).prop('disabled',false);
+						selectStart = calculFormatTime(Math.round(jpData.status.currentTime));
+						$("#start" + nbreSequence).val(selectStart);
+					});
+
+					$(".finish").unbind('click').click(function(event){
+						this.setAttribute("disabled","disabled");
+						selectFinish = calculFormatTime(Math.round(jpData.status.currentTime));
+						$("#finish" + nbreSequence).val(selectFinish);
+
+						if($("#lesParametres" + nbreSequence).val() != "" && $("#lesMethodes" + nbreSequence).val() != "" && $("#type" + nbreSequence).val() != "" && $("#Deb" + nbreSequence).prop("disabled") == true && $("#Fin" + nbreSequence).prop("disabled") == true){
+								ajoutSeq = true;
+								$(".sequence").prop("disabled",false);
+						}
+						else{
+							$(".sequence").prop("disabled",'disabled');
+							ajoutSeq = false;
+						}
+					});
+				}
 			}    
 		});
 
-	
+///////////////////////////////Gestion de la timeline (affichage)////////////////////////////////////////////////
+
 		setInterval(function() {
 			if ((jpData.status.currentTime > fin || jpData.status.currentTime < debut) && jpData.status.currentTime != 0) {
 				if(repeat == true){
@@ -445,6 +575,8 @@
 				</div>		
 				<input id="Start" type="hidden" name="capStart" value="0"/>
 				<input id="Finish" type="hidden" name="capFinish" value="0"/>
+				<input id="PseudoCode" type="hidden" name="pseudocode" value="0"/>
+
 				<input id="idVideo" type="hidden" name="idVideo" value="{{idVideo}}"/>
 			</form>	<!-- fin form -->
 		</div>
