@@ -5,7 +5,7 @@
 	{% if type == "method" %}
 		Paramètre: <input type="text" name="parameter"><br/>
 	{% endif %}
-	<input type="submit" name="submit" value="Modifier">
+	<input class="btn btn-primary" type="submit" name="submit" value="Modifier">
 	<input type="hidden" name="_METHOD" value="PUT">
 	{{ csrf.field | raw }}
 </form>

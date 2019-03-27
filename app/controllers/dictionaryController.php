@@ -22,13 +22,28 @@ class DictionaryController extends Controller{
 			$response = $this->delete($request, $response, $args);
 		}
 		else{
-			$sequences = Sequence::select("id")->where("pseudocode", "like", $element->id.";%")->orWhere("pseudocode", "like", "%;".$element->id.";%")->orWhere("pseudocode", "like", "%;".$element->id)->get();
-			$id = [];
+			$sequences = Sequence::where("pseudocode", "like", $element->id.";%")->orWhere("pseudocode", "like", "%;".$element->id.";%")->orWhere("pseudocode", "like", "%;".$element->id)->get();
 			foreach($sequences as $sequence){
-				array_push($id, $sequence->id);
+				$pseudocode = explode(";", $sequence->pseudocode);
+				$s = "";
+				for($i = 0; $i < count($pseudocode); $i++){
+					$element = Dictionnaire::where("id", "=", $pseudocode[$i])->first();
+					if($i > 2){
+						$s .= ", ";
+					}
+					$s .= $element->libelle;
+					if($i == 0){
+						$s .=  ".";
+					}
+					if($i == 1){
+						$s .= "(";
+					}
+				}
+				$s .= ")";
+				$sequence->pseudocode = $s;
+				$sequence->commentaires = Commentaire::select("commentaire")->where("idSequence", $sequence->id)->get();
 			}
-			$commentaires = Commentaire::select("commentaire")->whereIn("idSequence", $id)->get();
-			$response = $this->view->render($response, "dictionary/details.twig", array("element" => $element, "commentaires" => $commentaires));
+			$response = $this->view->render($response, "dictionary/details.twig", array("element" => $element, "sequences" => $sequences));
 		}		
 		return $response;
 	}
@@ -122,7 +137,7 @@ class DictionaryController extends Controller{
 				array_push($data[$s], $commentaire->commentaire);
 			}
 		}
-		$name = "export_".date("d-m-Y");
+		$name = "dictionnaire_".$format."_".date("d-m-Y");
 		$path = "../ressources/temp/";
 		$this->$format($data, $name, $path);
 		header('Content-disposition: attachment; filename="'.$name.'.'.$format.'"');
