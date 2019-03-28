@@ -1,9 +1,12 @@
 <?php
 use App\Middleware\AuthMiddleware;
+use App\Middleware\CsrfViewMiddleware;
 use App\Middleware\GuestMiddleware;
 use App\Middleware\SearcherMiddleware;
 use App\Middleware\UserMiddleware;
 
+
+// Routes ayant l'obligation de connection CHERCHEUR + CSRF
 $app->group('', function () {
     $this->get("/dictionary", "DictionaryController:index")->setName("dictionary");
 	$this->get("/dictionary/export", "DictionaryController:viewExport")->setName("dictionary.export");
@@ -14,7 +17,7 @@ $app->group('', function () {
 	$this->put("/dictionary/{id}", "DictionaryController:update")->setName("dictionary.edit");
 	$this->delete("/dictionary/{id}", "DictionaryController:delete")->setName("dictionary.delete");
 })->add(new SearcherMiddleware($container))
-    ->add(new \App\Middleware\CsrfViewMiddleware($container))
+    ->add(new CsrfViewMiddleware($container))
     ->add($container->csrf);
 
 $app->get("/sequence/{idVideo}/{idSequence}","SequenceController:index");
@@ -24,15 +27,32 @@ $app->post("/video","VideoController:createSequence");
 $app->get("/object/{recherche}","VideoController:getObject");
 $app->get("/method/{recherche}","VideoController:getMethod");
 
+
+$app->get("[/]", "HomeController:index")->setName('home');
+$app->get("/home[/]", "HomeController:index")->setName('home');
+$app->get('/home/mentions[/]', "HomeController:mentions")->setName('home.mentions');
+$app->get('/home/technos[/]', "HomeController:technos")->setName('home.technos');
+
+
+
+// Routes ayant l'obligation de connection USER
+$app->group('', function () {
+    $this->get("/commentaires[/]","HomeController:commentaires")->setName('commentaires');
+})->add(new UserMiddleware($container));
+
+
+//Creation de compte
 $app->group('', function () {
     $this->get("/auth/signup", "AuthController:getSignUp")->setName("auth.signup");
     $this->post("/auth/signup", "AuthController:postSignUp");
     $this->get("/auth/signin", "AuthController:getSignIn")->setName("auth.signin");
     $this->post("/auth/signin", "AuthController:postSignIn");
-})->add(new \App\Middleware\CsrfViewMiddleware($container))
+})->add(new CsrfViewMiddleware($container))
     ->add($container->csrf)
     ->add(new GuestMiddleware($container));
 
+
+// Routes ayant l'obligation de connection (user + chercheurs)
 $app->group('', function () {
     $this->get("/auth/signout", "AuthController:getSignOut")->setName("auth.signout");
 
@@ -46,7 +66,3 @@ $app->group('', function () {
     $this->post("/profil/checkProfilPictureUpload", "ProfilController:checkProfilPictureUpload")->setName("checkProfilPictureUpload");
 
 })->add(new AuthMiddleware($container));
-
-$app->get("/home[/]", "HomeController:index")->setName('home');
-$app->get('/home/mentions[/]', "HomeController:mentions")->setName('home.mentions');
-$app->get('/home/technos[/]', "HomeController:technos")->setName('home.technos');

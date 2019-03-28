@@ -78,7 +78,6 @@ $container['csrf'] = function ($container) {
 $app->add(new \App\Middleware\ValidationErrorsMiddleware($container));
 $app->add(new \App\Middleware\OldInputMiddleware($container));
 
-
 //REGLES DE VALIDATION
 v::with('App\\Validation\\Rules\\');
 
