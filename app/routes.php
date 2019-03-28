@@ -13,11 +13,9 @@ $app->group('', function () {
 	$this->post("/dictionary", "DictionaryController:create")->setName("dictionary.create");
 	$this->put("/dictionary/{id}", "DictionaryController:update")->setName("dictionary.edit");
 	$this->delete("/dictionary/{id}", "DictionaryController:delete")->setName("dictionary.delete");
-})->add(new SearcherMiddleware($container));
-
-$app->group('', function () {
-
-})->add(new UserMiddleware($container));
+})->add(new SearcherMiddleware($container))
+    ->add(new \App\Middleware\CsrfViewMiddleware($container))
+    ->add($container->csrf);
 
 $app->get("/sequence/{idVideo}/{idSequence}","SequenceController:index");
 $app->post("/commenter","SequenceController:commentaire");
