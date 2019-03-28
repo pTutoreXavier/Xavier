@@ -20,7 +20,12 @@
 </fieldset><br /><br />
 <fieldset id="fieldsetInfoCompte">
 	<legend>Informations du compte</legend>
-	Level d'acces : {{ level }}<br />
+	Type de compte : 
+	{%if level == 500%}
+		user
+	{%elseif level == 779%}
+		Chercheur
+	{%endif%}<br />
 	Date d'inscription : {{ created_at }}
 </fieldset>
 

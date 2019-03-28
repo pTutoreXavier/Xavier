@@ -30,6 +30,7 @@ $app->get("[/]", "HomeController:index")->setName('home');
 $app->get("/home[/]", "HomeController:index")->setName('home');
 $app->get('/home/mentions[/]', "HomeController:mentions")->setName('home.mentions');
 $app->get('/home/technos[/]', "HomeController:technos")->setName('home.technos');
+$app->get("/commentaires[/]","HomeController:commentaires");
 
 //Creation de compte
 $app->group('', function () {
