@@ -13,7 +13,9 @@ $app->group('', function () {
 	$this->post("/dictionary", "DictionaryController:create")->setName("dictionary.create");
 	$this->put("/dictionary/{id}", "DictionaryController:update")->setName("dictionary.edit");
 	$this->delete("/dictionary/{id}", "DictionaryController:delete")->setName("dictionary.delete");
-})->add(new SearcherMiddleware($container));
+})->add(new \App\Middleware\CsrfViewMiddleware($container))
+    ->add($container->csrf)
+    ->add(new SearcherMiddleware($container));
 
 $app->group('', function () {
 
@@ -31,8 +33,8 @@ $app->group('', function () {
     $this->post("/auth/signup", "AuthController:postSignUp");
     $this->get("/auth/signin", "AuthController:getSignIn")->setName("auth.signin");
     $this->post("/auth/signin", "AuthController:postSignIn");
-})/*->add(new \App\Middleware\CsrfViewMiddleware($container))
-    ->add($container->csrf)*/
+})->add(new \App\Middleware\CsrfViewMiddleware($container))
+    ->add($container->csrf)
     ->add(new GuestMiddleware($container));
 
 $app->group('', function () {

@@ -9,7 +9,7 @@ use \App\Models\Commentaire;
 class DictionaryController extends Controller{
 	public function index($request, $response){
 		$methods = Dictionnaire::where("type", "method")->get();
-		$objects = Dictionnaire::where("type", "object")->get();
+		$objects = Dictionnaire::where("type", "objet")->get();
 		return $this->view->render($response, "dictionary/dictionary.twig", ["elements" => ["Objets" => $objects, "Fonctions" => $methods]]);
 	}
 

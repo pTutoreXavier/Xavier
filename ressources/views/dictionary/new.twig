@@ -4,7 +4,6 @@
 	Nom de l'élément: <input type="text" name="name"><br/>
 	{% if type == "method" %}
 		Paramètre: <input type="text" name="parameter"><br/>
-		<!-- plusieurs paramètres?? -->
 	{% endif %}
 	<input class="btn btn-primary" type="submit" name="submit" value="Ajouter">
 	{{ csrf.field | raw }}
