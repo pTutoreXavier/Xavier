@@ -21,6 +21,7 @@ $app->group('', function () {
     ->add($container->csrf);
 
 $app->group('', function(){
+    $this->get("/videos[/]", "VideoController")->setName('videos');
 	$this->get("/video/{idVideo}[/]","VideoController:index");
 	$this->post("/video[/]","VideoController:createSequence");
 })->add(new SearcherMiddleware($container));
