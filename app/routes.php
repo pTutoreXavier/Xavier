@@ -20,13 +20,10 @@ $app->group('', function () {
     ->add(new CsrfViewMiddleware($container))
     ->add($container->csrf);
 
-$app->get("/sequence/{idVideo}/{idSequence}","SequenceController:index");
-$app->post("/commenter","SequenceController:commentaire");
-$app->get("/video/{idVideo}","VideoController:index");
-$app->post("/video","VideoController:createSequence");
-$app->get("/object/{recherche}","VideoController:getObject");
-$app->get("/method/{recherche}","VideoController:getMethod");
-
+$app->group('', function(){
+	$this->get("/video/{idVideo}","VideoController:index");
+	$this->post("/video","VideoController:createSequence");
+})->add(new SearcherMiddleware($container));
 
 $app->get("[/]", "HomeController:index")->setName('home');
 $app->get("/home[/]", "HomeController:index")->setName('home');
@@ -38,6 +35,9 @@ $app->get('/home/technos[/]', "HomeController:technos")->setName('home.technos')
 // Routes ayant l'obligation de connection USER
 $app->group('', function () {
     $this->get("/commentaires[/]","HomeController:commentaires")->setName('commentaires');
+    $this->post("/commenter","SequenceController:commentaire");
+    $this->get("/object/{recherche}","VideoController:getObject");
+	$this->get("/method/{recherche}","VideoController:getMethod");
 })->add(new UserMiddleware($container));
 
 
@@ -64,5 +64,6 @@ $app->group('', function () {
     $this->get("/profil/updateProfilPicture", "ProfilController:updateProfilPicture")->setName("updateProfilPicture");
     $this->post("/profil/checkProfilPicture", "ProfilController:checkProfilPicture")->setName("checkProfilPicture");
     $this->post("/profil/checkProfilPictureUpload", "ProfilController:checkProfilPictureUpload")->setName("checkProfilPictureUpload");
+    $this->get("/sequence/{idVideo}/{idSequence}","SequenceController:index");
 
 })->add(new AuthMiddleware($container));

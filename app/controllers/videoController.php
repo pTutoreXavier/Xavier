@@ -31,7 +31,7 @@ class VideoController extends Controller{
 			$seq->idVideo = $_POST['idVideo'];
 			$seq->debut = $tabStart[$i];
 			$seq->fin = $tabFinish[$i];
-			$seq->idUser = $_SESSION['idUser'];
+			$seq->idUser = $_SESSION['user'];
 			//echo $seq;
 			//$seq->save();
 		}

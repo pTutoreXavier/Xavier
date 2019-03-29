@@ -7,7 +7,7 @@ use \App\Models\Commentaire as Commentaire;
 
 class SequenceController extends Controller{
 	public function index($request, $response){
-		$_SESSION["idUser"] = 1;
+
 		$idVideo = $request->getAttribute('route')->getArgument('idVideo');
 		$idSequence = $request->getAttribute('route')->getArgument('idSequence');
 
@@ -15,7 +15,7 @@ class SequenceController extends Controller{
 
 		$seq = Sequence::where('id', '=', $idSequence)->where('idVideo', '=', $idVideo)->first();
 
-		$message = Commentaire::where('idUser', '=', $_SESSION["idUser"])->where('idSequence','=',$idSequence)->first();
+		$message = Commentaire::where('idUser', '=', $_SESSION["user"])->where('idSequence','=',$idSequence)->first();
 
 		$lesCommentaires = Commentaire::where('idSequence',"=",$idSequence)->get();
 
@@ -24,7 +24,7 @@ class SequenceController extends Controller{
 
 	public function commentaire($request, $response){
 		$c = new Commentaire();
-		$c->idUser = $_SESSION["idUser"];
+		$c->idUser = $_SESSION["user"];
 		$c->idSequence = $_POST['idSequence'];
 		$c->commentaire = $_POST["message"];
 

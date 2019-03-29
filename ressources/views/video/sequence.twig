@@ -63,7 +63,7 @@
 	function commentaires(){
 		let HTML = ""
 		lesComms.forEach(function(element){
-			HTML +=  "<div>" + element[0] + " => " + element[2] + "</div>";
+			HTML +=  "<div>" + element[2] + "</div>";
 		});
 		$("#lesComms").html(HTML);
 	}
@@ -290,16 +290,19 @@ return true;
 		</div>
 	</div>
 </div>
-<div id="commentaire">
-	<form method="POST" name="comment" action="../../commenter">
-		<input type="text" name="message"/>
-		<input type="hidden" name="idSequence" value="{{idSequence}}"/>
-		<input type="hidden" name="idVideo" value="{{idVideo}}"/>
-		<input type="submit" name="envoi" value="commenter"/>
-	</form>
-</div>
-<div id="lesComms">
-	
-</div>
+{% if auth.level is same as('user') %}
+	<div id="commentaire">
+		<form method="POST" name="comment" action="../../commenter">
+			<input type="text" name="message"/>
+			<input type="hidden" name="idSequence" value="{{idSequence}}"/>
+			<input type="hidden" name="idVideo" value="{{idVideo}}"/>
+			<input type="submit" name="envoi" value="commenter"/>
+		</form>
+	</div>
+{% elseif auth.level is same as('searcher')  %}
+	<div id="lesComms">
+		
+	</div>
+{% endif %}
 </body>
 </html>
