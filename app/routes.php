@@ -9,6 +9,8 @@ $app->group('', function () {
 	$this->get("/dictionary/export", "DictionaryController:viewExport")->setName("dictionary.export");
 	$this->get("/dictionary/export/{format}", "DictionaryController:export")->setName("dictionary.format");
 	$this->get("/dictionary/new", "DictionaryController:new")->setName("dictionary.new");
+    $this->get("/dictionary/nuage", "DictionaryController:nuage")->setName("dictionary.nuage");
+    $this->get("/dictionary/nuage/{element}", "DictionaryController:clickNuage")->setName("dictionary.clickNuage");
 	$this->get("/dictionary/{id}", "DictionaryController:getById")->setName("dictionary.details");
 	$this->post("/dictionary", "DictionaryController:create")->setName("dictionary.create");
 	$this->put("/dictionary/{id}", "DictionaryController:update")->setName("dictionary.edit");

@@ -239,4 +239,24 @@ class DictionaryController extends Controller{
 		fwrite($file, json_encode($data));
 		fclose($file);
 	}
+
+	public function nuage($request, $response, $args){
+		$elements = Dictionnaire::select(["libelle", "type"])->get();
+		$data = [];
+		foreach($elements as $element){
+			$count = Sequence::where("pseudocode", "like", $element->libelle.";%")->orWhere("pseudocode", "like", "%;".$element->libelle.";%")->orWhere("pseudocode", "like", "%;".$element->libelle)->count();
+			$e = $element->libelle;
+			if($element->type == "method"){
+				$e .= "()";
+			}
+			array_push($data, ["id" => $element->id, "libelle" => $e, "count" => $count]);
+		}
+		return $this->view->render($response, "dictionary/nuage.twig", ["elements" => $data]);
+	}
+
+	public function clickNuage($request, $response, $args){
+		$element = Dictionnaire::where("libelle", $args["element"])->first();
+		return $response->withRedirect($this->router->pathFor("dictionary.details", ["id" => $element->id]));
+	}
+
 }

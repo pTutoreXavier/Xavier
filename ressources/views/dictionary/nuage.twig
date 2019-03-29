@@ -1,0 +1,21 @@
+{% extends "templates/app.twig" %}
+{% block content %}
+<script src="{{ base_url() }}/d3-wordcloud/lib/d3/d3.js"></script>
+<script src="{{ base_url() }}/d3-wordcloud/lib/d3/d3.layout.cloud.js"></script>
+<script src="{{ base_url() }}/d3-wordcloud/d3.wordcloud.js"></script>
+<div id='wordcloud'></div>
+<script>
+  d3.wordcloud()
+    .size([800, 400])
+    .selector('#wordcloud')
+    .words([
+    	{% for element in elements %}
+    		{text: "{{ element.libelle }}", size: parseInt("{{ element.count }}") + 1 },
+    	{% endfor %}
+    ])
+    .onwordclick(function(d, i) {
+	  	window.location = "{{ base_url() }}" + "/dictionary/nuage/" + d.text;
+	})
+    .start();
+</script>
+{% endblock %}
