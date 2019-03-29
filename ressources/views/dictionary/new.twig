@@ -14,8 +14,7 @@
 </form>
 <script type="text/javascript">
 	$("#add").on("click", function(){
-		let div = $("#parametres");
-		let n = div.children().length + 1;
+		let n = $(".parametre").length;
 		$("#parametres").append('<input class="parametre" type="text" name="parametre'+n+'">');
 	});
 </script>

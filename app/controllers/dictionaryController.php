@@ -7,20 +7,25 @@ use \App\Models\Sequence;
 use \App\Models\Commentaire;
 
 class DictionaryController extends Controller{
+	//page d'accueil du dictionnaire
 	public function index($request, $response){
 		$methods = Dictionnaire::where("type", "method")->get();
 		$objects = Dictionnaire::where("type", "objet")->get();
 		return $this->view->render($response, "dictionary/dictionary.twig", ["elements" => ["Objets" => $objects, "Fonctions" => $methods]]);
 	}
 
+	//récupère un élément et redirige vers la page de modification,suppression ou la page de détails
 	public function getById($request, $response, $args){
 		$element = Dictionnaire::find($args["id"]);
+		//page de modification
 		if($request->getParam("action") !== null && $request->getParam("action") == "edit"){
 			$response = $this->view->render($response, "dictionary/edit.twig", ["element" => $element, "parametres" => explode("; ", $element->parametre)]);
 		}
+		//suppression
 		elseif($request->getParam("action") !== null && $request->getParam("action") == "delete"){
 			$response = $this->delete($request, $response, $args);
 		}
+		//details de l'élément
 		else{
 			$sequences = Sequence::where("pseudocode", "like", $element->id.";%")->orWhere("pseudocode", "like", "%;".$element->id.";%")->orWhere("pseudocode", "like", "%;".$element->id)->get();
 			foreach($sequences as $sequence){
@@ -48,10 +53,12 @@ class DictionaryController extends Controller{
 		return $response;
 	}
 
+	//page de création d'un élément
 	public function new($request, $response){
 		return $this->view->render($response, "dictionary/new.twig", ["type" => $request->getParam("type")]);
 	}
 
+	//enregistrement du nouvel élément
 	public function create($request, $response, $args){
 		$params = $request->getParams();
 		if($params["type"] == "method"){
@@ -88,6 +95,7 @@ class DictionaryController extends Controller{
 		return $response->withRedirect($this->router->pathFor('dictionary'));
 	}
 
+	//modification de l'élément
 	public function update($request, $response, $args){
 		$params = $request->getParams();
 		$element = Dictionnaire::find($args["id"]);
@@ -128,16 +136,19 @@ class DictionaryController extends Controller{
 	    return $response->withRedirect($this->router->pathFor("dictionary.details", ["id" => $args["id"]]));
 	}
 
+	//suppression de l'élément
 	public function delete($request, $response, $args){
         $element = Dictionnaire::find($args["id"]);
 	    $element->delete();
 	    return $response->withRedirect($this->router->pathFor("dictionary"));
 	}
 
+	//page pour choisir dans quel format exporter les données
 	public function viewExport($request, $response, $args){
 		return $this->view->render($response, "dictionary/export.twig", ["formats" => ["xml", "csv", "json"]]);
 	}
 
+	//création des données et du fichier qui sera téléchargé
 	public function export($request, $response, $args){
 		$format = $args["format"];
 		if(in_array($format, ["xml", "csv", "json"])){
@@ -182,7 +193,7 @@ class DictionaryController extends Controller{
 		}
 	}
 
-	//création d'un fichier xml
+	//création d'un fichier xml à partir des données
 	private function xml($data, $name, $path){
 		$xml = new \XMLWriter();
 		$xml->openMemory();
@@ -203,7 +214,7 @@ class DictionaryController extends Controller{
 		fclose($file);
 	}
 
-	//création d'un fichier csv
+	//création d'un fichier csv à partir des données
 	private function csv($data, $name, $path){
 		$file = fopen($path.$name.".csv", "w+");
 		fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
@@ -221,7 +232,7 @@ class DictionaryController extends Controller{
 		fclose($file);
 	}
 
-	//création d'un fichier json
+	//création d'un fichier json à partir des données
 	private function json($data, $name, $path){
 		$file = fopen($path.$name.".json", "w+");
 		fwrite($file, json_encode($data));
