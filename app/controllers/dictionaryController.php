@@ -27,16 +27,15 @@ class DictionaryController extends Controller{
 		}
 		//details de l'élément
 		else{
-			$sequences = Sequence::where("pseudocode", "like", $element->id.";%")->orWhere("pseudocode", "like", "%;".$element->id.";%")->orWhere("pseudocode", "like", "%;".$element->id)->get();
+			$sequences = Sequence::where("pseudocode", "like", $element->libelle.";%")->orWhere("pseudocode", "like", "%;".$element->libelle.";%")->orWhere("pseudocode", "like", "%;".$element->libelle)->get();
 			foreach($sequences as $sequence){
 				$pseudocode = explode(";", $sequence->pseudocode);
 				$s = "";
 				for($i = 0; $i < count($pseudocode); $i++){
-					$e = Dictionnaire::where("id", "=", $pseudocode[$i])->first();
 					if($i > 2){
 						$s .= ", ";
 					}
-					$s .= $e->libelle;
+					$s .= $pseudocode[$i];				
 					if($i == 0){
 						$s .=  ".";
 					}
@@ -63,11 +62,13 @@ class DictionaryController extends Controller{
 		$params = $request->getParams();
 		if($params["type"] == "method"){
 	    	foreach($params as $key => $value) {
-	    		if($key == "type" || $key == "libelle" || substr($key, 0, 9) == "parametre"){
-					$validation = $this->validator->validate($request, [
-				        $key=> v::alpha()
-				    ]);
-				}	    		
+	    		if($value != ""){
+	    			if($key == "type" || $key == "libelle" || substr($key, 0, 9) == "parametre"){
+						$validation = $this->validator->validate($request, [
+					        $key => v::alpha()
+					    ]);
+					}	
+	    		}      		
 	    	}	    	
 	    }
 	    else{
