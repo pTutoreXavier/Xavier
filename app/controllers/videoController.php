@@ -63,4 +63,20 @@ class VideoController extends Controller{
 
 		return json_encode($array);
 	}
+
+	public function getVideos($request, $response){
+		return $this->view->render($response, "video/lesVideos.twig");
+	}
+
+	public function getVideosSearcher($request, $response){
+		$array = array();
+
+		$video = Video::where("idChercheur","=", $_SESSION["user"])->get();
+
+		for ($i=0; $i < count($video); $i++) { 	
+			array_push($array, $video[$i]["lien"]);
+		}
+
+		return json_encode($array);
+	}
 }

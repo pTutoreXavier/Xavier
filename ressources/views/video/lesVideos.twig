@@ -1,0 +1,33 @@
+<head>
+	<meta charset="UTF-8">
+	<title>Xavier</title>
+ 	<script type="text/javascript" src="/projet_tut_merge/Xavier/ressources/views/jplayer/js/jquery.min.js"></script>
+</head>
+
+chercher par le nom d'un chercheur :
+<input type="text" name="chercheur" id="chercheur">
+<input type="button" id="recherche" value="recherche">
+<input type="button" id="mesVideos" value="Mes vidéos">
+
+<script type="text/javascript">
+	$("#mesVideos").click(function(event){
+		if($("#mesVideos").val() == "Mes vidéos"){
+			$.ajax({
+		        url : 'getVideosSearcher', // La ressource ciblée
+		        type : 'GET', // Le type de la requête HTTP.
+		        success : function(code_html, statut){
+		       		let video = JSON.parse(code_html);
+		       		console.log(video);
+		        }
+		    });
+			$("#mesVideos").val("toute les vidéos");
+		}
+		else{
+			$("#mesVideos").val("Mes vidéos");
+		}
+	});
+
+	$("#recherche").click(function(event){
+
+	});
+</script>
