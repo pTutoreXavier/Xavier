@@ -16,7 +16,7 @@ class DictionaryController extends Controller{
 	public function getById($request, $response, $args){
 		$element = Dictionnaire::find($args["id"]);
 		if($request->getParam("action") !== null && $request->getParam("action") == "edit"){
-			$response = $this->view->render($response, "dictionary/edit.twig", ["element" => $element]);
+			$response = $this->view->render($response, "dictionary/edit.twig", ["element" => $element, "parametres" => explode("; ", $element->parametre)]);
 		}
 		elseif($request->getParam("action") !== null && $request->getParam("action") == "delete"){
 			$response = $this->delete($request, $response, $args);
@@ -54,11 +54,11 @@ class DictionaryController extends Controller{
 
 	public function create($request, $response, $args){
 		$params = $request->getParams();
-	    if($params["type"] == "method"){
+		if($params["type"] == "method"){
 	    	foreach($params as $key => $value) {
-	    		if($key == "type" || $key == "libelle" || substr($key, 0, 9) == "parameter"){
+	    		if($key == "type" || $key == "libelle" || substr($key, 0, 9) == "parametre"){
 					$validation = $this->validator->validate($request, [
-				        $key=> v::notEmpty()->alpha()
+				        $key=> v::alpha()
 				    ]);
 				}	    		
 	    	}	    	
@@ -71,7 +71,6 @@ class DictionaryController extends Controller{
         if($validation->failed()){
             return $response->withRedirect($this->router->pathFor('dictionary.create'));
         }
-
 		$element = new Dictionnaire;
 		$element->type = $params["type"];
 		$element->libelle = $params["libelle"];
@@ -91,23 +90,41 @@ class DictionaryController extends Controller{
 
 	public function update($request, $response, $args){
 		$params = $request->getParams();
-		$validation = $this->validator->validate($request, [
-	        'name' => v::notEmpty()->alpha()
-	    ]);
-	    if($params["type"] == "method"){
+		$element = Dictionnaire::find($args["id"]);
+		if($element->type = "method"){
+	    	foreach($params as $key => $value) {
+	    		if($value != ""){
+	    			if($key == "type" || $key == "libelle" || substr($key, 0, 9) == "parametre"){
+						$validation = $this->validator->validate($request, [
+					        $key => v::alpha()
+					    ]);
+					}	
+	    		}    		
+	    	}	    	
+	    }
+	    else{
 	    	$validation = $this->validator->validate($request, [
-		        'parameter' => v::notEmpty()->alpha()
+		        'libelle' => v::notEmpty()->alpha()
 		    ]);
 	    }
         if($validation->failed()){
-            return $response->withRedirect($this->router->pathFor('dictionary'));
+            return $response->withRedirect($this->router->pathFor('dictionary.details', ["id" => $args["id"]]));
         }
-        $element = Dictionnaire::find($args["id"]);
-        $element->libelle = $params["name"];
-        if($params["type"] == "method"){
-	    	$element->parametre = $params["parameter"];
-	    }
-	    $element->save();
+        $element->libelle = $params["libelle"];
+        $element->parametre = "";
+		foreach($params as $key => $value){
+			if(substr($key, 0, 9) == "parametre"){				
+				if($value != ""){
+					if($element->parametre == ""){
+					$element->parametre .= $value;
+					}
+					else{
+						$element->parametre .= "; ".$value;
+					}
+				}
+			}
+		}
+		$element->save();
 	    return $response->withRedirect($this->router->pathFor("dictionary.details", ["id" => $args["id"]]));
 	}
 
@@ -166,6 +183,7 @@ class DictionaryController extends Controller{
 		}
 	}
 
+	//création d'un fichier xml
 	private function xml($data, $name, $path){
 		$xml = new \XMLWriter();
 		$xml->openMemory();
@@ -186,6 +204,7 @@ class DictionaryController extends Controller{
 		fclose($file);
 	}
 
+	//création d'un fichier csv
 	private function csv($data, $name, $path){
 		$file = fopen($path.$name.".csv", "w+");
 		fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
@@ -203,6 +222,7 @@ class DictionaryController extends Controller{
 		fclose($file);
 	}
 
+	//création d'un fichier json
 	private function json($data, $name, $path){
 		$file = fopen($path.$name.".json", "w+");
 		fwrite($file, json_encode($data));
