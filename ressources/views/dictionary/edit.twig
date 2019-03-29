@@ -9,17 +9,15 @@
 				<input class="parametre" type="text" name="parametre{{ loop.index }}" value="{{ parametre }}">
 			{% endfor %}
 		</div>
-	{% endif %}
-	<br/>
-	<button id="add" type="button" class="btn btn-secondary">Ajouter un paramètre</button>
+		<button id="add" type="button" class="btn btn-secondary">Ajouter un paramètre</button>
+	{% endif %}	
 	<input class="btn btn-primary" type="submit" name="submit" value="Modifier">
 	<input type="hidden" name="_METHOD" value="PUT">
 	{{ csrf.field | raw }}
 </form>
 <script type="text/javascript">
 	$("#add").on("click", function(){
-		let div = $("#parametres");
-		let n = div.children().length + 1;
+		let n = $("#parametres").children().length + 1;
 		$("#parametres").append('<input class="parametre" type="text" name="parametre'+n+'">');
 	});
 </script>

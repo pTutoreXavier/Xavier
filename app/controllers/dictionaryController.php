@@ -147,11 +147,10 @@ class DictionaryController extends Controller{
 				$pseudocode = explode(";", $sequence->pseudocode);
 				$s = "";
 				for($i = 0; $i < count($pseudocode); $i++){
-					$element = Dictionnaire::where("id", "=", $pseudocode[$i])->first();
 					if($i > 2){
 						$s .= ", ";
 					}
-					$s .= $element->libelle;
+					$s .= $pseudocode[$i];
 					if($i == 0){
 						$s .=  ".";
 					}
