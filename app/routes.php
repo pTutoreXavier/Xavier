@@ -21,9 +21,17 @@ $app->group('', function () {
     ->add($container->csrf);
 
 $app->group('', function(){
-    $this->get("/videos[/]", "VideoController")->setName('videos');
+
+    $this->get("/videos[/]","VideoController:getVideos")->setName('videos');
 	$this->get("/video/{idVideo}[/]","VideoController:index");
 	$this->post("/video[/]","VideoController:createSequence");
+
+	$this->get("/getVideosSearcher","VideoController:getVideosSearcher");
+	$this->get("/getAllVideos","VideoController:getAllVideos");
+	$this->get("/getSearcher/{recherche}","VideoController:getSearcher");
+	$this->get("/VideosSearcher/{recherche}","VideoController:getVideoOfSearcher");
+	$this->get("/upload","VideoController:upload");
+
 })->add(new SearcherMiddleware($container));
 
 $app->get("[/]", "HomeController:index")->setName('home');

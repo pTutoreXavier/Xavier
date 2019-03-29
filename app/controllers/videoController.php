@@ -4,6 +4,7 @@ use \Slim\Views\Twig as View;
 use \App\Models\Video as Video;
 use \App\Models\Sequence as Sequence;
 use \App\Models\Dictionnaire as Dictionnaire;
+use \App\Models\User as User;
 
 class VideoController extends Controller{
 	public function index($request, $response){
@@ -62,5 +63,66 @@ class VideoController extends Controller{
 		}
 
 		return json_encode($array);
+	}
+
+	public function upload($request, $response){
+		return $this->view->render($response, "video/upload.twig");
+	}
+
+	public function getVideos($request, $response){
+		return $this->view->render($response, "video/lesVideos.twig");
+	}
+
+	public function getVideosSearcher($request, $response){
+		$array = array();
+
+		$video = Video::where("idChercheur","=", $_SESSION["user"])->get();
+
+		for ($i=0; $i < count($video); $i++) { 	
+			array_push($array, $video[$i]["lien"]);
+		}
+
+		return json_encode($array);
+	}
+
+	public function getAllVideos($request, $response){
+		$array = array();
+
+		$video = Video::get();
+
+		for ($i=0; $i < count($video); $i++) { 	
+			array_push($array, $video[$i]["lien"]);
+		}
+
+		return json_encode($array);
+	}
+
+	public function getSearcher($request, $response){
+		$array = array();
+		$recherche = $request->getAttribute('route')->getArgument('recherche');
+		$maj = strtoupper($recherche);
+
+		$searcher = User::where("nom","like", $recherche."%")->orWhere("nom","like", $maj."%")->where("level","=","779")->get();
+
+		for ($i=0; $i < count($searcher); $i++) { 	
+			array_push($array, $searcher[$i]["nom"]);
+		}
+
+		return json_encode($array);
+	}
+
+	public function getVideoOfSearcher($request, $response){
+		$array = array();
+		$recherche = $request->getAttribute('route')->getArgument('recherche');
+
+		$user = User::where("nom","=",$recherche)->get("id");
+
+		$video = Video::where("idChercheur", "=", $user[0]->id)->get();
+
+		for ($i=0; $i < count($video); $i++) { 	
+			array_push($array, $video[$i]["lien"]);
+		}
+
+		return json_encode($array);		
 	}
 }

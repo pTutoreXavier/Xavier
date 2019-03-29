@@ -23,13 +23,14 @@ class SequenceController extends Controller{
 	}
 
 	public function commentaire($request, $response){
-		$c = new Commentaire();
-		$c->idUser = $_SESSION["user"];
-		$c->idSequence = $_POST['idSequence'];
-		$c->commentaire = $_POST["message"];
+		if($_POST["message"] != ""){
+			$c = new Commentaire();
+			$c->idUser = $_SESSION["user"];
+			$c->idSequence = $_POST['idSequence'];
+			$c->commentaire = $_POST["message"];
 
-		$c->save();
-
+			$c->save();
+		}
 		header('Location: sequence/'.$_POST['idVideo'].'/'.$_POST['idSequence']);
 		exit();
 	}
