@@ -12,8 +12,8 @@
 	{% for value in seqsAndComms %}
 		<tr>
 			<td>{{ loop.index }}</td>
-			<td>{{value.commentaire}}</td>
-			<td><a href="sequence/{{value.idVideo}}/{{value.id}}">Voir la vidéo</a></td>
+			<td>{{ value.commentaire }}</td>
+			<td><a href="{{ path_for('sequence', { idVideo:value.idVideo , idSequence:value.id }) }}">Voir la vidéo</a></td>
 		</tr>
 	{% endfor %}
 </table>
