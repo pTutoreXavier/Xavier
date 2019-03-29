@@ -266,12 +266,12 @@
 
 					let element = document.createElement("div");
 					element.setAttribute("id",nbreSequence);
-					element.setAttribute("class","StartFinish");
+					element.setAttribute("class","StartFinish row");
 					document.getElementById("leForm").appendChild(element);
 
 					element = document.createElement("button");
 					element.setAttribute("id", "Deb" + nbreSequence);  
-					element.setAttribute("class", "start");   
+					element.setAttribute("class", "start btn btn-dark");
 					element.setAttribute("type", "button");
 					element.setAttribute("value", "Début : "); 
 					document.getElementById(nbreSequence).appendChild(element);
@@ -279,7 +279,8 @@
 
 					element = document.createElement("input");
 					element.setAttribute("name", "start" + nbreSequence);
-					element.setAttribute("id", "start" + nbreSequence);       
+					element.setAttribute("id", "start" + nbreSequence);
+					element.setAttribute("class", "ml-3 form-control");
 					element.setAttribute("type", "text"); 
 					element.setAttribute("required", "required");      
 					element.setAttribute("disabled", "disabled");     
@@ -567,16 +568,23 @@
 				</div>			
 			</div>
 			<!-- début form -->
-			<form id="leForm" name="createSequence" method="POST" action='../video'>
+			<form id="leForm"  class="form-group row" name="createSequence" method="POST" action='../video'>
 				<div id="bloc">
-					<button class="ajouterSequence" type="button">Ajouter une sequence</button><br/> 
-					<button class="sequence" type="button" disabled="disabled">envoie</button>
-				</div>		
-				<input id="Start" type="hidden" name="capStart" value="0"/>
-				<input id="Finish" type="hidden" name="capFinish" value="0"/>
-				<input id="PseudoCode" type="hidden" name="pseudocode" value="0"/>
+					<button class="ajouterSequence btn btn-secondary" type="button">Ajouter une sequence</button><br/>
+					<button class="sequence btn btn-primary" type="button" disabled="disabled">Envoyer</button>
+				</div>
+				<div class="row">
+					<div class="form-group">
+						<input class="form-control" id="Start" type="hidden" name="capStart" value="0"/>
+						<input class="form-control" id="Finish" type="hidden" name="capFinish" value="0"/>
+						<input class="form-control" id="PseudoCode" type="hidden" name="pseudocode" value="0"/>
+						<input class="form-control" id="idVideo" type="hidden" name="idVideo" value="{{idVideo}}"/>
+					</div>
 
-				<input id="idVideo" type="hidden" name="idVideo" value="{{idVideo}}"/>
+				</div>
+
+
+
 			</form>	<!-- fin form -->
 			<div id="lesCommentaires">
 				
