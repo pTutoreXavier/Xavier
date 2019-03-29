@@ -1,11 +1,22 @@
 {% extends "templates/app.twig" %}
 {% block content %}
 <form method="POST" action="{{ path_for('dictionary.create') }}?type={{ type }}">
-	Nom de l'élément: <input type="text" name="name"><br/>
+	Nom de l'élément: <input type="text" name="libelle"><br/>
 	{% if type == "method" %}
-		Paramètre: <input type="text" name="parameter"><br/>
+		Paramètre(s):
+		<div id="parametres">
+			<input class="parametre" type="text" name="parametre1">
+		</div>
 	{% endif %}
+	<button id="add" type="button" class="btn btn-secondary">Ajouter un paramètre</button>
 	<input class="btn btn-primary" type="submit" name="submit" value="Ajouter">
 	{{ csrf.field | raw }}
 </form>
+<script type="text/javascript">
+	$("#add").on("click", function(){
+		let div = $("#parametres");
+		let n = div.children().length + 1;
+		$("#parametres").append('<input class="parametre" type="text" name="parametre'+n+'">');
+	});
+</script>
 {% endblock %}

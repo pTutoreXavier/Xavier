@@ -54,22 +54,36 @@ class DictionaryController extends Controller{
 
 	public function create($request, $response, $args){
 		$params = $request->getParams();
-		$validation = $this->validator->validate($request, [
-	        'name' => v::notEmpty()->alpha()
-	    ]);
-	    if($params == "method"){
+	    if($params["type"] == "method"){
+	    	foreach($params as $key => $value) {
+	    		if($key == "type" || $key == "libelle" || substr($key, 0, 9) == "parameter"){
+					$validation = $this->validator->validate($request, [
+				        $key=> v::notEmpty()->alpha()
+				    ]);
+				}	    		
+	    	}	    	
+	    }
+	    else{
 	    	$validation = $this->validator->validate($request, [
-		        'parameter' => v::notEmpty()->alpha()
+		        'libelle' => v::notEmpty()->alpha()
 		    ]);
 	    }
         if($validation->failed()){
             return $response->withRedirect($this->router->pathFor('dictionary.create'));
         }
+
 		$element = new Dictionnaire;
 		$element->type = $params["type"];
-		$element->libelle = $params["name"];
-		if($params["type"] == "method"){
-			$element->parametre = $params["parameter"];
+		$element->libelle = $params["libelle"];
+		foreach($params as $key => $value){
+			if(substr($key, 0, 9) == "parametre"){
+				if($element->parametre === null){
+					$element->parametre = $value;
+				}
+				else{
+					$element->parametre .= "; ".$value;
+				}
+			}
 		}
 		$element->save();
 		return $response->withRedirect($this->router->pathFor('dictionary'));
