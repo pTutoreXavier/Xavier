@@ -80,7 +80,7 @@
 	     	}
 	     	$("#Start").val(start);
 	   		$("#Finish").val(finish);
-	   		$("#PseudoCode").val(type + "." + method + "(" + param + ")");
+	   		$("#PseudoCode").val(type + ";" + method + ";" + param);
 
 	     	document.getElementById("leForm").submit();
 
@@ -431,8 +431,6 @@
 			}    
 		});
 
-///////////////////////////////Gestion de la timeline (affichage)////////////////////////////////////////////////
-
 		setInterval(function() {
 			if ((jpData.status.currentTime > fin || jpData.status.currentTime < debut) && jpData.status.currentTime != 0) {
 				if(repeat == true){
@@ -579,6 +577,9 @@
 
 				<input id="idVideo" type="hidden" name="idVideo" value="{{idVideo}}"/>
 			</form>	<!-- fin form -->
+			<div id="lesCommentaires">
+				
+			</div>
 		</div>
 		<div class="jp-no-solution">
 			<span>Update Required</span>

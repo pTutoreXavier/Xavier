@@ -16,6 +16,19 @@
   				$("#commentaire").html("");
   			}
 
+  			var lesComms = [];
+  			var test = [];
+  			{% for comm in commentaires %}
+  				test = [];
+		    	test.push("{{comm.idUser}}");
+		    	test.push("{{comm.idSequence}}");
+		    	test.push("{{comm.commentaire}}");
+		    	lesComms.push(test);
+		    {% endfor %}
+
+		    console.log(lesComms);
+		    commentaires();
+
      	$("#jquery_jplayer_1").jPlayer({
 		ready: function () {
 			$(this).jPlayer("setMedia", {
@@ -45,6 +58,18 @@
      	var max = (fin - debut); // (fin video - debut video)
      	var jp = $('#jquery_jplayer_1'), jpData = jp.data('jPlayer');
 
+///////////////////////////////Affichage commentaires (chercheur)///////////////////////////
+
+	function commentaires(){
+		let HTML = ""
+		lesComms.forEach(function(element){
+			HTML +=  "<div>" + element[0] + " => " + element[2] + "</div>";
+		});
+		$("#lesComms").html(HTML);
+	}
+
+///////////////////////////////lance la vidéo////////////////////////////////////////////////
+
     $(".jp-play").click( function() {  //clique sur le bouton play
     	if(jpData.status.currentTime !== undefined){
     		if(jpData.status.currentTime > 0){
@@ -61,12 +86,14 @@
     	//imprimer_bloc("miniature","jp_container_1");
     });
 
-
+///////////////////////////////stop la vidéo////////////////////////////////////////////////
 
     $(".jp-stop").click( function() {  //clique sur le bouton pause
     	play = false; // la video est en pause
       $("#jquery_jplayer_1").jPlayer("pause", jpData.status.currentTime); //ammène le curseur a l'endroit ou a était arreté la vidéo
     });
+
+///////////////////////////////active/desactive le repeat////////////////////////////////////////////////
 
     $(".jp-repeat").click(function(){
     	if(repeat == false){
@@ -76,6 +103,8 @@
     		repeat = false;
     	}
     });
+
+///////////////////////////////clique gauche sur la timeline////////////////////////////////////////////////
 
     $("#progressBar").click( function(event){	// clique sur la barre de progression
     	var x = document.getElementById("progressBar"); 
@@ -268,6 +297,9 @@ return true;
 		<input type="hidden" name="idVideo" value="{{idVideo}}"/>
 		<input type="submit" name="envoi" value="commenter"/>
 	</form>
+</div>
+<div id="lesComms">
+	
 </div>
 </body>
 </html>

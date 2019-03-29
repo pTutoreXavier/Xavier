@@ -17,7 +17,9 @@ class SequenceController extends Controller{
 
 		$message = Commentaire::where('idUser', '=', $_SESSION["idUser"])->where('idSequence','=',$idSequence)->first();
 
-		return $this->view->render($response, "video/sequence.twig", array("video" => $video, "seq" => $seq, "message" => $message, 'idVideo' => $idVideo, 'idSequence' => $idSequence));
+		$lesCommentaires = Commentaire::where('idSequence',"=",$idSequence)->get();
+
+		return $this->view->render($response, "video/sequence.twig", array("video" => $video, "seq" => $seq, "message" => $message, 'idVideo' => $idVideo, 'idSequence' => $idSequence, 'commentaires' => $lesCommentaires));
 	}
 
 	public function commentaire($request, $response){
