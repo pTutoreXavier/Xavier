@@ -25,6 +25,10 @@ $app->group('', function(){
 	$this->post("/video","VideoController:createSequence");
 	$this->get("/videos","VideoController:getVideos");
 	$this->get("/getVideosSearcher","VideoController:getVideosSearcher");
+	$this->get("/getAllVideos","VideoController:getAllVideos");
+	$this->get("/getSearcher/{recherche}","VideoController:getSearcher");
+	$this->get("/VideosSearcher/{recherche}","VideoController:getVideoOfSearcher");
+	$this->get("/upload","VideoController:upload");
 })->add(new SearcherMiddleware($container));
 
 $app->get("[/]", "HomeController:index")->setName('home');
