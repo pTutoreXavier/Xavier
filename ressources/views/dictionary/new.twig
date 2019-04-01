@@ -1,21 +1,44 @@
 {% extends "templates/app.twig" %}
 {% block content %}
-<form method="POST" action="{{ path_for('dictionary.create') }}?type={{ type }}">
-	Nom de l'élément: <input type="text" name="libelle"><br/>
-	{% if type == "method" %}
-		Paramètre(s):
-		<div id="parametres">
-			<input class="parametre" type="text" name="parametre1">
+<div class="row m-auto col-6">
+	<h4>
+		{% if type == "objet" %}
+			Nouvel objet
+		{% elseif type == "method" %}
+			Nouvelle fonction
+		{% endif %}
+	</h4>
+	<form method="POST" action="{{ path_for('dictionary.create') }}?type={{ type }}">
+		<div class="form-group card">
+			<div class="card-body">
+				<div class="form-group row">
+					<label class="col-6 col-form-label">Nom de l'élément</label>
+					<div class="col-6">
+						<input class="form-control" type="text" name="libelle" value="{{ old.libelle }}">
+						{% if errors.libelle %}
+							<span class="erreur">{{ errors.libelle | first }}</span>
+						{% endif %}
+					</div>
+				</div>
+				{% if type == "method" %}
+					<div class="form-group row">
+						<label class="col-6 col-form-label">Paramètre(s)</label>
+						<div id="parametres">
+							<input class="form-control parametre" type="text" name="parametre1">
+						</div>
+					</div>
+					<button id="add" type="button" class="btn btn-secondary">Ajouter un paramètre</button>
+				{% endif %}	
+				<input class="btn btn-primary" type="submit" name="submit" value="Ajouter">
+			</div>
 		</div>
-		<button id="add" type="button" class="btn btn-secondary">Ajouter un paramètre</button>
-	{% endif %}	
-	<input class="btn btn-primary" type="submit" name="submit" value="Ajouter">
-	{{ csrf.field | raw }}
-</form>
+		{{ csrf.field | raw }}
+	</form>
+</div>
 <script type="text/javascript">
 	$("#add").on("click", function(){
-		let n = $(".parametre").length;
-		$("#parametres").append('<input class="parametre" type="text" name="parametre'+n+'">');
+		let n = $(".parametre").length + 1;
+		$("#parametres").append('<input class="form-control parametre mt-2" type="text" name="parametre'+n+'">');
 	});
 </script>
 {% endblock %}

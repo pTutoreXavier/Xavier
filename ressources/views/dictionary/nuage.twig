@@ -10,11 +10,11 @@
     .selector('#wordcloud')
     .words([
     	{% for element in elements %}
-    		{text: "{{ element.libelle }}", size: parseInt("{{ element.count }}") + 1 },
+    		{text: "{{ element.libelle }}", size: "{{ element.count }}" + 1 },
     	{% endfor %}
     ])
     .onwordclick(function(d, i) {
-	  	window.location = "{{ base_url() }}" + "/dictionary/nuage/" + d.text;
+	  	window.location = "{{ base_url() }}" + "/dictionary/" + d.text + "/id";
 	})
     .start();
 </script>

@@ -18,33 +18,18 @@ class DictionaryController extends Controller{
 	public function getById($request, $response, $args){
 		$element = Dictionnaire::find($args["id"]);
 		//page de modification
-		if($request->getParam("action") !== null && $request->getParam("action") == "edit"){
+		if($request->getParam("action") != null && $request->getParam("action") == "edit"){
 			$response = $this->view->render($response, "dictionary/edit.twig", ["element" => $element, "parametres" => explode("; ", $element->parametre)]);
 		}
 		//suppression
-		elseif($request->getParam("action") !== null && $request->getParam("action") == "delete"){
+		elseif($request->getParam("action") != null && $request->getParam("action") == "delete"){
 			$response = $this->delete($request, $response, $args);
 		}
 		//details de l'élément
 		else{
 			$sequences = Sequence::where("pseudocode", "like", $element->libelle.";%")->orWhere("pseudocode", "like", "%;".$element->libelle.";%")->orWhere("pseudocode", "like", "%;".$element->libelle)->get();
 			foreach($sequences as $sequence){
-				$pseudocode = explode(";", $sequence->pseudocode);
-				$s = "";
-				for($i = 0; $i < count($pseudocode); $i++){
-					if($i > 2){
-						$s .= ", ";
-					}
-					$s .= $pseudocode[$i];				
-					if($i == 0){
-						$s .=  ".";
-					}
-					if($i == 1){
-						$s .= "(";
-					}
-				}
-				$s .= ")";
-				$sequence->pseudocode = $s;
+				$sequence->pseudocode = explode(";", $sequence->pseudocode);
 				$sequence->commentaires = Commentaire::select("commentaire")->where("idSequence", $sequence->id)->get();
 			}
 			$response = $this->view->render($response, "dictionary/details.twig", ["element" => $element, "sequences" => $sequences]);
@@ -54,7 +39,10 @@ class DictionaryController extends Controller{
 
 	//page de création d'un élément
 	public function new($request, $response){
-		return $this->view->render($response, "dictionary/new.twig", ["type" => $request->getParam("type")]);
+		if($request->getParam("type") == "objet" || $request->getParam("type") == "method"){
+			return $this->view->render($response, "dictionary/new.twig", ["type" => $request->getParam("type")]);
+		}
+		return $response->withRedirect($this->router->pathFor('dictionary'));
 	}
 
 	//enregistrement du nouvel élément
@@ -77,22 +65,24 @@ class DictionaryController extends Controller{
 		    ]);
 	    }
         if($validation->failed()){
-            return $response->withRedirect($this->router->pathFor('dictionary.create'));
+            return $response->withRedirect($this->router->pathFor('dictionary.new')."?type=".$request->getParam("type"));
         }
-		$element = new Dictionnaire;
-		$element->type = $params["type"];
-		$element->libelle = $params["libelle"];
-		foreach($params as $key => $value){
-			if(substr($key, 0, 9) == "parametre"){
-				if($element->parametre === null){
-					$element->parametre = $value;
-				}
-				else{
-					$element->parametre .= "; ".$value;
+		if(Dictionnaire::where("libelle", $params["libelle"])->first() == null){
+			$element = new Dictionnaire;
+			$element->type = $params["type"];
+			$element->libelle = $params["libelle"];
+			foreach($params as $key => $value){
+				if(substr($key, 0, 9) == "parametre"){
+					if($element->parametre === null){
+						$element->parametre = $value;
+					}
+					else{
+						$element->parametre .= "; ".$value;
+					}
 				}
 			}
+			$element->save();
 		}
-		$element->save();
 		return $response->withRedirect($this->router->pathFor('dictionary'));
 	}
 
@@ -100,7 +90,7 @@ class DictionaryController extends Controller{
 	public function update($request, $response, $args){
 		$params = $request->getParams();
 		$element = Dictionnaire::find($args["id"]);
-		if($element->type = "method"){
+		if($element->type == "method"){
 	    	foreach($params as $key => $value) {
 	    		if($value != ""){
 	    			if($key == "type" || $key == "libelle" || substr($key, 0, 9) == "parametre"){
@@ -120,19 +110,21 @@ class DictionaryController extends Controller{
             return $response->withRedirect($this->router->pathFor('dictionary.details', ["id" => $args["id"]]));
         }
         $element->libelle = $params["libelle"];
-        $element->parametre = "";
-		foreach($params as $key => $value){
-			if(substr($key, 0, 9) == "parametre"){				
-				if($value != ""){
-					if($element->parametre == ""){
-					$element->parametre .= $value;
-					}
-					else{
-						$element->parametre .= "; ".$value;
+        if($element->type == "method"){
+        	$element->parametre = "";
+			foreach($params as $key => $value){
+				if(substr($key, 0, 9) == "parametre"){				
+					if($value != ""){
+						if($element->parametre == ""){
+						$element->parametre .= $value;
+						}
+						else{
+							$element->parametre .= "; ".$value;
+						}
 					}
 				}
 			}
-		}
+        }
 		$element->save();
 	    return $response->withRedirect($this->router->pathFor("dictionary.details", ["id" => $args["id"]]));
 	}
@@ -186,11 +178,14 @@ class DictionaryController extends Controller{
 			header("Cache-Control: max-age=0");
 			header("Pragma: no-cache");
 			header("Expires: 0");			 
-			// force le téléchargement du fichier avec un beau nom
+			// force le téléchargement du fichier avec le bon nom
 			header("Content-Type: application/force-download");
 			header('Content-Disposition: attachment; filename="'.$name.'.'.$format.'"');
 			readfile($path.$name.'.'.$format);
 			unlink($path.$name.'.'.$format);
+		}
+		else{
+			return $response->withRedirect($this->router->pathFor('dictionary'));
 		}
 	}
 
@@ -254,9 +249,8 @@ class DictionaryController extends Controller{
 		return $this->view->render($response, "dictionary/nuage.twig", ["elements" => $data]);
 	}
 
-	public function clickNuage($request, $response, $args){
+	public function getId($request, $response, $args){
 		$element = Dictionnaire::where("libelle", $args["element"])->first();
 		return $response->withRedirect($this->router->pathFor("dictionary.details", ["id" => $element->id]));
 	}
-
 }

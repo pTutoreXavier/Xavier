@@ -4,14 +4,14 @@ use App\Middleware\GuestMiddleware;
 use App\Middleware\SearcherMiddleware;
 use App\Middleware\UserMiddleware;
 
-$app->group('', function () {
+$app->group('', function () {    
     $this->get("/dictionary", "DictionaryController:index")->setName("dictionary");
 	$this->get("/dictionary/export", "DictionaryController:viewExport")->setName("dictionary.export");
 	$this->get("/dictionary/export/{format}", "DictionaryController:export")->setName("dictionary.format");
 	$this->get("/dictionary/new", "DictionaryController:new")->setName("dictionary.new");
     $this->get("/dictionary/nuage", "DictionaryController:nuage")->setName("dictionary.nuage");
-    $this->get("/dictionary/nuage/{element}", "DictionaryController:clickNuage")->setName("dictionary.clickNuage");
-	$this->get("/dictionary/{id}", "DictionaryController:getById")->setName("dictionary.details");
+    $this->get("/dictionary/{id}", "DictionaryController:getById")->setName("dictionary.details");
+    $this->get("/dictionary/{element}/id", "DictionaryController:getId")->setName("dictionary.id");	
 	$this->post("/dictionary", "DictionaryController:create")->setName("dictionary.create");
 	$this->put("/dictionary/{id}", "DictionaryController:update")->setName("dictionary.edit");
 	$this->delete("/dictionary/{id}", "DictionaryController:delete")->setName("dictionary.delete");
