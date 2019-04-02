@@ -25,7 +25,7 @@
 		$(document).ready(function(){
 			if($("#searcher").html() == null){
 				$.ajax({
-			        url : 'random', // La ressource ciblée
+			        url : '../random', // La ressource ciblée
 			        type : 'GET', // Le type de la requête HTTP.
 			        success : function(code_html, statut){
 			       		let video = JSON.parse(code_html);
@@ -36,7 +36,7 @@
 			       			newA.setAttribute("href","sequence/" + element.idVideo + "/" + element.id);
 			       			newA.setAttribute("class","miniaVideo");
 			       			var newImg = document.createElement("img");
-			       			newImg.setAttribute("src","../ressources/views/home/img/baniere.png");
+			       			newImg.setAttribute("src","../../ressources/views/home/img/baniere.png");
 			       			newImg.setAttribute("class","img-reponsive imgMinia");
 			       			var newDiv = document.createElement("div");
 			       			newDiv.setAttribute("class","bottom-right");
@@ -64,7 +64,7 @@
 				$("#recherche").keyup(function(event){
 					if($("#recherche").val() != ""){
 						$.ajax({
-					        url : 'pseudoCode/' + $("#recherche").val(), // La ressource ciblée
+					        url : '../pseudoCode/' + $("#recherche").val(), // La ressource ciblée
 					        type : 'GET', // Le type de la requête HTTP.
 					        success : function(code_html, statut){
 					       		let video = JSON.parse(code_html);

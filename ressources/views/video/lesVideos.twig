@@ -22,7 +22,7 @@ chercher par le nom d'un chercheur :
 			$("#mesVideos").click(function(event){
 				if($("#mesVideos").val() == "Mes vidéos"){
 					$.ajax({
-				        url : 'getVideosSearcher', // La ressource ciblée
+				        url : '../getVideosSearcher', // La ressource ciblée
 				        type : 'GET', // Le type de la requête HTTP.
 				        success : function(code_html, statut){
 				       		let video = JSON.parse(code_html);
@@ -45,7 +45,7 @@ chercher par le nom d'un chercheur :
 			$("#chercheur").keyup(function(event){
 				if($("#chercheur").val() != ""){
 					$.ajax({
-				        url : 'getSearcher/' + $("#chercheur").val(), // La ressource ciblée
+				        url : '../getSearcher/' + $("#chercheur").val(), // La ressource ciblée
 				        type : 'GET', // Le type de la requête HTTP.
 				        success : function(code_html, statut){
 				       		let video = JSON.parse(code_html);
@@ -62,7 +62,7 @@ chercher par le nom d'un chercheur :
 
 			$("#rechercher").click(function(event){
 				$.ajax({
-			        url : 'VideosSearcher/' + $("#chercheur").val(), // La ressource ciblée
+			        url : '../VideosSearcher/' + $("#chercheur").val(), // La ressource ciblée
 			        type : 'GET', // Le type de la requête HTTP.
 			        success : function(code_html, statut){
 			       		let video = JSON.parse(code_html);
@@ -79,7 +79,7 @@ chercher par le nom d'un chercheur :
 
 			function loadVideos(){
 				$.ajax({
-			        url : 'getAllVideos', // La ressource ciblée
+			        url : '../getAllVideos', // La ressource ciblée
 			        type : 'GET', // Le type de la requête HTTP.
 			        success : function(code_html, statut){
 			       		let video = JSON.parse(code_html);

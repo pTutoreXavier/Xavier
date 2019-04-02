@@ -9,9 +9,13 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="{{ path_for('home')}}">Home <span class="sr-only">(current)</span></a>
                 </li>
+                {% if auth.check %}
+                <li class="nav-item"><a class="nav-link" href="{{ path_for('sequences') }}">Sequences</a></li>
+                {% endif %}
                 {% if auth.level is same as('user') %}
                     <li><a class="nav-link" href="{{ path_for('commentaires') }}">Mes Commentaires</a></li>
                 {% elseif auth.level is same as('searcher')  %}
+                    <li class="nav-item"><a class="nav-link" href="{{ path_for('videos') }}">Vidéos</a></li>
                     <li><a class="nav-link" href="{{ path_for('dictionary') }}">Dictionnaire</a></li>
                 {% elseif not auth.level %}
                 {% endif %}
