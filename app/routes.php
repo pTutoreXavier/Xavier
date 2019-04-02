@@ -8,17 +8,19 @@ use App\Middleware\UserMiddleware;
 
 // Routes ayant l'obligation de connection CHERCHEUR + CSRF
 $app->group('', function () {
-    $this->get("/dictionary[/]", "DictionaryController:index")->setName("dictionary");
-	$this->get("/dictionary/export[/]", "DictionaryController:viewExport")->setName("dictionary.export");
-	$this->get("/dictionary/export/{format}[/]", "DictionaryController:export")->setName("dictionary.format");
-	$this->get("/dictionary/new[/]", "DictionaryController:new")->setName("dictionary.new");
-	$this->get("/dictionary/{id}[/]", "DictionaryController:getById")->setName("dictionary.details");
-	$this->post("/dictionary[/]", "DictionaryController:create")->setName("dictionary.create");
-	$this->put("/dictionary/{id}[/]", "DictionaryController:update")->setName("dictionary.edit");
-	$this->delete("/dictionary/{id}[/]", "DictionaryController:delete")->setName("dictionary.delete");
-})->add(new SearcherMiddleware($container))
-    ->add(new CsrfViewMiddleware($container))
-    ->add($container->csrf);
+    $this->get("/dictionary", "DictionaryController:index")->setName("dictionary");
+	$this->get("/dictionary/export", "DictionaryController:viewExport")->setName("dictionary.export");
+	$this->get("/dictionary/export/{format}", "DictionaryController:export")->setName("dictionary.format");
+	$this->get("/dictionary/new", "DictionaryController:new")->setName("dictionary.new");
+    $this->get("/dictionary/nuage", "DictionaryController:nuage")->setName("dictionary.nuage");
+    $this->get("/dictionary/{id}", "DictionaryController:getById")->setName("dictionary.details");
+    $this->get("/dictionary/{element}/id", "DictionaryController:getId")->setName("dictionary.id");
+	$this->post("/dictionary", "DictionaryController:create")->setName("dictionary.create");
+	$this->put("/dictionary/{id}", "DictionaryController:update")->setName("dictionary.edit");
+	$this->delete("/dictionary/{id}", "DictionaryController:delete")->setName("dictionary.delete");
+})->add(new \App\Middleware\CsrfViewMiddleware($container))
+    ->add($container->csrf)
+    ->add(new SearcherMiddleware($container));
 
 $app->group('', function(){
 
@@ -33,6 +35,7 @@ $app->group('', function(){
 	$this->get("/upload","VideoController:upload");
 
 })->add(new SearcherMiddleware($container));
+
 
 $app->get("[/]", "HomeController:index")->setName('home');
 $app->get("/home[/]", "HomeController:index")->setName('home');
