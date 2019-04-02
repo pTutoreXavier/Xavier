@@ -1,12 +1,41 @@
 {% extends "templates/app.twig" %}
 {% block content %}
-<form method="POST" action="{{ path_for('dictionary.edit', {'id': element.id}) }}?type={{ element.type }}">
-	Nom de l'élément: <input type="text" name="name" value="{{ element.libelle }}"><br/>
-	{% if type == "method" %}
-		Paramètre: <input type="text" name="parameter"><br/>
-	{% endif %}
-	<input class="btn btn-primary" type="submit" name="submit" value="Modifier">
-	<input type="hidden" name="_METHOD" value="PUT">
-	{{ csrf.field | raw }}
-</form>
+<div class="row m-auto col-6">
+	<h4>Modification</h4>
+	<form method="POST" action="{{ path_for('dictionary.edit', {'id': element.id}) }}?type={{ element.type }}">
+		<div class="form-group card">
+			<div class="card-body">
+				<div class="form-group row">
+					<label class="col-6 col-form-label">Nom de l'élément</label>
+					<div class="col-6">
+						<input class="form-control" type="text" name="libelle" value="{{ element.libelle }}">
+						{% if errors.libelle %}
+							<span class="erreur">{{ errors.libelle | first }}</span>
+						{% endif %}
+					</div>
+				</div>
+				{% if element.type == "method" %}
+					<div class="form-group row">
+						<label class="col-6 col-form-label">Paramètre(s)</label>
+						<div id="parametres">
+							{% for parametre in parametres %}
+								<input class="form-control parametre" type="text" name="parametre{{ loop.index }}" value="{{ parametre }}">
+							{% endfor %}
+						</div>
+					</div>
+					<button id="add" type="button" class="btn btn-secondary">Ajouter un paramètre</button>
+				{% endif %}
+				<input type="hidden" name="_METHOD" value="PUT">
+				<input class="btn btn-primary" type="submit" name="submit" value="Modifier">
+			</div>
+		</div>
+		{{ csrf.field | raw }}
+	</form>
+</div>
+<script type="text/javascript">
+	$("#add").on("click", function(){
+		let n = $(".parametre").length + 1;
+		$("#parametres").append('<input class="form-control parametre mt-2" type="text" name="parametre'+n+'">');
+	});
+</script>
 {% endblock %}

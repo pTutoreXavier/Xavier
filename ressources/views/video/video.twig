@@ -1,13 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="UTF-8">
-	<title>Xavier</title>
-	<!--D:\laragon\www\Projet_Tutore\ressources\jplayer\css-->
-	<link type="text/css" href="/projet_tut_merge/Xavier/ressources/views/jplayer/skin/css/blue.monday/css/jplayer.blue.monday.css" rel="stylesheet" />
-	<link rel="stylesheet" href="/projet_tut_merge/Xavier/ressources/views/jplayer/css/style.css" type="text/css"/>
- 	<script type="text/javascript" src="/projet_tut_merge/Xavier/ressources/views/jplayer/js/jquery.min.js"></script>
-  	<script type="text/javascript" src="/projet_tut_merge/Xavier/ressources/views/jplayer/js/jquery.jplayer.min.js"></script>
+{% extends 'templates/app.twig' %}
+
+{% block stylesheets %}
+	<link type="text/css" rel="stylesheet" href="{{ base_url() }}/jplayer/skin/css/blue.monday/css/jplayer.blue.monday.css">
+	<link type="text/css" rel="stylesheet" href="{{ base_url() }}/jplayer/css/jplayer.css">
+{% endblock %}
+
+{% block jshead %}
+
+	<script type="text/javascript" src="{{ base_url() }}/jplayer/js/jquery.min.js"></script>
+	<script type="text/javascript" src="{{ base_url() }}/jplayer/js/jquery.jplayer.min.js"></script>
 
   	<script type="text/javascript">
   		$(document).ready(function(){
@@ -35,11 +36,11 @@
 			ready: function () {
 				$(this).jPlayer("setMedia", {
 					title: "{{video.lien}}",  //titre de la video
-					m4v: "/projet_tut_merge/Xavier/ressources/views/video/{{video.lien}}.mp4",		//lien de la video (complete)
+					m4v: "{{ base_url() }}/video/{{video.lien}}.mp4",		//lien de la video (complete)
 					//poster: "http://www.jplayer.org/video/poster/Big_Buck_Bunny_Trailer_480x270.png"  //miniature
 				});
 			},
-			swfPath: "/projet_tut_merge/Xavier/ressources/views/jplayer/js/",  //emplacement jplayer
+			swfPath: "{{ base_url() }}/jplayer/js/",  //emplacement jplayer
 			supplied: "m4v",
 			size: {
 				width: "640px", //largeur de la fenetre video
@@ -80,7 +81,7 @@
 	     	}
 	     	$("#Start").val(start);
 	   		$("#Finish").val(finish);
-	   		$("#PseudoCode").val(type + "." + method + "(" + param + ")");
+	   		$("#PseudoCode").val(type + ";" + method + ";" + param);
 
 	     	document.getElementById("leForm").submit();
 
@@ -265,12 +266,12 @@
 
 					let element = document.createElement("div");
 					element.setAttribute("id",nbreSequence);
-					element.setAttribute("class","StartFinish");
+					element.setAttribute("class","StartFinish row");
 					document.getElementById("leForm").appendChild(element);
 
 					element = document.createElement("button");
 					element.setAttribute("id", "Deb" + nbreSequence);  
-					element.setAttribute("class", "start");   
+					element.setAttribute("class", "start btn btn-dark  mb-3");
 					element.setAttribute("type", "button");
 					element.setAttribute("value", "Début : "); 
 					document.getElementById(nbreSequence).appendChild(element);
@@ -278,7 +279,8 @@
 
 					element = document.createElement("input");
 					element.setAttribute("name", "start" + nbreSequence);
-					element.setAttribute("id", "start" + nbreSequence);       
+					element.setAttribute("id", "start" + nbreSequence);
+					element.setAttribute("class", "ml-3 form-control mb-3");
 					element.setAttribute("type", "text"); 
 					element.setAttribute("required", "required");      
 					element.setAttribute("disabled", "disabled");     
@@ -287,7 +289,7 @@
 
 					element = document.createElement("button");
 					element.setAttribute("id", "Fin" + nbreSequence);  
-					element.setAttribute("class", "finish");  
+					element.setAttribute("class", "finish btn btn-dark ml-3  mb-3");
 					element.setAttribute("type", "button"); 
 					element.setAttribute("value", "Fin : "); 
 					element.setAttribute("disabled", "disabled"); 
@@ -296,7 +298,8 @@
 
 					element = document.createElement("input");
 					element.setAttribute("name", "finish" + nbreSequence);
-					element.setAttribute("id", "finish" + nbreSequence);       
+					element.setAttribute("id", "finish" + nbreSequence);
+                    element.setAttribute("class", "ml-3 form-control  mb-3");
 					element.setAttribute("type", "text"); 
 					element.setAttribute("required", "required");      
 					element.setAttribute("disabled", "disabled");     
@@ -306,7 +309,9 @@
 					element = document.createElement("input");
 					element.setAttribute("name", "list" + nbreSequence);
 					element.setAttribute("id", "type" + nbreSequence);       
-					element.setAttribute("list", "objet" + nbreSequence);   
+					element.setAttribute("list", "objet" + nbreSequence);
+                    element.setAttribute("class", "form-control col-6");
+                    element.setAttribute("placeholder", "pseudo-code");
 					element.setAttribute("type", "text");
 					document.getElementById(nbreSequence).appendChild(element);
 
@@ -348,7 +353,9 @@
 					element = document.createElement("input");
 					element.setAttribute("name", "methodes" + nbreSequence);
 					element.setAttribute("id", "lesMethodes" + nbreSequence);       
-					element.setAttribute("list", "libelle" + nbreSequence);   
+					element.setAttribute("list", "libelle" + nbreSequence);
+                    element.setAttribute("class", "form-control col-6");
+                    element.setAttribute("placeholder", "méthode");
 					element.setAttribute("type", "text");
 					document.getElementById(nbreSequence).appendChild(element);
 
@@ -387,7 +394,9 @@
 					element = document.createElement("input");
 					element.setAttribute("name", "parametre" + nbreSequence);
 					element.setAttribute("id", "lesParametres" + nbreSequence);       
-					element.setAttribute("list", "params" + nbreSequence);   
+					element.setAttribute("list", "params" + nbreSequence);
+                    element.setAttribute("class", "form-control col-6");
+                    element.setAttribute("placeholder", "paramètres");
 					element.setAttribute("type", "text");
 					document.getElementById(nbreSequence).appendChild(element);
 
@@ -430,8 +439,6 @@
 				}
 			}    
 		});
-
-///////////////////////////////Gestion de la timeline (affichage)////////////////////////////////////////////////
 
 		setInterval(function() {
 			if ((jpData.status.currentTime > fin || jpData.status.currentTime < debut) && jpData.status.currentTime != 0) {
@@ -517,68 +524,83 @@
 		},500); 
 	});
   	</script>
-</head>
-<body>
-<div class="container">
-	{% block content %}{% endblock %}
-</div>
-<div id="config_val_face"></div>
-<div id="jp_container_1" class="jp-video jp-video-360p" role="application" aria-label="media player">
-	
-	<div class="jp-type-single">
-		<div class="jp-details">
-		</div>
-		<div id="jquery_jplayer_1" class="jp-jplayer">
-			
-		</div>
-		<div class="jp-gui">
-			<div class="jp-interface">
-				<div id="invisible" class="jp-current-time" role="timer" aria-label="time"></div>
-				<div id="invisible" class="jp-duration" role="timer" aria-lable="time"></div>
 
-				<div id="progressBar">
-
-				</div>
+{% endblock %}
 
 
-				<div class="duree">
-					<div id="jp-current-time" role="timer" aria-label="time">&nbsp;
-					</div>
-					<div id="jp-duration" role="timer" aria-label="duration">&nbsp;
-					</div>
-				</div>
-				<div class="jp-controls-holder">
-					<div class="jp-volume-controls">
-						<button class="jp-mute" role="button" tabindex="0">mute</button>
-						<button class="jp-volume-max" role="button" tabindex="0">max volume</button>
-						<div class="jp-volume-bar">
-							<div class="jp-volume-bar-value">
-								
-							</div>
-						</div>
-					</div>
-					<div class="jp-controls">
-						<button id="play" class="jp-play" role="button" tabindex="0">play</button>
-						<button class="jp-stop" role="button" tabindex="0">stop</button>
-					</div>
-					<div class="jp-toggles">
-						<button class="jp-repeat" role="button" tabindex="0">repeat</button>
-						<button class="jp-full-screen" role="button" tabindex="0">full screen</button>
-					</div>
-				</div>			
+{% block content %}
+    <div class="col-6 offset-2">
+
+        <div id="config_val_face"></div>
+        <div id="jp_container_1" class="jp-video jp-video-360p" role="application" aria-label="media player">
+
+            <div class="jp-type-single">
+                <div class="jp-details">
+                </div>
+                <div id="jquery_jplayer_1" class="jp-jplayer">
+
+                </div>
+                <div class="jp-gui">
+                    <div class="jp-interface">
+                        <div id="invisible" class="jp-current-time" role="timer" aria-label="time"></div>
+                        <div id="invisible" class="jp-duration" role="timer" aria-lable="time"></div>
+
+                        <div id="progressBar">
+
+                        </div>
+
+
+                        <div class="duree">
+                            <div id="jp-current-time" role="timer" aria-label="time">&nbsp;
+                            </div>
+                            <div id="jp-duration" role="timer" aria-label="duration">&nbsp;
+                            </div>
+                        </div>
+                        <div class="jp-controls-holder">
+                            <div class="jp-volume-controls">
+                                <button class="jp-mute" role="button" tabindex="0">mute</button>
+                                <button class="jp-volume-max" role="button" tabindex="0">max volume</button>
+                                <div class="jp-volume-bar">
+                                    <div class="jp-volume-bar-value">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="jp-controls">
+                                <button id="play" class="jp-play" role="button" tabindex="0">play</button>
+                                <button class="jp-stop" role="button" tabindex="0">stop</button>
+                            </div>
+                            <div class="jp-toggles">
+                                <button class="jp-repeat" role="button" tabindex="0">repeat</button>
+                                <button class="jp-full-screen" role="button" tabindex="0">full screen</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- début form -->
+                    <form id="leForm"  class="form-group row" name="createSequence" method="POST" action='../video'>
+                        <div id="bloc" class="row">
+                            <button class="ajouterSequence btn btn-secondary" type="button">Ajouter une sequence</button><br/>
+                            <button class="sequence btn btn-primary col-3" type="button" disabled="disabled">Envoyer</button>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <input class="form-control" id="Start" type="hidden" name="capStart" value="0"/>
+                                <input class="form-control" id="Finish" type="hidden" name="capFinish" value="0"/>
+                                <input class="form-control" id="PseudoCode" type="hidden" name="pseudocode" value="0"/>
+                                <input class="form-control" id="idVideo" type="hidden" name="idVideo" value="{{idVideo}}"/>
+                            </div>
+
+                        </div>
+
+
+
+                    </form>	<!-- fin form -->
+
+    </div>
+
+			<div id="lesCommentaires">
+				
 			</div>
-			<!-- début form -->
-			<form id="leForm" name="createSequence" method="POST" action='../video'>
-				<div id="bloc">
-					<button class="ajouterSequence" type="button">Ajouter une sequence</button><br/> 
-					<button class="sequence" type="button">envoie</button>
-				</div>		
-				<input id="Start" type="hidden" name="capStart" value="0"/>
-				<input id="Finish" type="hidden" name="capFinish" value="0"/>
-				<input id="PseudoCode" type="hidden" name="pseudocode" value="0"/>
-
-				<input id="idVideo" type="hidden" name="idVideo" value="{{idVideo}}"/>
-			</form>	<!-- fin form -->
 		</div>
 		<div class="jp-no-solution">
 			<span>Update Required</span>
@@ -586,5 +608,4 @@
 		</div>
 	</div>
 </div>	
-</body>
-</html>
+{% endblock %}

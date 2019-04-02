@@ -7,7 +7,7 @@ use \App\Models\Commentaire as Commentaire;
 
 class SequenceController extends Controller{
 	public function index($request, $response){
-		$_SESSION["idUser"] = 1;
+
 		$idVideo = $request->getAttribute('route')->getArgument('idVideo');
 		$idSequence = $request->getAttribute('route')->getArgument('idSequence');
 
@@ -15,19 +15,22 @@ class SequenceController extends Controller{
 
 		$seq = Sequence::where('id', '=', $idSequence)->where('idVideo', '=', $idVideo)->first();
 
-		$message = Commentaire::where('idUser', '=', $_SESSION["idUser"])->where('idSequence','=',$idSequence)->first();
+		$message = Commentaire::where('idUser', '=', $_SESSION["user"])->where('idSequence','=',$idSequence)->first();
 
-		return $this->view->render($response, "video/sequence.twig", array("video" => $video, "seq" => $seq, "message" => $message, 'idVideo' => $idVideo, 'idSequence' => $idSequence));
+		$lesCommentaires = Commentaire::where('idSequence',"=",$idSequence)->get();
+
+		return $this->view->render($response, "video/sequence.twig", array("video" => $video, "seq" => $seq, "message" => $message, 'idVideo' => $idVideo, 'idSequence' => $idSequence, 'commentaires' => $lesCommentaires));
 	}
 
 	public function commentaire($request, $response){
-		$c = new Commentaire();
-		$c->idUser = $_SESSION["idUser"];
-		$c->idSequence = $_POST['idSequence'];
-		$c->commentaire = $_POST["message"];
+		if($_POST["message"] != ""){
+			$c = new Commentaire();
+			$c->idUser = $_SESSION["user"];
+			$c->idSequence = $_POST['idSequence'];
+			$c->commentaire = $_POST["message"];
 
-		$c->save();
-
+			$c->save();
+		}
 		header('Location: sequence/'.$_POST['idVideo'].'/'.$_POST['idSequence']);
 		exit();
 	}
