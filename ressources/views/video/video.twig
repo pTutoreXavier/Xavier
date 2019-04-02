@@ -100,6 +100,7 @@
      	let pourcent = 0;
      	let ajoutSeq = true;
 
+
 ///////////////////////////////affichage des séqences utilisé sur la timeline////////////////////////////////////////////////
 
      	function afficherIndisponible(seconde){
@@ -227,8 +228,9 @@
 
 	    $("#progressBar").click( function(event){	// clique sur la barre de progression
 	    	var x = document.getElementById("progressBar"); 
+	    	var marginLeft = document.getElementsByClassName("container");
 	    	//console.log("decalage gauche : " + x.offsetLeft);
-	    	var start = ((event.clientX - 10) / x.offsetWidth); // event.clientX => abscisse de la souris || offsetwidth => taille de la barre de progression | calcul pourcentage de la video pour la barre de progression
+	    	var start = ((event.clientX - (parseInt($('.container').css('padding-left').slice(0, 2)) + marginLeft[0].offsetLeft)) / x.offsetWidth); // event.clientX => abscisse de la souris || offsetwidth => taille de la barre de progression | calcul pourcentage de la video pour la barre de progression
 	    	if(play == true){ 
 	    		$("#jquery_jplayer_1").jPlayer("play", start * max + debut); // si la video est en cours la lancer ou le clique a était éffectué
 	    	}
@@ -242,7 +244,7 @@
 	    $("#progressBar").contextmenu(function(event){
 	    	var x = document.getElementById("progressBar"); 
 	    	//console.log("decalage gauche : " + x.offsetLeft);
-	    	var start = ((event.clientX - 10) / x.offsetWidth); // event.clientX => abscisse de la souris || offsetwidth => taille de la barre de progression | calcul pourcentage de la video pour la barre de progression
+	    	var start = ((event.clientX - (event.clientX - event.offsetX)) / x.offsetWidth); // event.clientX => abscisse de la souris || offsetwidth => taille de la barre de progression | calcul pourcentage de la video pour la barre de progression
 	    	if(play == true){ 
 	    		$("#jquery_jplayer_1").jPlayer("play", start * max + debut); // si la video est en cours la lancer ou le clique a était éffectué
 	    	}
@@ -335,6 +337,7 @@
 						        type : 'GET', // Le type de la requête HTTP.
 						        success : function(code_html, statut){
 						       		let tab = JSON.parse(code_html);
+						       		console.log(tab);
 						       		let laListe = document.getElementById("objet" + nbreSequence);
 						       		let HTML = "";
 						       		tab.forEach(function(e){
@@ -567,7 +570,7 @@
 				</div>			
 			</div>
 			<!-- début form -->
-			<form id="leForm" name="createSequence" method="POST" action='../video'>
+			<form id="leForm" name="createSequence" method="POST" action='{{path_for("PostVideo")}}'>
 				<div id="bloc">
 					<button class="ajouterSequence" type="button">Ajouter une sequence</button><br/> 
 					<button class="sequence" type="button" disabled="disabled">envoie</button>

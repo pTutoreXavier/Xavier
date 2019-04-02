@@ -33,18 +33,18 @@ class VideoController extends Controller{
 			$seq->debut = $tabStart[$i];
 			$seq->fin = $tabFinish[$i];
 			$seq->idUser = $_SESSION['user'];
-			//echo $seq;
-			//$seq->save();
+			echo $seq;
+			$seq->save();
 		}
 
-		//header('Location: video/'.$_POST['idVideo']);
-		//exit();
+		header('Location: video/'.$_POST['idVideo']);
+		exit();
 	}
 
 	public function getObject($request, $response){
 		$array = array();
 
-		$objet = Dictionnaire::where("type", "=", "object")->where("libelle", "like", $request->getAttribute('route')->getArgument('recherche')."%")->get();
+		$objet = Dictionnaire::where("type", "=", "objet")->where("libelle", "like", $request->getAttribute('route')->getArgument('recherche')."%")->get();
 
 		for ($i=0; $i < count($objet); $i++) { 	
 			array_push($array, $objet[$i]["libelle"]);

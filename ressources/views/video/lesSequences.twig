@@ -1,0 +1,87 @@
+{% extends 'templates/app.twig' %}
+
+{% block content %}
+
+{% if auth.level is same as('user') %}
+	<div id="user">
+		
+	</div>
+{% elseif auth.level is same as('searcher')  %}
+	<div id="searcher">
+		<input type="text" id="recherche">
+		<div id="sequences">
+
+		</div>
+	</div>
+{% endif %}
+
+{% endblock %}
+
+{% block jshead %}
+
+	<script type="text/javascript" src="{{ base_url() }}/jplayer/js/jquery.min.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			if($("#searcher").html() == null){
+				$.ajax({
+			        url : 'random', // La ressource ciblée
+			        type : 'GET', // Le type de la requête HTTP.
+			        success : function(code_html, statut){
+			       		let video = JSON.parse(code_html);
+			       		console.log(video);
+			       		let HTML = "";
+			       		video.forEach(function(element){
+			       			var newA = document.createElement("a");
+			       			newA.setAttribute("href","sequence/" + element.idVideo + "/" + element.id);
+			       			newA.setAttribute("class","miniaVideo");
+			       			var newImg = document.createElement("img");
+			       			newImg.setAttribute("src","../ressources/views/home/img/baniere.png");
+			       			newImg.setAttribute("class","img-reponsive imgMinia");
+			       			var newDiv = document.createElement("div");
+			       			newDiv.setAttribute("class","bottom-right");
+			       			newDiv.textContent = element.fin - element.debut;
+
+			       			
+
+			       			newA.appendChild(newImg);
+			       			newA.appendChild(newDiv);
+
+			       			document.getElementById("user").appendChild(newA);
+
+
+			       			/*HTML += "<a href='sequence/" + element.idVideo + "/" + element.id + "' class='miniaVideo'";
+			       			HTML += "<img src='../ressources/views/home/img/baniere.png' class='img-reponsive imgMinia'";
+			       			HTML += "<div class='bottom-right'> " + (element.fin - element.debut) + "</div>";
+			       			HTML += "</a>";*/
+			       			//HTML += "<div> id de la séquence : " + element.id + " / id de la video : " + element.idVideo +" </div>";
+			       		});
+			       		//$("#user").html(HTML);
+			        }
+			    });
+			}
+			else{
+				$("#recherche").keyup(function(event){
+					if($("#recherche").val() != ""){
+						$.ajax({
+					        url : 'pseudoCode/' + $("#recherche").val(), // La ressource ciblée
+					        type : 'GET', // Le type de la requête HTTP.
+					        success : function(code_html, statut){
+					       		let video = JSON.parse(code_html);
+					       		console.log(video);
+					       		let HTML = "";
+					       		video.forEach(function(element){
+					       			HTML += "<div> id de la séquence : " + element.id + " / id de la video : " + element.idVideo +" / le pseudoCode : " + element.pseudocode + " </div>";
+					       		});
+					       		$("#sequences").html(HTML);
+					        }
+					    });
+					}
+				});
+			}
+		});
+
+
+	</script>
+
+{% endblock %}

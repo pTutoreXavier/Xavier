@@ -22,13 +22,16 @@ $app->group('', function () {
 
 $app->group('', function(){
 	$this->get("/video/{idVideo}","VideoController:index");
-	$this->post("/video","VideoController:createSequence");
+	$this->post("/postvideo","VideoController:createSequence")->setName("PostVideo");
 	$this->get("/videos","VideoController:getVideos");
 	$this->get("/getVideosSearcher","VideoController:getVideosSearcher");
 	$this->get("/getAllVideos","VideoController:getAllVideos");
 	$this->get("/getSearcher/{recherche}","VideoController:getSearcher");
 	$this->get("/VideosSearcher/{recherche}","VideoController:getVideoOfSearcher");
 	$this->get("/upload","VideoController:upload");
+	$this->get("/object/{recherche}","VideoController:getObject");
+	$this->get("/method/{recherche}","VideoController:getMethod");
+	$this->get("/pseudoCode/{recherche}","SequenceController:pseudoCode");
 })->add(new SearcherMiddleware($container));
 
 $app->get("[/]", "HomeController:index")->setName('home');
@@ -42,8 +45,7 @@ $app->get('/home/technos[/]', "HomeController:technos")->setName('home.technos')
 $app->group('', function () {
     $this->get("/commentaires[/]","HomeController:commentaires")->setName('commentaires');
     $this->post("/commenter","SequenceController:commentaire");
-    $this->get("/object/{recherche}","VideoController:getObject");
-	$this->get("/method/{recherche}","VideoController:getMethod");
+    $this->get("/random","SequenceController:random");
 })->add(new UserMiddleware($container));
 
 
@@ -71,5 +73,6 @@ $app->group('', function () {
     $this->post("/profil/checkProfilPicture", "ProfilController:checkProfilPicture")->setName("checkProfilPicture");
     $this->post("/profil/checkProfilPictureUpload", "ProfilController:checkProfilPictureUpload")->setName("checkProfilPictureUpload");
     $this->get("/sequence/{idVideo}/{idSequence}","SequenceController:index");
+    $this->get("/sequences","SequenceController:sequences");
 
 })->add(new AuthMiddleware($container));

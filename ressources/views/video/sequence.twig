@@ -12,7 +12,6 @@
 
   		<script type="text/javascript">
   		$(document).ready(function(){
-  			console.log("{{message.commentaire}}");
   			if("{{message.commentaire}}" != ""){
   				$("#commentaire").html("");
   			}
@@ -110,7 +109,7 @@
     $("#progressBar").click( function(event){	// clique sur la barre de progression
     	var x = document.getElementById("progressBar"); 
     	//console.log("decalage gauche : " + x.offsetLeft);
-    	var start = ((event.clientX - 10) / x.offsetWidth); // event.clientX => abscisse de la souris || offsetwidth => taille de la barre de progression | calcul pourcentage de la video pour la barre de progression
+    	var start = ((event.clientX - (event.clientX - event.offsetX)) / x.offsetWidth); // event.clientX => abscisse de la souris || offsetwidth => taille de la barre de progression | calcul pourcentage de la video pour la barre de progression
     	if(play == true){ 
     		$("#jquery_jplayer_1").jPlayer("play", start * max + debut); // si la video est en cours la lancer ou le clique a était éffectué
     	}
