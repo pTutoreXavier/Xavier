@@ -17,7 +17,7 @@ $app->group('', function () {
     $this->get("/dictionary/{element}/id", "DictionaryController:getId")->setName("dictionary.id");
 	$this->post("/dictionary", "DictionaryController:create")->setName("dictionary.create");
 	$this->put("/dictionary/{id}", "DictionaryController:update")->setName("dictionary.edit");
-	$this->delete("/dictionary/{id}", "DictionaryController:delete")->setName("dictionary.delete");
+	//$this->delete("/dictionary/{id}", "DictionaryController:delete")->setName("dictionary.delete");
 })->add(new \App\Middleware\CsrfViewMiddleware($container))
     ->add($container->csrf)
     ->add(new SearcherMiddleware($container));

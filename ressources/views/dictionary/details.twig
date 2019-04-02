@@ -15,36 +15,49 @@
 	</div>
 	<div class="col-1">
 		<a href="{{ path_for('dictionary.details', {'id': element.id}) }}?action=edit"><i class="fas fa-pen"></i></a>
-		<a href="{{ path_for('dictionary.delete', {'id': element.id}) }}?action=delete"><i class="fas fa-trash"></i></a>
 	</div>
 </div>
 <p>Utilisé dans {{ sequences | length }} séquence(s)</p>
 {% for sequence in sequences %}
-	<ul class="list-group mt-4">
-		<p>
-			{% for pseudocode in sequence.pseudocode %}
-				{% if loop.index > 3 %}
-					, 
-				{% endif %}
-				{% if pseudocode != element.libelle %}
-					<a href="{{ path_for('dictionary.id', {'element': pseudocode}) }}">{{ pseudocode }}</a>
-				{% else %}
-					{{ pseudocode }}
-				{% endif %}
-				{% if loop.first %}
-					.
-				{% endif %}
-				{% if loop.index == 2 %}
-					(
-				{% endif %}
-			{% endfor %}
-			)
-		</p>
-		{% for commentaire in sequence.commentaires %}
-			<li class="list-group-item">
-				{{ commentaire.commentaire }}
-			</li>
+	<p class="mt-4">
+		{% for pseudocode in sequence.pseudocode %}
+			{% if pseudocode != element.libelle %}
+				<a href="{{ path_for('dictionary.id', {'element': pseudocode}) }}">{{ pseudocode }}</a>
+			{% else %}
+				{{ pseudocode }}
+			{% endif %}
+			{% if loop.first %}
+				.
+			{% endif %}
+			{% if loop.index == 2 %}
+				(
+			{% endif %}
 		{% endfor %}
-	</ul>	
+		)
+	</p>
+	{% if sequence.commentaires | length != 0 %}
+		<button type="button" class="btn btn-primary btn-commentaires"><i class="fas fa-chevron-down"></i></button>
+		<ul class="list-group mb-4">
+			{% for commentaire in sequence.commentaires %}
+				<li class="list-group-item">
+					{{ commentaire.commentaire }}
+				</li>
+			{% endfor %}
+		</ul>
+	{% endif %}
 {% endfor %}
+<script type="text/javascript">
+	$("ul").hide();
+	$(".btn-commentaires").on("click", function(){
+		var i = $(this).children("i");
+		if(i.attr("class") == "fas fa-chevron-up"){
+			i.attr("class", "fas fa-chevron-down");
+			$(this).next("ul").hide();
+		}
+		else{
+			i.attr("class", "fas fa-chevron-up");
+			$(this).next("ul").show();
+		}
+	});
+</script>
 {% endblock %}

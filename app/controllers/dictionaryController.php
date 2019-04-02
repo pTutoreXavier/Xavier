@@ -48,21 +48,13 @@ class DictionaryController extends Controller{
 	//enregistrement du nouvel élément
 	public function create($request, $response, $args){
 		$params = $request->getParams();
-		if($params["type"] == "method"){
-	    	foreach($params as $key => $value) {
-	    		if($value != ""){
-	    			if($key == "type" || $key == "libelle" || substr($key, 0, 9) == "parametre"){
-						$validation = $this->validator->validate($request, [
-					        $key => v::alpha()
-					    ]);
-					}	
-	    		}      		
-	    	}	    	
-	    }
-	    else{
+	    $validation = $this->validator->validate($request, [
+		    'libelle' => v::notEmpty()->alpha()
+		]);
+		if($params["type"] == "method" && $params["parametre"] != ""){
 	    	$validation = $this->validator->validate($request, [
-		        'libelle' => v::notEmpty()->alpha()
-		    ]);
+			    'parametre' => v::alpha()
+			]);	    	
 	    }
         if($validation->failed()){
             return $response->withRedirect($this->router->pathFor('dictionary.new')."?type=".$request->getParam("type"));
@@ -71,15 +63,8 @@ class DictionaryController extends Controller{
 			$element = new Dictionnaire;
 			$element->type = $params["type"];
 			$element->libelle = $params["libelle"];
-			foreach($params as $key => $value){
-				if(substr($key, 0, 9) == "parametre"){
-					if($element->parametre === null){
-						$element->parametre = $value;
-					}
-					else{
-						$element->parametre .= "; ".$value;
-					}
-				}
+			if($params["type"] == "method"){
+				$element->parametre = $params["parametre"];
 			}
 			$element->save();
 		}
@@ -90,51 +75,31 @@ class DictionaryController extends Controller{
 	public function update($request, $response, $args){
 		$params = $request->getParams();
 		$element = Dictionnaire::find($args["id"]);
-		if($element->type == "method"){
-	    	foreach($params as $key => $value) {
-	    		if($value != ""){
-	    			if($key == "type" || $key == "libelle" || substr($key, 0, 9) == "parametre"){
-						$validation = $this->validator->validate($request, [
-					        $key => v::alpha()
-					    ]);
-					}	
-	    		}    		
-	    	}	    	
-	    }
-	    else{
+		$validation = $this->validator->validate($request, [
+		    'libelle' => v::notEmpty()->alpha()
+		]);
+		if($element->type == "method" && $params["parametre"] != ""){
 	    	$validation = $this->validator->validate($request, [
-		        'libelle' => v::notEmpty()->alpha()
-		    ]);
+			    'parametre' => v::alpha()
+			]);	    	
 	    }
         if($validation->failed()){
-            return $response->withRedirect($this->router->pathFor('dictionary.details', ["id" => $args["id"]]));
+            return $response->withRedirect($this->router->pathFor('dictionary.edit', ["id" => $args["id"]])."?action=edit");
         }
         $element->libelle = $params["libelle"];
         if($element->type == "method"){
-        	$element->parametre = "";
-			foreach($params as $key => $value){
-				if(substr($key, 0, 9) == "parametre"){				
-					if($value != ""){
-						if($element->parametre == ""){
-						$element->parametre .= $value;
-						}
-						else{
-							$element->parametre .= "; ".$value;
-						}
-					}
-				}
-			}
+        	$element->parametre = $params["parametre"];
         }
 		$element->save();
 	    return $response->withRedirect($this->router->pathFor("dictionary.details", ["id" => $args["id"]]));
 	}
 
 	//suppression de l'élément
-	public function delete($request, $response, $args){
+	/*public function delete($request, $response, $args){
         $element = Dictionnaire::find($args["id"]);
 	    $element->delete();
 	    return $response->withRedirect($this->router->pathFor("dictionary"));
-	}
+	}*/
 
 	//page pour choisir dans quel format exporter les données
 	public function viewExport($request, $response, $args){
@@ -151,9 +116,6 @@ class DictionaryController extends Controller{
 				$pseudocode = explode(";", $sequence->pseudocode);
 				$s = "";
 				for($i = 0; $i < count($pseudocode); $i++){
-					if($i > 2){
-						$s .= ", ";
-					}
 					$s .= $pseudocode[$i];
 					if($i == 0){
 						$s .=  ".";
