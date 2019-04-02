@@ -3,8 +3,8 @@
 {% block content %}
 
 {% if auth.level is same as('user') %}
-	<div id="user">
-		
+		<h2 class="text-center" style="margin-bottom: -40px;">Les séquences : </h2><br />
+	<div id="user" style="display: flex; flex-wrap: wrap">
 	</div>
 {% elseif auth.level is same as('searcher')  %}
 	<div id="searcher">
@@ -34,13 +34,14 @@
 			       		video.forEach(function(element){
 			       			var newA = document.createElement("a");
 			       			newA.setAttribute("href","sequence/" + element.idVideo + "/" + element.id);
-			       			newA.setAttribute("class","miniaVideo");
+			       			newA.setAttribute("class","miniaVideo col-lg-4 col-md-6 col-sm-12 col-xs-12");
+			       			newA.setAttribute("style","margin-top: 50px;");
 			       			var newImg = document.createElement("img");
 			       			newImg.setAttribute("src","../../ressources/views/home/img/baniere.png");
 			       			newImg.setAttribute("class","img-reponsive imgMinia");
 			       			var newDiv = document.createElement("div");
-			       			newDiv.setAttribute("class","bottom-right");
-			       			newDiv.textContent = element.fin - element.debut;
+			       			newDiv.setAttribute("style","position: absolute; right: 30px; bottom: 10px;");
+			       			newDiv.textContent = element.fin - element.debut + 's';
 
 			       			
 

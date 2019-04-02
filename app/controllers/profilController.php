@@ -28,8 +28,8 @@ class ProfilController extends Controller{
 		$user = User::find($_SESSION['user']);
 		if (isset($_SESSION['errorPass'])) {
 			echo $_SESSION['errorPass'];
+			unset($_SESSION['errorPass']);
 		}
-		session_destroy();
 		return $this->view->render($response, 'profil/profilUpdatePass.twig', array(
 			"mdp" => $user->mdp,
 		));
@@ -38,8 +38,8 @@ class ProfilController extends Controller{
 		$user = User::find($_SESSION['user']);
 		if (isset($_SESSION['errorMail'])) {
 			echo $_SESSION['errorMail'];
+			unset($_SESSION['errorMail']);
 		}
-		session_destroy();
 		return $this->view->render($response, 'profil/profilUpdateMail.twig');
 	}
 	public function checkPass($request, $response){
@@ -90,8 +90,8 @@ class ProfilController extends Controller{
 	public function updateProfilPicture($request, $response){	
 		if (isset($_SESSION['erreur'])) {
 			echo $_SESSION['erreur'];
+			unset($_SESSION['erreur']);
 		}
-		session_destroy();
 		$user = User::find($_SESSION['user']);
 		return $this->view->render($response, 'profil/profilUpdateProfilPicture.twig', array(
 			"mdp" => $user->mdp,
@@ -118,7 +118,7 @@ class ProfilController extends Controller{
 		else
 		{
 			$rand = md5(uniqid(rand(), true));
-			$nom = "../ressources/views/avatar/custom/{$rand}.{$extension_upload}";
+			$nom = "../public/images/avatar/custom/{$rand}.{$extension_upload}";
 			$resultat = move_uploaded_file($_FILES['picture']['tmp_name'],$nom);
 			if ($resultat) echo "Transfert réussi";
 			$user->avatar = "custom/{$rand}.{$extension_upload}";
