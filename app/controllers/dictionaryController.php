@@ -250,7 +250,11 @@ class DictionaryController extends Controller{
 	}
 
 	public function getId($request, $response, $args){
-		$element = Dictionnaire::where("libelle", $args["element"])->first();
+		$libelle = $args["element"];
+		if(substr($libelle, -2, 2) == "()"){
+			$libelle = substr($libelle, 0, strlen($libelle) - 2);
+		}
+		$element = Dictionnaire::where("libelle", $libelle)->first();
 		return $response->withRedirect($this->router->pathFor("dictionary.details", ["id" => $element->id]));
 	}
 }
