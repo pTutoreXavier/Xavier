@@ -111,7 +111,7 @@ class DictionaryController extends Controller{
 		return $this->view->render($response, "dictionary/export.twig", ["formats" => ["xml", "csv", "json"]]);
 	}
 
-	//création des données et du fichier qui sera téléchargé (tout le dictionnaire)
+	//création des données et du fichier qui sera téléchargé (tout ou un élément)
 	public function export($request, $response, $args){
 		$format = $args["format"];
 		if(in_array($format, ["xml", "csv", "json"])){
@@ -167,6 +167,7 @@ class DictionaryController extends Controller{
 		}
 	}
 
+	//export dans le format choisi d'une séquence (pseudo et commentaires)
 	public function exportSequence($request, $response, $args){
 		$format = $args["format"];
 		if(in_array($format, ["xml", "csv", "json"])){
