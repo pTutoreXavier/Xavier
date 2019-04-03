@@ -45,7 +45,7 @@
 			       			newA.setAttribute("class","miniaVideo col-lg-4 col-md-6 col-sm-12 col-xs-12");
 			       			newA.setAttribute("style","margin-top: 50px;");
 			       			var newImg = document.createElement("img");
-			       			newImg.setAttribute("src","../../ressources/views/home/img/baniere.png");
+			       			newImg.setAttribute("src","{{ base_url() }}/images/miniatures/" + element.miniature);
 			       			newImg.setAttribute("class","img-reponsive imgMinia");
 			       			var newDiv = document.createElement("div");
 			       			newDiv.setAttribute("style","position: absolute; right: 30px; bottom: 10px;");

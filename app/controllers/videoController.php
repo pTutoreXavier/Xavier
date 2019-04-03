@@ -21,20 +21,23 @@ class VideoController extends Controller{
 
 		var_dump($_POST);
 
-
-		/*for ($i=0; $i < count($tabStart); $i++) { 
-			$seq = new Sequence();
-			$seq->idVideo = $_POST['idVideo'];
-			$seq->debut = $tabStart[$i];
-			$seq->fin = $tabFinish[$i];
-			$seq->idUser = $_SESSION['user'];
-			$seq->pseudocode = $objet[$i].";".$method[$i].";".$params[$i];
-			echo $seq;
-			$seq->save();
+		$seq = new Sequence();
+		$seq->idVideo = $_POST['idVideo'];
+		$seq->debut = $_POST['start'];
+		$seq->fin = $_POST["finish"];
+		$seq->idUser = $_SESSION['user'];
+		if($_POST["parametre"] != null){
+			$seq->pseudocode = $_POST["objet"].";".$_POST["method"].";".$_POST["parametre"];
 		}
+		else{
+			$seq->pseudocode = $_POST["objet"].";".$_POST["method"];
+		}	
+		$seq->miniature = $_POST["miniature"].".png";
+		echo $seq;
+		$seq->save();
 
 		header('Location: video/'.$_POST['idVideo']);
-		exit();*/
+		exit();
 	}
 
 	public function getObjet($request, $response){
@@ -181,5 +184,39 @@ class VideoController extends Controller{
 		}
 		return json_encode($result);
 
+	}
+
+	public function addMiniature($request, $response){
+		$time = time();
+		$imageData = $_POST['image'];
+		$imageData = str_replace('data:image/png;base64,', '', $imageData);
+		$imageData = str_replace(' ', '+', $imageData);
+		//$filteredData = substr($imageData, strpos($imageData, ",") + 1);
+
+		$decoded = "";
+		for ($i=0; $i < ceil(strlen($imageData)/256); $i++){
+		   $decoded = $decoded . base64_decode(substr($imageData,$i*256,256));
+		}
+
+		
+		$fp = fopen("images/miniatures/". $time .'.png', 'wb');
+		fwrite($fp, $decoded);
+		fclose($fp);
+
+		/*$upload_dir = "../public/image/miniature/";
+		$img = $_POST['image'];
+		$img = str_replace('data:image/png;base64,', '', $img);
+		$img = str_replace(' ', '+', $img);
+		$data = base64_encode($img);
+		$file = $upload_dir . time() . ".png";
+		//	 $success = file_put_contents($file, $data);*/
+
+		return json_encode($time);
+
+		/*$data = $_POST['image'];
+		$image = explode('base64,',$data);
+		$fic=fopen("image.png","wb");
+		fwrite($fic,base64_decode($image[1]));
+		fclose($fic);*/
 	}
 }

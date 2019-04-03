@@ -40,8 +40,8 @@ $app->group('', function(){
 	$this->get("/inMethod/{recherche}","VideoController:inMethod");
 	$this->get("/inObjet/{recherche}","VideoController:inObjet");
 	$this->get("/allSequence","SequenceController:takeAllSequence");
+	$this->post("/image","VideoController:addMiniature");
 })->add(new SearcherMiddleware($container));
-
 
 $app->get("[/]", "HomeController:index")->setName('home');
 $app->get("/home[/]", "HomeController:index")->setName('home');
