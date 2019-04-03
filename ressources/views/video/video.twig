@@ -600,20 +600,31 @@
 							<datalist id="lesMethods"></datalist>
 							<input class="col-3" type="text" list="lesParams" id="parametre" name="param" disabled="disabled">
 							<datalist id="lesParams"></datalist>
-							<input type="button" id="screen" value="miniature">
 						</div>
+						<div class="col-12 form-inline">
+							<div class="col-2 ml-5">
+								<input class="btn btn-outline-secondary" type="button" id="screen" value="miniature">
+							</div>
+							<div class="col-4 ml-5">
+								<canvas class="border border-primary"></canvas>
+							</div>
+
+						</div>
+
                     </form>	<!-- fin form -->
 
     </div>
-			<div id="lesCommentaires">
-				
-			</div>
+
 		</div>
+
 		<div class="jp-no-solution">
 			<span>Update Required</span>
 			To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
 		</div>
 	</div>
 </div>
-<canvas></canvas>	
+	<div class="col-2">
+		<canvas></canvas>
+	</div>
+
 {% endblock %}
