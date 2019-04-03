@@ -11,6 +11,7 @@ $app->group('', function () {
     $this->get("/dictionary", "DictionaryController:index")->setName("dictionary");
 	$this->get("/dictionary/export", "DictionaryController:viewExport")->setName("dictionary.export");
 	$this->get("/dictionary/export/{format}", "DictionaryController:export")->setName("dictionary.format");
+    $this->get("/dictionary/export/{format}/{id}", "DictionaryController:exportSequence")->setName("dictionary.exportSequence");
 	$this->get("/dictionary/new", "DictionaryController:new")->setName("dictionary.new");
     $this->get("/dictionary/nuage", "DictionaryController:nuage")->setName("dictionary.nuage");
     $this->get("/dictionary/{id}", "DictionaryController:getById")->setName("dictionary.details");
