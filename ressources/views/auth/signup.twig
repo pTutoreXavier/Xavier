@@ -29,7 +29,7 @@
 								<label class="col-6 col-form-label" for="naissance">Date de naissance</label>
 								<div class="col-6">
 									<input class="form-control" type="date" name="naissance" id="naissance" value="{{ old.naissance }}" required>
-									{% if errors.niassance %}
+									{% if errors.naissance %}
 										<span class="erreur">{{ errors.naissance | first }}</span>
 									{% endif %}
 								</div>
