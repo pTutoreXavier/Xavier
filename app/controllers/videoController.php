@@ -111,14 +111,23 @@ class VideoController extends Controller{
 		$array = array();
 		$recherche = $request->getAttribute('route')->getArgument('recherche');
 
-		$user = User::where("nom","=",$recherche)->get("id");
+		$user = User::where("nom","=",$recherche)->get();
 
-		$video = Video::where("idChercheur", "=", $user[0]->id)->get();
+		if(count($user) != 0){
+			$video = Video::where("idChercheur", "=", $user[0]->id)->get();
 
-		for ($i=0; $i < count($video); $i++) { 	
-			array_push($array, $video[$i]);
+			if($video != null){
+				for ($i=0; $i < count($video); $i++) { 	
+					array_push($array, $video[$i]);
+				}
+			}
+			else{
+				return json_encode(0);	
+			}
 		}
-
+		else{
+			return json_encode(0);	
+		}
 		return json_encode($array);		
 	}
 

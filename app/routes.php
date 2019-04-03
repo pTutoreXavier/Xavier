@@ -38,6 +38,7 @@ $app->group('', function(){
 	$this->get("/methodParam/{recherche}","VideoController:param");
 	$this->get("/inMethod/{recherche}","VideoController:inMethod");
 	$this->get("/inObjet/{recherche}","VideoController:inObjet");
+	$this->get("/allSequence","SequenceController:takeAllSequence");
 })->add(new SearcherMiddleware($container));
 
 
