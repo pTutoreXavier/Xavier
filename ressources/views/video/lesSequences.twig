@@ -32,7 +32,6 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 			let base = $("#lesSequences").html();
-			takeAllSequence();
 			if($("#searcher").html() == null){
 				$.ajax({
 			        url : '../random', // La ressource ciblée
@@ -61,6 +60,7 @@
 			    });
 			}
 			else{
+				takeAllSequence();
 				$("#recherche").keyup(function(event){
 					if($("#recherche").val() != ""){
 						$.ajax({
