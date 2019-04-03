@@ -25,7 +25,7 @@ class DictionaryController extends Controller{
 		/*elseif($request->getParam("action") == "delete"){
 			$response = $this->delete($request, $response, $args);
 		}*/
-		if($request->getParam("action") == "export"){
+		elseif($request->getParam("action") == "export"){
 			$args["format"] = $request->getParam("format");
 			$args["sequence"] = $element;
 			$response = $this->export($request, $response, $args);
