@@ -37,7 +37,7 @@
 	</p>
 	{% if sequence.commentaires | length != 0 %}
 		<button type="button" class="btn btn-primary btn-commentaires"><i class="fas fa-chevron-down"></i></button>
-		<ul class="list-group mb-4">
+		<ul class="list-group mb-4 ul-commentaires">
 			{% for commentaire in sequence.commentaires %}
 				<li class="list-group-item">
 					{{ commentaire.commentaire }}
@@ -47,7 +47,7 @@
 	{% endif %}
 {% endfor %}
 <script type="text/javascript">
-	$("ul").hide();
+	$(".ul-commentaires").hide();
 	$(".btn-commentaires").on("click", function(){
 		var i = $(this).children("i");
 		if(i.attr("class") == "fas fa-chevron-up"){
