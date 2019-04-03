@@ -63,7 +63,7 @@ class DictionaryController extends Controller{
 			$element = new Dictionnaire;
 			$element->type = $params["type"];
 			$element->libelle = $params["libelle"];
-			if($params["type"] == "method"){
+			if($params["type"] == "method" && $params["parametre"] != ""){
 				$element->parametre = $params["parametre"];
 			}
 			$element->save();
@@ -87,7 +87,7 @@ class DictionaryController extends Controller{
             return $response->withRedirect($this->router->pathFor('dictionary.edit', ["id" => $args["id"]])."?action=edit");
         }
         $element->libelle = $params["libelle"];
-        if($element->type == "method"){
+        if($element->type == "method"  && $params["parametre"] != ""){
         	$element->parametre = $params["parametre"];
         }
 		$element->save();

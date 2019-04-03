@@ -36,7 +36,8 @@
 		)
 	</p>
 	{% if sequence.commentaires | length != 0 %}
-		<button type="button" class="btn btn-primary btn-commentaires"><i class="fas fa-chevron-down"></i></button>
+		<span class="badge badge-primary badge-pill">{{ sequence.commentaires | length }}</span>
+		<button type="button" class="btn btn-primary btn-commentaires"><i class="fas fa-plus"></i></button>
 		<ul class="list-group mb-4 ul-commentaires">
 			{% for commentaire in sequence.commentaires %}
 				<li class="list-group-item">
@@ -50,12 +51,12 @@
 	$(".ul-commentaires").hide();
 	$(".btn-commentaires").on("click", function(){
 		var i = $(this).children("i");
-		if(i.attr("class") == "fas fa-chevron-up"){
-			i.attr("class", "fas fa-chevron-down");
+		if(i.attr("class") == "fas fa-minus"){
+			i.attr("class", "fas fa-plus");
 			$(this).next("ul").hide();
 		}
 		else{
-			i.attr("class", "fas fa-chevron-up");
+			i.attr("class", "fas fa-minus");
 			$(this).next("ul").show();
 		}
 	});

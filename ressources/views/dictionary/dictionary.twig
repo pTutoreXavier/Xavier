@@ -4,10 +4,10 @@
 {% endblock %}
 {% block content %}
 <nav class="nav">
-  	<a class="text-decoration-none mr-4" href="dictionary/new?type=objet">Ajouter un objet</a>
-	<a class="text-decoration-none mr-4" href="dictionary/new?type=method">Ajouter une fonction</a>
-	<a class="text-decoration-none mr-4" href="dictionary/nuage">Dictionnaire (Nuage)</a>
-	<a class="text-decoration-none" href="dictionary/export">Exporter le dictionnaire</a>
+  	<a class="text-decoration-none mr-4" href="{{ path_for('dictionary.new') }}?type=objet">Ajouter un objet</a>
+	<a class="text-decoration-none mr-4" href="{{ path_for('dictionary.new') }}?type=method">Ajouter une fonction</a>
+	<a class="text-decoration-none mr-4" href="{{ path_for('dictionary.nuage') }}">Dictionnaire (Nuage)</a>
+	<a class="text-decoration-none" href="{{ path_for('dictionary.export') }}">Exporter le dictionnaire</a>
 </nav>
 <div class="row mt-5">
 	{% for key, value in elements %}
