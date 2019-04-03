@@ -74,7 +74,7 @@
 
 					       		video.forEach(function(element){
 					       			let pseudocode = element.pseudocode.split(";");
-					       			HTML += "<tr><td>" + (cpt+1) + "</td><td> " + pseudocode[0] + "." + pseudocode[1] + "(" + pseudocode[2] + ") </td><td><a href='../video/" + element.idVideo + "'> Voir la vidéo</a></td></tr>";
+					       			HTML += "<tr><td>" + (cpt+1) + "</td><td> " + pseudocode[0] + "." + pseudocode[1] + "(" + pseudocode[2] + ") </td><td><a href='../video/" + element.idVideo + "'> Voir la séquence</a></td></tr>";
 					       			cpt++;
 					       		});
 					       		$("#lesSequences").html(base + HTML);

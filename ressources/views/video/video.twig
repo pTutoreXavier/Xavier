@@ -120,15 +120,6 @@
      		}   	
      	});
 
-////////////////////////////////Restart//////////////////////////////////////////////////////////////
-
-		$("#restart").click(function(event){
-			$("#start").prop("disabled",false);
-			$("#finish").prop("disabled",true);
-			$("#timeStart").val("");
-			$("#timeFinish").val("");
-		});
-
 ///////////////////////////////Variables/////////////////////////////////////////////////////////////
      	var repeat = false;
      	var debut = 0;
@@ -144,14 +135,40 @@
 
 		$("#start").click(function(event){
 			$("#timeStart").val(calculFormatTime(Math.round(jpData.status.currentTime)));
-			$("#finish").prop("disabled",false);
-			$("#start").prop("disabled",true);
+			verifTime();
+			affichageSelect();
 		});
 
 		$("#finish").click(function(event){
 			$("#timeFinish").val(calculFormatTime(Math.round(jpData.status.currentTime)));
-			$("#finish").prop("disabled",true);
+
+			verifTime();
+			affichageSelect();
 		});
+
+		function affichageSelect(){
+			if($("#timeStart").val() != "" && $("#timeFinish").val() != ""){
+				let width = (calculSeconde($("#timeFinish").val().split(":")) - calculSeconde($("#timeStart").val().split(":"))) / pourcent;
+
+				let marginleft = (calculSeconde($("#timeStart").val().split(":")) / pourcent) - (80 / (640 / 100));
+
+				$("#selection").css("width",width + "%");
+				$("#selection").css("margin-left",marginleft + "%");
+			}
+			
+		}
+
+		function verifTime(){
+			if($("#timeStart").val() != "" && $("#timeFinish").val() != ""){
+				let start = calculSeconde($("#timeStart").val().split(":"));
+				let finish = calculSeconde($("#timeFinish").val().split(":"))
+				if(start > finish){
+					let tempo = $("#timeStart").val();
+					$("#timeStart").val($("#timeFinish").val());
+					$("#timeFinish").val(tempo);
+				}
+			}
+		}
 
 ///////////////////////////////Suggestion pseudocode///////////////////////////////////////////////////////////////////////
 
@@ -223,13 +240,13 @@
 			}
 		});
 
-///////////////////////////////affichage des séquences utilisé sur la timeline////////////////////////////////////////////////
+///////////////////////////////affichage des séquences crée sur la timeline////////////////////////////////////////////////
 
      	function afficherIndisponible(seconde){
      		let duree = seconde;
 
      		pourcent = duree / 100;
-     		let HTML = '<div id="indicator"></div><div id="selection"></div>';
+     		let HTML = '<div id="indicator"></div><div id="selection" style="height:8px;background-color:green;display:inline-block;z-index:4;position:absolute;opacity:0.6;"></div>';
      		for (var i = 0; i < seqStart.length; i++) {
      			let width = (seqFinish[i] - seqStart[i]) / pourcent;
      			let margin = (seqStart[i] / pourcent) - (80 / (640 / 100));
@@ -310,6 +327,8 @@
 				max = (fin - debut);
 				first = false;
 				afficherIndisponible(total);
+				$("#start").prop("disabled",false);
+				$("#finish").prop("disabled",false);
 	    	}
        	
 			
@@ -528,11 +547,10 @@
                             <button class="retour btn btn-secondary" type="button">Menu vidéo</button><br/>
                             <button class="sequence btn btn-primary col-3" type="button">Ajouter cette séquence</button>
                         </div>
-                        <input type="button" id="start" value="Début">
+                        <input type="button" id="start" value="Début" disabled="disabled">
                         <input type="text" id="timeStart" disabled="disabled" name="start">
                         <input type="button" id="finish" value="Fin" disabled="disabled">
                         <input type="text" id="timeFinish" disabled="disabled" name="finish">
-                        <input type="button" id="restart" value="Recommencer la séléction">
                         <input type="text" list="lesObjets" id="objet" name="objet">
 						<datalist id="lesObjets"></datalist>
                         <input type="text" list="lesMethods" id="method" name="method">
