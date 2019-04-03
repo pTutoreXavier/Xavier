@@ -130,6 +130,22 @@
      	var first = true;
      	let pourcent = 0;
      	var paramObjet = 0;
+		
+		var canvas = document.querySelector('canvas');
+		// Get a handle on the 2d context of the canvas element
+		var context = canvas.getContext('2d');
+		// Define some vars required later
+		var w, h;
+     	
+		
+		// Takes a snapshot of the video
+		function snap() {
+			var video = document.querySelector('#jp_video_0');
+			// Define the size of the rectangle that will be filled (basically the entire element)
+			context.fillRect(0, 0, w, h);
+			// Grab the image from the video
+			context.drawImage(video, 0, 0, w, h);
+		}
 
 ///////////////////////////////click début et fin//////////////////////////////////////////////////////
 
@@ -406,6 +422,20 @@
 			document.location.href="../videos/";
 		});
 
+///////////////////////////////miniature/////////////////////////////////////////////////////////////
+
+		$("#screen").click(function(event){
+			// Get handles on the video and canvas elements
+
+			w = 320;
+
+			h = 180;
+
+			canvas.width = w;
+			canvas.height = h;	
+			snap();
+		});
+
 ///////////////////////////////Calcul timeLine //////////////////////////////////////////////////////
 
 		setInterval(function() {
@@ -570,6 +600,7 @@
 							<datalist id="lesMethods"></datalist>
 							<input class="col-3" type="text" list="lesParams" id="parametre" name="param" disabled="disabled">
 							<datalist id="lesParams"></datalist>
+							<input type="button" id="screen" value="miniature">
 						</div>
                     </form>	<!-- fin form -->
 
@@ -583,5 +614,6 @@
 			To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
 		</div>
 	</div>
-</div>	
+</div>
+<canvas></canvas>	
 {% endblock %}
