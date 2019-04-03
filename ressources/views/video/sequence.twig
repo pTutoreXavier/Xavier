@@ -322,11 +322,13 @@ return true;
 				<div id="commentaire">
 					<form class="form-group" method="POST" name="comment" action="../../commenter">
 						<label class="col-form-label mr-3" for="message"><h3>Ecrivez votre commentaire</h3></label>
-						<input  class="form-control" type="text" name="message" id="comm"/>
+						<div class="form-inline">
+							<input  class="form-control" type="text" name="message" id="comm"/>
+							<input type="button" class="btn btn-dark" name="vocal" value="vocal" id='vocal'>
+						</div>
 						<input type="hidden" name="idSequence" value="{{idSequence}}"/>
 						<input type="hidden" name="idVideo" value="{{idVideo}}"/>
 						<input class="btn btn-primary mt-3 float-right" type="submit" name="envoi" value="commenter"/>
-						<input type="button" name="vocal" value="vocal" id='vocal'>
 					</form>
 				</div>
 			{% elseif auth.level is same as('searcher')  %}
