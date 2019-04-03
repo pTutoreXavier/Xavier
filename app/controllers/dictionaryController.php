@@ -18,12 +18,17 @@ class DictionaryController extends Controller{
 	public function getById($request, $response, $args){
 		$element = Dictionnaire::find($args["id"]);
 		//page de modification
-		if($request->getParam("action") != null && $request->getParam("action") == "edit"){
+		if($request->getParam("action") == "edit"){
 			$response = $this->view->render($response, "dictionary/edit.twig", ["element" => $element, "parametres" => explode("; ", $element->parametre)]);
 		}
 		//suppression
-		elseif($request->getParam("action") != null && $request->getParam("action") == "delete"){
+		/*elseif($request->getParam("action") == "delete"){
 			$response = $this->delete($request, $response, $args);
+		}*/
+		if($request->getParam("action") == "export"){
+			$args["format"] = $request->getParam("format");
+			$args["sequence"] = $element;
+			$response = $this->export($request, $response, $args);
 		}
 		//details de l'élément
 		else{
@@ -87,7 +92,7 @@ class DictionaryController extends Controller{
             return $response->withRedirect($this->router->pathFor('dictionary.edit', ["id" => $args["id"]])."?action=edit");
         }
         $element->libelle = $params["libelle"];
-        if($element->type == "method"  && $params["parametre"] != ""){
+        if($element->type == "method"  && $params["parametre"] != "" ){
         	$element->parametre = $params["parametre"];
         }
 		$element->save();
@@ -106,12 +111,18 @@ class DictionaryController extends Controller{
 		return $this->view->render($response, "dictionary/export.twig", ["formats" => ["xml", "csv", "json"]]);
 	}
 
-	//création des données et du fichier qui sera téléchargé
+	//création des données et du fichier qui sera téléchargé (tout le dictionnaire)
 	public function export($request, $response, $args){
 		$format = $args["format"];
 		if(in_array($format, ["xml", "csv", "json"])){
 			$data = [];
-			$sequences = Sequence::select(["id", "pseudocode"])->get();
+			if(isset($args["sequence"])){
+				$sequences = Sequence::where("pseudocode", "like", $args["sequence"]->libelle.";%")->orWhere("pseudocode", "like", "%;".$args["sequence"]->libelle.";%")->orWhere("pseudocode", "like", "%;".$args["sequence"]->libelle)->get();
+			}
+			else{
+				$sequences = Sequence::select(["id", "pseudocode"])->get();
+			}
+			
 			foreach($sequences as $sequence){
 				$pseudocode = explode(";", $sequence->pseudocode);
 				$s = "";
@@ -131,7 +142,49 @@ class DictionaryController extends Controller{
 					array_push($data[$s], $commentaire->commentaire);
 				}
 			}
-			$name = "dictionnaire_".$format."_".date("d-m-Y");
+			$name = $args["sequence"]->libelle."_".$format."_".date("d-m-Y");
+			$path = "../ressources/";
+			$this->$format($data, $name, $path);
+			// désactive la mise en cache
+			header("Cache-Control: no-cache, must-revalidate");
+			header("Cache-Control: post-check=0,pre-check=0");
+			header("Cache-Control: max-age=0");
+			header("Pragma: no-cache");
+			header("Expires: 0");			 
+			// force le téléchargement du fichier avec le bon nom
+			header("Content-Type: application/force-download");
+			header('Content-Disposition: attachment; filename="'.$name.'.'.$format.'"');
+			readfile($path.$name.'.'.$format);
+			unlink($path.$name.'.'.$format);
+		}
+		else{
+			return $response->withRedirect($this->router->pathFor('dictionary'));
+		}
+	}
+
+	public function exportSequence($request, $response, $args){
+		$format = $args["format"];
+		if(in_array($format, ["xml", "csv", "json"])){
+			$data = [];
+			$sequence = Sequence::find($args["id"]);
+			$pseudocode = explode(";", $sequence->pseudocode);
+			$s = "";
+			for($i = 0; $i < count($pseudocode); $i++){
+				$s .= $pseudocode[$i];
+				if($i == 0){
+					$s .=  ".";
+				}
+				if($i == 1){
+					$s .= "(";
+				}
+			}
+			$s .= ")";
+			$commentaires = Commentaire::where("idSequence", "=", $sequence->id)->get();
+			$data[$s] = [];
+			foreach ($commentaires as $commentaire){
+				array_push($data[$s], $commentaire->commentaire);
+			}
+			$name = $s."_".$format."_".date("d-m-Y");
 			$path = "../ressources/";
 			$this->$format($data, $name, $path);
 			// désactive la mise en cache
