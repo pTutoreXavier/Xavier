@@ -26,15 +26,18 @@ $app->group('', function(){
 
 	$this->post("/postvideo","VideoController:createSequence")->setName("PostVideo");
     $this->get("/videos[/]","VideoController:getVideos")->setName('videos');
-	$this->get("/video/{idVideo}[/]","VideoController:index");
+	$this->get("/video/{idVideo}[/]","VideoController:index")->setName('ViewVideo');
 	$this->get("/getVideosSearcher","VideoController:getVideosSearcher");
 	$this->get("/getAllVideos","VideoController:getAllVideos");
 	$this->get("/getSearcher/{recherche}","VideoController:getSearcher");
 	$this->get("/VideosSearcher/{recherche}","VideoController:getVideoOfSearcher");
 	$this->get("/upload","VideoController:upload");
-	$this->get("/object/{recherche}","VideoController:getObject");
+	$this->get("/objet/{recherche}","VideoController:getObjet");
 	$this->get("/method/{recherche}","VideoController:getMethod");
 	$this->get("/pseudoCode/{recherche}","SequenceController:pseudoCode");
+	$this->get("/methodParam/{recherche}","VideoController:param");
+	$this->get("/inMethod/{recherche}","VideoController:inMethod");
+	$this->get("/inObjet/{recherche}","VideoController:inObjet");
 })->add(new SearcherMiddleware($container));
 
 

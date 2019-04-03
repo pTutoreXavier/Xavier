@@ -8,10 +8,18 @@
 	</div>
 {% elseif auth.level is same as('searcher')  %}
 	<div id="searcher">
+		Recherche par pseudocode : 
 		<input type="text" id="recherche">
-		<div id="sequences">
+		<table class="table mt-5" id="lesSequences">
+			<thead class="thead-dark">
+			    <tr>
+			      <th scope="col">#</th>
+			      <th scope="col">pseudoCode</th>
+			      <th scope="col">Vidéo</th>
+			    </tr>
+		    </thead>
 
-		</div>
+		</table>
 	</div>
 {% endif %}
 
@@ -23,6 +31,7 @@
 
 	<script type="text/javascript">
 		$(document).ready(function(){
+			let base = $("#lesSequences").html();
 			if($("#searcher").html() == null){
 				$.ajax({
 			        url : '../random', // La ressource ciblée
@@ -33,7 +42,7 @@
 			       		let HTML = "";
 			       		video.forEach(function(element){
 			       			var newA = document.createElement("a");
-			       			newA.setAttribute("href","sequence/" + element.idVideo + "/" + element.id);
+			       			newA.setAttribute("href","../sequence/" + element.idVideo + "/" + element.id);
 			       			newA.setAttribute("class","miniaVideo col-lg-4 col-md-6 col-sm-12 col-xs-12");
 			       			newA.setAttribute("style","margin-top: 50px;");
 			       			var newImg = document.createElement("img");
@@ -43,21 +52,11 @@
 			       			newDiv.setAttribute("style","position: absolute; right: 30px; bottom: 10px;");
 			       			newDiv.textContent = element.fin - element.debut + 's';
 
-			       			
-
 			       			newA.appendChild(newImg);
 			       			newA.appendChild(newDiv);
 
 			       			document.getElementById("user").appendChild(newA);
-
-
-			       			/*HTML += "<a href='sequence/" + element.idVideo + "/" + element.id + "' class='miniaVideo'";
-			       			HTML += "<img src='../ressources/views/home/img/baniere.png' class='img-reponsive imgMinia'";
-			       			HTML += "<div class='bottom-right'> " + (element.fin - element.debut) + "</div>";
-			       			HTML += "</a>";*/
-			       			//HTML += "<div> id de la séquence : " + element.id + " / id de la video : " + element.idVideo +" </div>";
 			       		});
-			       		//$("#user").html(HTML);
 			        }
 			    });
 			}
@@ -71,12 +70,19 @@
 					       		let video = JSON.parse(code_html);
 					       		console.log(video);
 					       		let HTML = "";
+					       		let cpt = 0;
+
 					       		video.forEach(function(element){
-					       			HTML += "<div> id de la séquence : " + element.id + " / id de la video : " + element.idVideo +" / le pseudoCode : " + element.pseudocode + " </div>";
+					       			let pseudocode = element.pseudocode.split(";");
+					       			HTML += "<tr><td>" + (cpt+1) + "</td><td> " + pseudocode[0] + "." + pseudocode[1] + "(" + pseudocode[2] + ") </td><td><a href='../video/" + element.idVideo + "'> Voir la vidéo</a></td></tr>";
+					       			cpt++;
 					       		});
-					       		$("#sequences").html(HTML);
+					       		$("#lesSequences").html(base + HTML);
 					        }
 					    });
+					}
+					else{
+						$("#lesSequences").html(base);
 					}
 				});
 			}

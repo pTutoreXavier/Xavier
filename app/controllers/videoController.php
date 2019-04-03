@@ -18,30 +18,26 @@ class VideoController extends Controller{
 	}
 
 	public function createSequence($request, $response){
-		echo $_POST["capStart"];
-		echo "<br/>";
-		echo $_POST["capFinish"];
-		echo "<br/>";
-		echo $_POST["pseudocode"];
-		echo "<br/>";
-		$tabStart = explode(",",$_POST["capStart"]);
-		$tabFinish = explode(",",$_POST["capFinish"]);
 
-		for ($i=0; $i < count($tabStart); $i++) { 
+		var_dump($_POST);
+
+
+		/*for ($i=0; $i < count($tabStart); $i++) { 
 			$seq = new Sequence();
 			$seq->idVideo = $_POST['idVideo'];
 			$seq->debut = $tabStart[$i];
 			$seq->fin = $tabFinish[$i];
 			$seq->idUser = $_SESSION['user'];
+			$seq->pseudocode = $objet[$i].";".$method[$i].";".$params[$i];
 			echo $seq;
 			$seq->save();
 		}
 
 		header('Location: video/'.$_POST['idVideo']);
-		exit();
+		exit();*/
 	}
 
-	public function getObject($request, $response){
+	public function getObjet($request, $response){
 		$array = array();
 
 		$objet = Dictionnaire::where("type", "=", "objet")->where("libelle", "like", $request->getAttribute('route')->getArgument('recherche')."%")->get();
@@ -79,7 +75,7 @@ class VideoController extends Controller{
 		$video = Video::where("idChercheur","=", $_SESSION["user"])->get();
 
 		for ($i=0; $i < count($video); $i++) { 	
-			array_push($array, $video[$i]["lien"]);
+			array_push($array, $video[$i]);
 		}
 
 		return json_encode($array);
@@ -91,7 +87,7 @@ class VideoController extends Controller{
 		$video = Video::get();
 
 		for ($i=0; $i < count($video); $i++) { 	
-			array_push($array, $video[$i]["lien"]);
+			array_push($array, $video[$i]);
 		}
 
 		return json_encode($array);
@@ -120,9 +116,61 @@ class VideoController extends Controller{
 		$video = Video::where("idChercheur", "=", $user[0]->id)->get();
 
 		for ($i=0; $i < count($video); $i++) { 	
-			array_push($array, $video[$i]["lien"]);
+			array_push($array, $video[$i]);
 		}
 
 		return json_encode($array);		
+	}
+
+	public function param($request, $response){
+		$recherche = $request->getAttribute('route')->getArgument('recherche');
+
+		$param = Dictionnaire::select("parametre")->where("type","=","method")->where("libelle","=",$recherche)->first();
+
+		if($param != null){
+			if($param->parametre == "objet"){
+				$result = 2;
+			}
+			else{
+				$result = 1;
+			}
+		}
+		else{
+			$result = 0;
+		}	
+
+		return json_encode($result);
+	}
+
+	public function inMethod($request, $response){
+
+		$recherche = $request->getAttribute('route')->getArgument('recherche');
+
+		$method = Dictionnaire::where("type","=","method")->where("libelle","=",$recherche)->first();
+
+		if($method != null){
+			$result = 1;
+		}
+		else{
+			$result = 0;
+		}
+		return json_encode($result);
+
+	}
+
+	public function inObjet($request, $response){
+
+		$recherche = $request->getAttribute('route')->getArgument('recherche');
+
+		$objet = Dictionnaire::where("type","=","objet")->where("libelle","=",$recherche)->first();
+
+		if($objet != null){
+			$result = 1;
+		}
+		else{
+			$result = 0;
+		}
+		return json_encode($result);
+
 	}
 }

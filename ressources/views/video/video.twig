@@ -58,50 +58,172 @@
 ///////////////////////////////envoie du formulaire////////////////////////////////////////////////
 
      	$(".sequence").click(function(event){
-     		let start = [];
-     		let finish = [];
-     		let type = [];
-     		let method = [];
-     		let param = [];
 
-     		for(let i = 1; i < nbreSequence +1; i++){
-	     		let tempo = $("#start" + i).val().split(':');   			
-		    	let total = calculSeconde(tempo);	
-	     		start.push(total);
-
-	     		tempo = $("#finish" + i).val().split(':');   			
-		    	total = calculSeconde(tempo);
-	     		finish.push(total);
-
-	     		type.push($("#type" + i).val());;
-
-	     		method.push($("#lesMethodes" + i).val());;
-
-	     		param.push($("#lesParametres" + i).val());;
-	     	}
-	     	$("#Start").val(start);
-	   		$("#Finish").val(finish);
-	   		$("#PseudoCode").val(type + ";" + method + ";" + param);
-
-	     	document.getElementById("leForm").submit();
-
+     		if($("#timeStart").val() != "" && $("#timeFinish").val() != "" && $("objet").val() != "" && $("#method").val() != ""){
+     			if (confirm("Etes vous sur de votre paramètre ?")){
+     				$.ajax({
+				        url : '../inObjet/' + $("#objet").val(), // La ressource ciblée
+				        type : 'GET', // Le type de la requête HTTP.
+				        success : function(code_html, statut){
+				       		let objet = JSON.parse(code_html);
+				       		console.log(objet);
+				       		if(objet == 1){
+				       			$.ajax({
+							        url : '../inMethod/' + $("#method").val(), // La ressource ciblée
+							        type : 'GET', // Le type de la requête HTTP.
+							        success : function(code_html, statut){
+							       		let method = JSON.parse(code_html);
+							       		console.log(method);
+							       		if(method == 1){
+							       			if(paramObjet == 2){
+							       				$.ajax({
+											        url : '../inObjet/' + $("#parametre").val(), // La ressource ciblée
+											        type : 'GET', // Le type de la requête HTTP.
+											        success : function(code_html, statut){
+											       		let objet = JSON.parse(code_html);
+											       		if(objet == 1){
+											       			$("#timeStart").prop("disabled",false);
+										     				$("#timeFinish").prop("disabled",false);
+										     				$("#timeStart").val(calculSeconde($("#timeStart").val().split(":")));
+										     				$("#timeFinish").val(calculSeconde($("#timeFinish").val().split(":")));
+										     				document.getElementById("leForm").submit();
+											       		}
+											       		else{
+											       			alert("votre paramètre n'est pas correct");
+											       		}
+											        }
+												});
+							       			}
+							       			else{
+							       				$("#timeStart").prop("disabled",false);
+							     				$("#timeFinish").prop("disabled",false);
+							     				$("#timeStart").val(calculSeconde($("#timeStart").val().split(":")));
+							     				$("#timeFinish").val(calculSeconde($("#timeFinish").val().split(":")));
+							       				document.getElementById("leForm").submit();
+							       			}
+							       		}
+							       		else{
+							       			alert("la méthode n'est pas bonne");
+							       		}
+							        }
+								});
+				       		}
+				       		else{
+				       			alert("l'objet n'est pas bon");
+				       		}
+				        }
+					});
+		        }
+     		}
+     		else{
+     			alert("tous les champs ne sont pas remplis");
+     		}   	
      	});
 
+////////////////////////////////Restart//////////////////////////////////////////////////////////////
+
+		$("#restart").click(function(event){
+			$("#start").prop("disabled",false);
+			$("#finish").prop("disabled",true);
+			$("#timeStart").val("");
+			$("#timeFinish").val("");
+		});
+
+///////////////////////////////Variables/////////////////////////////////////////////////////////////
      	var repeat = false;
      	var debut = 0;
      	var fin;
      	var play = false;  // savoir si la vidéo est en cours ou non
      	var max; // (fin video - debut video)
      	var jp = $('#jquery_jplayer_1'), jpData = jp.data('jPlayer');
-     	var nbreSequence = 0;
      	var first = true;
-     	var selectStart = 0;
-     	var selectFinish = 0;
      	let pourcent = 0;
-     	let ajoutSeq = true;
+     	var paramObjet = 0;
 
+///////////////////////////////click début et fin//////////////////////////////////////////////////////
 
-///////////////////////////////affichage des séqences utilisé sur la timeline////////////////////////////////////////////////
+		$("#start").click(function(event){
+			$("#timeStart").val(calculFormatTime(Math.round(jpData.status.currentTime)));
+			$("#finish").prop("disabled",false);
+			$("#start").prop("disabled",true);
+		});
+
+		$("#finish").click(function(event){
+			$("#timeFinish").val(calculFormatTime(Math.round(jpData.status.currentTime)));
+			$("#finish").prop("disabled",true);
+		});
+
+///////////////////////////////Suggestion pseudocode///////////////////////////////////////////////////////////////////////
+
+		$("#objet").keyup(function(event){
+			if($("#objet").val() != ""){
+				$.ajax({
+			        url : '../objet/' + $("#objet").val(), // La ressource ciblée
+			        type : 'GET', // Le type de la requête HTTP.
+			        success : function(code_html, statut){
+			       		let video = JSON.parse(code_html);
+			       		let HTML = "";
+			       		video.forEach(function(element){
+			       			HTML += "<option value='" + element + "'>";
+			       		});
+			       		$("#lesObjets").html(HTML);
+			        }
+				});
+			}			
+		});
+
+		$("#method").keyup(function(event){
+			if($("#method").val() != ""){
+				$.ajax({
+			        url : '../method/' + $("#method").val(), // La ressource ciblée
+			        type : 'GET', // Le type de la requête HTTP.
+			        success : function(code_html, statut){
+			       		let video = JSON.parse(code_html);
+			       		let HTML = "";
+			       		video.forEach(function(element){
+			       			HTML += "<option value='" + element + "'>";
+			       		});
+			       		$("#lesMethods").html(HTML);
+			        }
+				});
+				$.ajax({
+			        url : '../methodParam/' + $("#method").val(), // La ressource ciblée
+			        type : 'GET', // Le type de la requête HTTP.
+			        success : function(code_html, statut){
+			       		let param = JSON.parse(code_html);
+			       		let HTML = "";
+			       		paramObjet = param;
+			       		console.log(param);
+			       		if(param < 2){
+			       			$("#parametre").prop("disabled",true);
+			       			$("#parametre").val("");
+			       		}
+			       		else{
+			       			$("#parametre").prop("disabled",false);
+			       		}
+			        }
+				});
+			}
+		});
+
+		$("#parametre").keyup(function(event){
+			if($("#parametre").val() != "" && paramObjet == 2){
+				$.ajax({
+			        url : '../objet/' + $("#parametre").val(), // La ressource ciblée
+			        type : 'GET', // Le type de la requête HTTP.
+			        success : function(code_html, statut){
+			       		let video = JSON.parse(code_html);
+			       		let HTML = "";
+			       		video.forEach(function(element){
+			       			HTML += "<option value='" + element + "'>";
+			       		});
+			       		$("#lesParams").html(HTML);
+			        }
+				});
+			}
+		});
+
+///////////////////////////////affichage des séquences utilisé sur la timeline////////////////////////////////////////////////
 
      	function afficherIndisponible(seconde){
      		let duree = seconde;
@@ -256,195 +378,13 @@
 	    	}
 	    });
 		
-///////////////////////////////Ajout d'une séquence////////////////////////////////////////////////
+///////////////////////////////Retour menu videos////////////////////////////////////////////////
 
-		$(".ajouterSequence").click(function(event){
-
-			if(ajoutSeq){
-				if($("#start" + nbreSequence).val() == "0:NaN" || $("#start" + nbreSequence).val() == "" || $("#finish" + nbreSequence).val() == "0:NaN" || $("#finish" + nbreSequence).val() == ""){
-				}
-				else{
-
-					seqStart.push(selectStart);
-					seqFinish.push(selectFinish);
-					nbreSequence += 1;
-
-					let element = document.createElement("div");
-					element.setAttribute("id",nbreSequence);
-					element.setAttribute("class","StartFinish row");
-					document.getElementById("leForm").appendChild(element);
-
-					element = document.createElement("button");
-					element.setAttribute("id", "Deb" + nbreSequence);  
-					element.setAttribute("class", "start btn btn-dark  mb-3");
-					element.setAttribute("type", "button");
-					element.setAttribute("value", "Début : "); 
-					document.getElementById(nbreSequence).appendChild(element);
-					$("#Deb"+ nbreSequence).html("Début");
-
-					element = document.createElement("input");
-					element.setAttribute("name", "start" + nbreSequence);
-					element.setAttribute("id", "start" + nbreSequence);
-					element.setAttribute("class", "ml-3 form-control mb-3");
-					element.setAttribute("type", "text"); 
-					element.setAttribute("required", "required");      
-					element.setAttribute("disabled", "disabled");     
-					element.setAttribute("style", "width:100px");   
-					document.getElementById(nbreSequence).appendChild(element);
-
-					element = document.createElement("button");
-					element.setAttribute("id", "Fin" + nbreSequence);  
-					element.setAttribute("class", "finish btn btn-dark ml-3  mb-3");
-					element.setAttribute("type", "button"); 
-					element.setAttribute("value", "Fin : "); 
-					element.setAttribute("disabled", "disabled"); 
-					document.getElementById(nbreSequence).appendChild(element);
-					$("#Fin"+ nbreSequence).html("Fin");
-
-					element = document.createElement("input");
-					element.setAttribute("name", "finish" + nbreSequence);
-					element.setAttribute("id", "finish" + nbreSequence);
-                    element.setAttribute("class", "ml-3 form-control  mb-3");
-					element.setAttribute("type", "text"); 
-					element.setAttribute("required", "required");      
-					element.setAttribute("disabled", "disabled");     
-					element.setAttribute("style", "width:100px");   
-					document.getElementById(nbreSequence).appendChild(element);
-
-					element = document.createElement("input");
-					element.setAttribute("name", "list" + nbreSequence);
-					element.setAttribute("id", "type" + nbreSequence);       
-					element.setAttribute("list", "objet" + nbreSequence);
-                    element.setAttribute("class", "form-control col-6");
-                    element.setAttribute("placeholder", "pseudo-code");
-					element.setAttribute("type", "text");
-					document.getElementById(nbreSequence).appendChild(element);
-
-					element = document.createElement("datalist");
-					element.setAttribute("id", "objet" + nbreSequence);       
-					document.getElementById(nbreSequence).appendChild(element);
-
-					ajoutSeq = false;
-
-					$(".sequence").prop("disabled",'disabled');
-
-					$("#type" + nbreSequence).keyup(function(event){
-						if($("#lesParametres" + nbreSequence).val() != "" && $("#lesMethodes" + nbreSequence).val() != "" && $("#type" + nbreSequence).val() != "" && $("#Deb" + nbreSequence).prop("disabled") == true && $("#Fin" + nbreSequence).prop("disabled") == true){
-								ajoutSeq = true;
-								$(".sequence").prop("disabled",false);
-						}
-						else{
-							$(".sequence").prop("disabled",'disabled');
-							ajoutSeq = false;
-						}
-
-						if($("#type" + nbreSequence).val() != ""){
-							$.ajax({
-						        url : '../object/' + $("#type" + nbreSequence).val(), // La ressource ciblée
-						        type : 'GET', // Le type de la requête HTTP.
-						        success : function(code_html, statut){
-						       		let tab = JSON.parse(code_html);
-						       		console.log(tab);
-						       		let laListe = document.getElementById("objet" + nbreSequence);
-						       		let HTML = "";
-						       		tab.forEach(function(e){
-						       			HTML += "<option value='"+e+"'>";    
-						       		});
-						       		laListe.innerHTML = HTML;
-						        }
-						    });
-						}
-					});
-
-					element = document.createElement("input");
-					element.setAttribute("name", "methodes" + nbreSequence);
-					element.setAttribute("id", "lesMethodes" + nbreSequence);       
-					element.setAttribute("list", "libelle" + nbreSequence);
-                    element.setAttribute("class", "form-control col-6");
-                    element.setAttribute("placeholder", "méthode");
-					element.setAttribute("type", "text");
-					document.getElementById(nbreSequence).appendChild(element);
-
-					element = document.createElement("datalist");
-					element.setAttribute("id", "libelle" + nbreSequence);       
-					document.getElementById(nbreSequence).appendChild(element);
-
-					$("#lesMethodes" + nbreSequence).keyup(function(event){
-						if($("#lesParametres" + nbreSequence).val() != "" && $("#lesMethodes" + nbreSequence).val() != "" && $("#type" + nbreSequence).val() != "" && $("#Deb" + nbreSequence).prop("disabled") == true && $("#Fin" + nbreSequence).prop("disabled") == true){
-								ajoutSeq = true;
-								$(".sequence").prop("disabled",false);
-						}
-						else{
-							$(".sequence").prop("disabled",'disabled');
-							ajoutSeq = false;
-						}
-
-						if($("#lesMethodes" + nbreSequence).val() != ""){
-							$.ajax({
-						        url : '../method/' + $("#lesMethodes" + nbreSequence).val(), // La ressource ciblée
-						        type : 'GET', // Le type de la requête HTTP.
-						        success : function(code_html, statut){
-						       		let tab = JSON.parse(code_html);
-						       		console.log(tab);
-						       		let laListe = document.getElementById("libelle" + nbreSequence);
-						       		let HTML = "";
-						       		tab.forEach(function(e){
-						       			HTML += "<option value='"+e+"'>";    
-						       		});
-						       		laListe.innerHTML = HTML;
-						        }
-						    });
-						}
-					});
-
-					element = document.createElement("input");
-					element.setAttribute("name", "parametre" + nbreSequence);
-					element.setAttribute("id", "lesParametres" + nbreSequence);       
-					element.setAttribute("list", "params" + nbreSequence);
-                    element.setAttribute("class", "form-control col-6");
-                    element.setAttribute("placeholder", "paramètres");
-					element.setAttribute("type", "text");
-					document.getElementById(nbreSequence).appendChild(element);
-
-					element = document.createElement("datalist");
-					element.setAttribute("id", "params" + nbreSequence);       
-					document.getElementById(nbreSequence).appendChild(element);
-
-					$("#lesParametres" + nbreSequence).keyup(function(event){
-						if($("#lesParametres" + nbreSequence).val() != "" && $("#lesMethodes" + nbreSequence).val() != "" && $("#type" + nbreSequence).val() != "" && $("#Deb" + nbreSequence).prop("disabled") == true && $("#Fin" + nbreSequence).prop("disabled") == true){
-								ajoutSeq = true;
-								$(".sequence").prop("disabled",false);
-						}
-						else{
-							$(".sequence").prop("disabled",'disabled');
-							ajoutSeq = false;
-						}
-					});
-
-					$(".start").unbind('click').click(function(event){
-						this.setAttribute("disabled","disabled");
-						$("#Fin"+nbreSequence).prop('disabled',false);
-						selectStart = calculFormatTime(Math.round(jpData.status.currentTime));
-						$("#start" + nbreSequence).val(selectStart);
-					});
-
-					$(".finish").unbind('click').click(function(event){
-						this.setAttribute("disabled","disabled");
-						selectFinish = calculFormatTime(Math.round(jpData.status.currentTime));
-						$("#finish" + nbreSequence).val(selectFinish);
-
-						if($("#lesParametres" + nbreSequence).val() != "" && $("#lesMethodes" + nbreSequence).val() != "" && $("#type" + nbreSequence).val() != "" && $("#Deb" + nbreSequence).prop("disabled") == true && $("#Fin" + nbreSequence).prop("disabled") == true){
-								ajoutSeq = true;
-								$(".sequence").prop("disabled",false);
-						}
-						else{
-							$(".sequence").prop("disabled",'disabled');
-							ajoutSeq = false;
-						}
-					});
-				}
-			}    
+		$(".retour").click(function(event){
+			document.location.href="../videos/";
 		});
+
+///////////////////////////////Calcul timeLine //////////////////////////////////////////////////////
 
 		setInterval(function() {
 			if ((jpData.status.currentTime > fin || jpData.status.currentTime < debut) && jpData.status.currentTime != 0) {
@@ -583,23 +523,22 @@
                         </div>
                     </div>
                     <!-- début form -->
-                    <form id="leForm"  class="form-group row" name="createSequence" method="POST" action='{{path_for("PostVideo")}}'>
+                    <form id="leForm"  class="form-group row" autocomplete="off" name="createSequence" method="POST" action='{{path_for("PostVideo")}}'>
                         <div id="bloc" class="row">
-                            <button class="ajouterSequence btn btn-secondary" type="button">Ajouter une sequence</button><br/>
-                            <button class="sequence btn btn-primary col-3" type="button" disabled="disabled">Envoyer</button>
+                            <button class="retour btn btn-secondary" type="button">Menu vidéo</button><br/>
+                            <button class="sequence btn btn-primary col-3" type="button">Ajouter cette séquence</button>
                         </div>
-                        <div class="row">
-                            <div class="form-group">
-                                <input class="form-control" id="Start" type="hidden" name="capStart" value="0"/>
-                                <input class="form-control" id="Finish" type="hidden" name="capFinish" value="0"/>
-                                <input class="form-control" id="PseudoCode" type="hidden" name="pseudocode" value="0"/>
-                                <input class="form-control" id="idVideo" type="hidden" name="idVideo" value="{{idVideo}}"/>
-                            </div>
-
-                        </div>
-
-
-
+                        <input type="button" id="start" value="Début">
+                        <input type="text" id="timeStart" disabled="disabled" name="start">
+                        <input type="button" id="finish" value="Fin" disabled="disabled">
+                        <input type="text" id="timeFinish" disabled="disabled" name="finish">
+                        <input type="button" id="restart" value="Recommencer la séléction">
+                        <input type="text" list="lesObjets" id="objet" name="objet">
+						<datalist id="lesObjets"></datalist>
+                        <input type="text" list="lesMethods" id="method" name="method">
+                        <datalist id="lesMethods"></datalist>
+                        <input type="text" list="lesParams" id="parametre" name="param" disabled="disabled">
+                        <datalist id="lesParams"></datalist>
                     </form>	<!-- fin form -->
 
     </div>
