@@ -73,7 +73,11 @@
 
 					       		sequences.forEach(function(element){
 					       			let pseudocode = element.pseudocode.split(";");
-					       			HTML += "<tr><td>" + (cpt+1) + "</td><td> " + pseudocode[0] + "." + pseudocode[1] + "(" + pseudocode[2] + ") </td><td><a href='../video/" + element.idVideo + "'> Voir la séquence</a></td></tr>";
+					       			HTML += "<tr><td>" + (cpt+1) + "</td><td> " + pseudocode[0] + "." + pseudocode[1] + "(";
+					       			if(pseudocode[2]){
+					       				HTML += pseudocode[2];
+					       			}
+					       			HTML += ") </td><td><a href='../video/" + element.idVideo + "'> Voir la séquence</a></td></tr>";
 					       			cpt++;
 					       		});
 					       		$("#lesSequences").html(base + HTML);
@@ -96,7 +100,11 @@
 			       		let cpt = 0;
 			       		sequences.forEach(function(element){
 			       			let pseudocode = element.pseudocode.split(";");
-			       			HTML += "<tr><td>" + (cpt+1) + "</td><td> " + pseudocode[0] + "." + pseudocode[1] + "(" + pseudocode[2] + ") </td><td><a href='../video/" + element.idVideo + "'> Voir la séquence</a></td></tr>";
+			       			HTML += "<tr><td>" + (cpt+1) + "</td><td> " + pseudocode[0] + "." + pseudocode[1] + "(";
+					       	if(pseudocode[2]){
+					       		HTML += pseudocode[2];
+					       	}
+					       	HTML += ") </td><td><a href='../video/" + element.idVideo + "'> Voir la séquence</a></td></tr>";
 			       			cpt++;
 			       		});
 			       		$("#lesSequences").html(base + HTML);
