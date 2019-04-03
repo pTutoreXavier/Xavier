@@ -67,12 +67,7 @@
 	display: flex;
 }
 
-.ajouterSequence, .sequence{
-	width:40%;
-	height:35px;
-	margin:auto;
-	margin-top: 25px;
-}
+
 
 .StartFinish{
 	width:80%;

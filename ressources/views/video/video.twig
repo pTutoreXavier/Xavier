@@ -546,20 +546,31 @@
                     </div>
                     <!-- début form -->
                     <form id="leForm"  class="form-group row" autocomplete="off" name="createSequence" method="POST" action='{{path_for("PostVideo")}}'>
-                        <div id="bloc" class="row">
-                            <button class="retour btn btn-secondary" type="button">Menu vidéo</button><br/>
-                            <button class="sequence btn btn-primary col-3" type="button">Ajouter cette séquence</button>
-                        </div>
-                        <input type="button" id="start" value="Début" disabled="disabled">
-                        <input type="text" id="timeStart" disabled="disabled" name="start">
-                        <input type="button" id="finish" value="Fin" disabled="disabled">
-                        <input type="text" id="timeFinish" disabled="disabled" name="finish">
-                        <input type="text" list="lesObjets" id="objet" name="objet">
-						<datalist id="lesObjets"></datalist>
-                        <input type="text" list="lesMethods" id="method" name="method">
-                        <datalist id="lesMethods"></datalist>
-                        <input type="text" list="lesParams" id="parametre" name="param" disabled="disabled">
-                        <datalist id="lesParams"></datalist>
+						<div class="form-group col-12">
+							<button type="button" class="retour btn btn-secondary col-5 ml-5">Menu vidéo</button>
+							<button  type="button" class="sequence btn btn-primary col-5">Ajouter la séquence</button>
+						</div>
+						<div class="form-group col-12">
+							<div class="form-inline m-auto">
+								 <div class="col-4 m-auto">
+									<input class="btn btn-secondary" type="button" id="start" value="Début" disabled="disabled">
+									<input class="form-control col-5" type="text" id="timeStart" disabled="disabled" name="start">
+								 </div>
+								<div class="col-4 m-auto">
+									<input class="btn btn-secondary" type="button" id="finish" value="Fin" disabled="disabled">
+									<input class="form-control col-5" type="text" id="timeFinish" disabled="disabled" name="finish">
+								</div>
+							</div>
+
+						</div>
+						<div class="form-group col-12 ml-5">
+							<input class="col-3" type="text" list="lesObjets" id="objet" name="objet">
+							<datalist id="lesObjets"></datalist>
+							<input class="col-3" type="text" list="lesMethods" id="method" name="method">
+							<datalist id="lesMethods"></datalist>
+							<input class="col-3" type="text" list="lesParams" id="parametre" name="param" disabled="disabled">
+							<datalist id="lesParams"></datalist>
+						</div>
                     </form>	<!-- fin form -->
 
     </div>
