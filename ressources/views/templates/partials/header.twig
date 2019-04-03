@@ -17,6 +17,7 @@
                 {% elseif auth.level is same as('searcher')  %}
                     <li class="nav-item"><a class="nav-link" href="{{ path_for('videos') }}">Vidéos</a></li>
                     <li><a class="nav-link" href="{{ path_for('dictionary') }}">Dictionnaire</a></li>
+                    <li><a class="nav-link" href="{{ path_for('upload') }}">Télécharger une vidéo</a></li>
                 {% elseif not auth.level %}
                 {% endif %}
             </ul>

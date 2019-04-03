@@ -31,7 +31,7 @@ $app->group('', function(){
 	$this->get("/getAllVideos","VideoController:getAllVideos");
 	$this->get("/getSearcher/{recherche}","VideoController:getSearcher");
 	$this->get("/VideosSearcher/{recherche}","VideoController:getVideoOfSearcher");
-	$this->get("/upload","VideoController:upload");
+	$this->get("/upload","VideoController:upload")->setName('upload');
 	$this->get("/objet/{recherche}","VideoController:getObjet");
 	$this->get("/method/{recherche}","VideoController:getMethod");
 	$this->get("/pseudoCode/{recherche}","SequenceController:pseudoCode");
