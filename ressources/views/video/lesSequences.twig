@@ -32,15 +32,15 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 			let base = $("#lesSequences").html();
+			takeAllSequence();
 			if($("#searcher").html() == null){
 				$.ajax({
 			        url : '../random', // La ressource ciblée
 			        type : 'GET', // Le type de la requête HTTP.
 			        success : function(code_html, statut){
-			       		let video = JSON.parse(code_html);
-			       		console.log(video);
+			       		let sequences = JSON.parse(code_html);
 			       		let HTML = "";
-			       		video.forEach(function(element){
+			       		sequences.forEach(function(element){
 			       			var newA = document.createElement("a");
 			       			newA.setAttribute("href","../sequence/" + element.idVideo + "/" + element.id);
 			       			newA.setAttribute("class","miniaVideo col-lg-4 col-md-6 col-sm-12 col-xs-12");
@@ -67,12 +67,11 @@
 					        url : '../pseudoCode/' + $("#recherche").val(), // La ressource ciblée
 					        type : 'GET', // Le type de la requête HTTP.
 					        success : function(code_html, statut){
-					       		let video = JSON.parse(code_html);
-					       		console.log(video);
+					       		let sequences = JSON.parse(code_html);
 					       		let HTML = "";
 					       		let cpt = 0;
 
-					       		video.forEach(function(element){
+					       		sequences.forEach(function(element){
 					       			let pseudocode = element.pseudocode.split(";");
 					       			HTML += "<tr><td>" + (cpt+1) + "</td><td> " + pseudocode[0] + "." + pseudocode[1] + "(" + pseudocode[2] + ") </td><td><a href='../video/" + element.idVideo + "'> Voir la séquence</a></td></tr>";
 					       			cpt++;
@@ -82,8 +81,26 @@
 					    });
 					}
 					else{
-						$("#lesSequences").html(base);
+						takeAllSequence();
 					}
+				});
+			}
+
+			function takeAllSequence(){
+				$.ajax({
+			        url : '../allSequence', // La ressource ciblée
+			        type : 'GET', // Le type de la requête HTTP.
+			        success : function(code_html, statut){
+			       		let sequences = JSON.parse(code_html);
+			       		let HTML = "";
+			       		let cpt = 0;
+			       		sequences.forEach(function(element){
+			       			let pseudocode = element.pseudocode.split(";");
+			       			HTML += "<tr><td>" + (cpt+1) + "</td><td> " + pseudocode[0] + "." + pseudocode[1] + "(" + pseudocode[2] + ") </td><td><a href='../video/" + element.idVideo + "'> Voir la séquence</a></td></tr>";
+			       			cpt++;
+			       		});
+			       		$("#lesSequences").html(base + HTML);
+			        }
 				});
 			}
 		});

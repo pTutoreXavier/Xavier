@@ -89,4 +89,15 @@ class SequenceController extends Controller{
 
 		return json_encode($array);
 	}
+
+	public function takeAllSequence($request, $response){
+		$array = array();
+		$sequences = Sequence::get();
+
+		for ($i=0; $i < count($sequences); $i++) { 	
+			array_push($array, $sequences[$i]);
+		}
+
+		return json_encode($array);
+	}
 }
