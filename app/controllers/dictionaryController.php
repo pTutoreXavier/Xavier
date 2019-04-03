@@ -142,7 +142,12 @@ class DictionaryController extends Controller{
 					array_push($data[$s], $commentaire->commentaire);
 				}
 			}
-			$name = $args["sequence"]->libelle."_".$format."_".date("d-m-Y");
+			if(isset($args["sequence"])){
+				$name = $args["sequence"]->libelle."_".$format."_".date("d-m-Y");
+			}
+			else{
+				$name = "dictionnaire_".$format."_".date("d-m-Y");
+			}
 			$path = "../ressources/";
 			$this->$format($data, $name, $path);
 			// désactive la mise en cache
