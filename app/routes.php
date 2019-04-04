@@ -50,7 +50,7 @@ $app->get('/home/technos[/]', "HomeController:technos")->setName('home.technos')
 
 
 
-// Routes ayant l'obligation de connection USER
+// Routes ayant l'obligation de connexion USER
 $app->group('', function () {
     $this->get("/commentaires[/]","HomeController:commentaires")->setName('commentaires');
     $this->get("/random","SequenceController:random");
@@ -58,7 +58,7 @@ $app->group('', function () {
 })->add(new UserMiddleware($container));
 
 
-//Creation de compte
+//Authentification
 $app->group('', function () {
     $this->get("/auth/signup[/]", "AuthController:getSignUp")->setName("auth.signup");
     $this->post("/auth/signup[/]", "AuthController:postSignUp");
@@ -69,7 +69,7 @@ $app->group('', function () {
     ->add(new GuestMiddleware($container));
 
 
-// Routes ayant l'obligation de connection (user + chercheurs)
+// Routes ayant l'obligation de connexion (user + chercheurs)
 $app->group('', function () {
     $this->get("/auth/signout[/]", "AuthController:getSignOut")->setName("auth.signout");
     $this->get("/profil[/]", "ProfilController:index")->setName("profil");
