@@ -14,7 +14,7 @@ class DictionaryController extends Controller{
 		return $this->view->render($response, "dictionary/dictionary.twig", ["elements" => ["Objets" => $objects, "Fonctions" => $methods]]);
 	}
 
-	//récupère un élément et redirige vers la page de modification,suppression ou la page de détails
+	//récupère un élément et redirige vers l'action (modification, export ou affichage)
 	public function getById($request, $response, $args){
 		$element = Dictionnaire::find($args["id"]);
 		//page de modification
@@ -25,6 +25,7 @@ class DictionaryController extends Controller{
 		/*elseif($request->getParam("action") == "delete"){
 			$response = $this->delete($request, $response, $args);
 		}*/
+		//export
 		elseif($request->getParam("action") == "export"){
 			$args["format"] = $request->getParam("format");
 			$args["sequence"] = $element;
@@ -44,13 +45,13 @@ class DictionaryController extends Controller{
 
 	//page de création d'un élément
 	public function new($request, $response){
-		if($request->getParam("type") == "objet" || $request->getParam("type") == "method"){
+		if(in_array($request->getParam("type"), ["type", "method"])){
 			return $this->view->render($response, "dictionary/new.twig", ["type" => $request->getParam("type")]);
 		}
 		return $response->withRedirect($this->router->pathFor('dictionary'));
 	}
 
-	//enregistrement du nouvel élément
+	//création de l'élément
 	public function create($request, $response, $args){
 		$params = $request->getParams();
 	    $validation = $this->validator->validate($request, [
@@ -106,7 +107,7 @@ class DictionaryController extends Controller{
 	    return $response->withRedirect($this->router->pathFor("dictionary"));
 	}*/
 
-	//page pour choisir dans quel format exporter les données
+	//page pour choisir dans quel format exporter les données (tout le dictionnaire)
 	public function viewExport($request, $response, $args){
 		return $this->view->render($response, "dictionary/export.twig", ["formats" => ["xml", "csv", "json"]]);
 	}
@@ -122,7 +123,6 @@ class DictionaryController extends Controller{
 			else{
 				$sequences = Sequence::select(["id", "pseudocode"])->get();
 			}
-			
 			foreach($sequences as $sequence){
 				$pseudocode = explode(";", $sequence->pseudocode);
 				$s = "";
@@ -148,7 +148,7 @@ class DictionaryController extends Controller{
 			else{
 				$name = "dictionnaire_".$format."_".date("d-m-Y");
 			}
-			$path = "../ressources/";
+			$path = "../public/";
 			$this->$format($data, $name, $path);
 			// désactive la mise en cache
 			header("Cache-Control: no-cache, must-revalidate");
@@ -191,7 +191,7 @@ class DictionaryController extends Controller{
 				array_push($data[$s], $commentaire->commentaire);
 			}
 			$name = $s."_".$format."_".date("d-m-Y");
-			$path = "../ressources/";
+			$path = "../public/";
 			$this->$format($data, $name, $path);
 			// désactive la mise en cache
 			header("Cache-Control: no-cache, must-revalidate");
@@ -256,20 +256,21 @@ class DictionaryController extends Controller{
 		fclose($file);
 	}
 
+	//affichage du nuage de mot, récupération du libelle et du nombre
 	public function nuage($request, $response, $args){
 		$elements = Dictionnaire::select(["libelle", "type"])->get();
 		$data = [];
 		foreach($elements as $element){
 			$count = Sequence::where("pseudocode", "like", $element->libelle.";%")->orWhere("pseudocode", "like", "%;".$element->libelle.";%")->orWhere("pseudocode", "like", "%;".$element->libelle)->count();
-			$e = $element->libelle;
 			if($element->type == "method"){
-				$e .= "()";
+				$element->libelle .= "()";
 			}
-			array_push($data, ["id" => $element->id, "libelle" => $e, "count" => $count]);
+			array_push($data, ["libelle" => $element->libelle, "count" => $count]);
 		}
 		return $this->view->render($response, "dictionary/nuage.twig", ["elements" => $data]);
 	}
 
+	//récupération de l'id par rapport au libellé (click nuage et détails d'un élément)
 	public function getId($request, $response, $args){
 		$libelle = $args["element"];
 		if(substr($libelle, -2, 2) == "()"){
