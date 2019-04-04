@@ -20,10 +20,11 @@
 		        e.preventDefault();
 		        return false;
 		    });
-  			var seqStart = [];
-  			var seqFinish = [];
 
 ///////////////////////////////Récupération des scéances de la vidéo de la base ////////////////////////////////////////////////
+	
+			var seqStart = [];
+  			var seqFinish = [];
 
 		    {% for sequence in lesSequences %}
 		    	seqStart.push("{{sequence.debut}}");
@@ -86,7 +87,18 @@
 										     				$("#timeFinish").prop("disabled",false);
 										     				$("#timeStart").val(calculSeconde($("#timeStart").val().split(":")));
 										     				$("#timeFinish").val(calculSeconde($("#timeFinish").val().split(":")));
-										     				document.getElementById("leForm").submit();
+										     				var canvas = document.getElementById("canvas");
+			                								var dataURL = canvas.toDataURL("image/png");
+			                								$.ajax({
+														        url : '../image', // La ressource ciblée
+														        type : 'POST', // Le type de la requête HTTP.
+														        data : 'image=' + dataURL,
+														        success : function(code_html, statut){
+														       		console.log(JSON.parse(code_html));
+														       		$("#miniature").val(JSON.parse(code_html))
+														       		document.getElementById("leForm").submit();
+														        }
+															});
 											       		}
 											       		else{
 											       			alert("votre paramètre n'est pas correct");
@@ -99,7 +111,19 @@
 							     				$("#timeFinish").prop("disabled",false);
 							     				$("#timeStart").val(calculSeconde($("#timeStart").val().split(":")));
 							     				$("#timeFinish").val(calculSeconde($("#timeFinish").val().split(":")));
-							       				document.getElementById("leForm").submit();
+							     				
+							     				var canvas = document.getElementById("canvas");
+                								var dataURL = canvas.toDataURL("image/png");
+                								$.ajax({
+											        url : '../image', // La ressource ciblée
+											        type : 'POST', // Le type de la requête HTTP.
+											        data : 'image=' + dataURL,
+											        success : function(code_html, statut){
+											       		console.log(JSON.parse(code_html));
+											       		$("#miniature").val(JSON.parse(code_html))
+											       		document.getElementById("leForm").submit();
+											        }
+												});
 							       			}
 							       		}
 							       		else{
@@ -227,7 +251,7 @@
 			       		let HTML = "";
 			       		paramObjet = param;
 			       		console.log(param);
-			       		if(param < 2){
+			       		if(param < 1){
 			       			$("#parametre").prop("disabled",true);
 			       			$("#parametre").val("");
 			       		}
@@ -427,9 +451,9 @@
 		$("#screen").click(function(event){
 			// Get handles on the video and canvas elements
 
-			w = 320;
+			w = 640 / 2;
 
-			h = 180;
+			h = 360 / 2;
 
 			canvas.width = w;
 			canvas.height = h;	
@@ -606,10 +630,13 @@
 								<input class="btn btn-outline-secondary" type="button" id="screen" value="miniature">
 							</div>
 							<div class="col-4 ml-5">
-								<canvas class="border border-primary"></canvas>
+								<canvas id="canvas" class="border border-primary"></canvas>
 							</div>
 
 						</div>
+
+						<input type="hidden" id="miniature" name="miniature">
+						<input type="hidden" id="miniature" name="idVideo" value="{{idVideo}}">
 
                     </form>	<!-- fin form -->
 
@@ -623,8 +650,5 @@
 		</div>
 	</div>
 </div>
-	<div class="col-2">
-		<canvas></canvas>
-	</div>
 
 {% endblock %}

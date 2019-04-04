@@ -34,7 +34,7 @@
 			$(this).jPlayer("setMedia", {
 				//title: "{{seq.pseudocode}}",  //titre de la video
 				m4v: "{{ base_url() }}/video/{{video.lien}}.mp4",		//lien de la video (complete)
-				//poster: "http://www.jplayer.org/video/poster/Big_Buck_Bunny_Trailer_480x270.png"  //miniature
+				poster: "{{ base_url() }}/images/miniatures/{{seq.miniature}}"  //miniature
 			});
 		},
 		swfPath: "{{ base_url() }}/jplayer/js/",  //emplacement jplayer
