@@ -36,13 +36,14 @@ $app->group('', function(){
 	$this->get("/objet/{recherche}","VideoController:getObjet");
 	$this->get("/method/{recherche}","VideoController:getMethod");
 	$this->get("/pseudoCode/{recherche}","SequenceController:pseudoCode");
-	$this->get("/methodParam/{recherche}","VideoController:param");
+	
 	$this->get("/inMethod/{recherche}","VideoController:inMethod");
 	$this->get("/inObjet/{recherche}","VideoController:inObjet");
 	$this->get("/allSequence","SequenceController:takeAllSequence");
 	$this->post("/image","VideoController:addMiniature");
 })->add(new SearcherMiddleware($container));
 
+$app->get("/methodParam/{recherche}","VideoController:param");
 $app->get("[/]", "HomeController:index")->setName('home');
 $app->get("/home[/]", "HomeController:index")->setName('home');
 $app->get('/home/mentions[/]', "HomeController:mentions")->setName('home.mentions');

@@ -26,8 +26,8 @@ class VideoController extends Controller{
 		$seq->debut = $_POST['start'];
 		$seq->fin = $_POST["finish"];
 		$seq->idUser = $_SESSION['user'];
-		if($_POST["parametre"] != null){
-			$seq->pseudocode = $_POST["objet"].";".$_POST["method"].";".$_POST["parametre"];
+		if($_POST["param"] != null){
+			$seq->pseudocode = $_POST["objet"].";".$_POST["method"].";".$_POST["param"];
 		}
 		else{
 			$seq->pseudocode = $_POST["objet"].";".$_POST["method"];
@@ -139,7 +139,7 @@ class VideoController extends Controller{
 
 		$param = Dictionnaire::select("parametre")->where("type","=","method")->where("libelle","=",$recherche)->first();
 
-		if($param != null){
+		if($param != null && $param != NULL){
 			if($param->parametre == "objet"){
 				$result = 2;
 			}

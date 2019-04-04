@@ -16,6 +16,15 @@
   				$("#commentaire").html("");
   			}
 
+  			var laSequence = "{{seq.pseudocode}}";
+  			laSequence = laSequence.split(';');
+  			if(laSequence[2] != null){
+				$("#titrePseudoCode").html(laSequence[0] + "." + laSequence[1] + "(" + laSequence[2] + ")");
+  			}
+  			else{
+  				$("#titrePseudoCode").html(laSequence[0] + "." + laSequence[1] + "()");
+  			}
+
   			var lesComms = [];
   			var test = [];
   			{% for comm in commentaires %}
@@ -62,8 +71,10 @@
 
 	function commentaires(){
 		let HTML = ""
+		let cpt = 1;
 		lesComms.forEach(function(element){
-			HTML +=  "<tr><td>" + element[0] + "</td><td>" + element[2] + "</td></tr>";
+			HTML +=  "<tr><td>" + cpt + "</td><td>" + element[2] + "</td></tr>";
+			cpt++;
 		});
 		$("#lesComms").html(HTML);
 	}
@@ -223,34 +234,6 @@
 		}
 		   
 },500); 
-	function imprimer_bloc(titre, objet) {
-// Définition de la zone à imprimer
-var zone = document.getElementById(objet).innerHTML;
- 
-// Ouverture du popup
-var fen = window.open("", "", "height=500, width=600,toolbar=0, menubar=0, scrollbars=1, resizable=1,status=0, location=0, left=10, top=10");
- var css = "<head><link type='text/css' href='../ressources/jplayer/skin/css/blue.monday/css/jplayer.blue.monday.css' rel='stylesheet' />"
-	css += "<link rel='stylesheet' href='../ressources/jplayer/css/style.css' type='text/css'/></head>"
-// style du popup
-fen.document.body.style.color = '#000000';
-fen.document.body.style.backgroundColor = '#FFFFFF';
-fen.document.body.style.padding = "20px";
- 
-// Ajout des données a imprimer
-fen.document.title = titre;
-
-fen.document.body.innerHTML +=  css +" " + zone + " ";
- 
-// Impression du popup
-fen.window.print();
- 
-//Fermeture du popup
-//fen.window.close();
-return true;
-}
-
-//imprimer_bloc("miniature","jp_container_1");
-
 });
 
 
@@ -263,7 +246,9 @@ return true;
 
 
 {%  block content %}
-	<h1>Séquence vidéo {{ idVideo }} : {{ idSequence }}</h1>
+	{% if auth.level is same as('searcher') %}
+		<h1 id="titrePseudoCode"></h1>
+	{% endif %}
 	<div class="row">
 		<div class="col-8 mt-4">
 			<div id="config_val_face"></div>
@@ -320,11 +305,11 @@ return true;
 		<div class="col-lg-4 align-self-center">
 			{% if auth.level is same as('user') %}
 				<div id="commentaire">
-					<form class="form-group" method="POST" name="comment" action="../../commenter">
+					<form class="form-group" method="POST" name="comment" action="../../commenter" autocomplete="off">
 						<label class="col-form-label mr-3" for="message"><h3>Ecrivez votre commentaire</h3></label>
 						<div class="form-inline">
-							<input  class="form-control col-9" type="text" name="message" id="comm"/>
-							<input type="button" class="btn btn-dark" name="vocal" value="vocal" id='vocal'>
+							<input  class="form-control col-10" type="text" name="message" id="comm"/>
+                            <button type="button" class="btn btn-dark" name="vocal" id='vocal'><i class="fas fa-microphone"></i></button>
 						</div>
 						<input type="hidden" name="idSequence" value="{{idSequence}}"/>
 						<input type="hidden" name="idVideo" value="{{idVideo}}"/>
